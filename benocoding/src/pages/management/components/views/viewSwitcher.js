@@ -1,14 +1,14 @@
 
-import ClassInfo from "../views/viewClassInfo";
+import ViewClassInfo from "./viewClassInfo";
 
 function chooseView(viewData, clickedOption) {
     if ( clickedOption === "classInfo" ) {
         console.log('Hi I am here');
-        return <ClassInfo viewData={viewData}/>
+        return <ViewClassInfo viewData={viewData}/>
     }
 }
 
-const OptionDetails = ({viewData, clickedOption}) => {
+const ViewSwitcher = ({viewData, clickedOption}) => {
     return (
         <div>
             {chooseView(viewData, clickedOption)}
@@ -16,4 +16,4 @@ const OptionDetails = ({viewData, clickedOption}) => {
     )
 }
 
-export default OptionDetails;
+export default ViewSwitcher;

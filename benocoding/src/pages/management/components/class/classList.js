@@ -5,19 +5,32 @@ import ClassItem from "./classItem.js";
 
 const ClassListContainer = styled.div`
     height: 80%;
-    width: 20%;
+    width: 200px;
     text-align: center;
     padding: 0 10px;
     border: 1px solid white;
     border-radius: 10px;
     margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+`;
+
+const Heading = styled.h2`
+    height: 34px;
+    position: sticky;
+    top: 10px;
+    background-color: rgba(10, 170, 120, 95%);
+    margin: 10px;
+    padding: 10px 0;
+    border-radius: 10px;
 `;
 
 const ClassList = ({classInfos, chooseClass, setViewData}) => {
 
     return (
         <ClassListContainer>
-            <h2>你的課程</h2>
+            <Heading>你的課程</Heading>
             {
                 classInfos.map((data)=> {
                     return <ClassItem 

@@ -1,8 +1,8 @@
 
 import styled from "styled-components";
 import ClassList from "./class/classList";
-import ClassOptions from "./options/optionList";
-import OptionView from "./options/optionView";
+import OptionList from "./options/optionList";
+import ViewContainer from "./views/viewContainer";
 import { useEffect, useState } from "react";
 import { fetchUserData } from "../../../utils/apis/user.js";
 
@@ -31,11 +31,11 @@ const MainContainer = () => {
                 chooseClass={setClassOptions}
                 setViewData={setViewData}
             />
-            <ClassOptions
+            <OptionList
                 classOptions={classOptions}
                 setClickedOption={setClickedOption}
             />
-            <OptionView viewData={viewData} clickedOption={clickedOption}/>
+            <ViewContainer viewData={viewData} clickedOption={clickedOption}/>
         </Container>
     )
 }
