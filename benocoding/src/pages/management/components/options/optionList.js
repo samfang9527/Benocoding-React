@@ -12,7 +12,7 @@ const ClassOptionsContainer = styled.div`
     margin: 0 10px;
 `;
 
-const ClassOptions = ({classOptions}) => {
+const ClassOptions = ({classOptions, setClickedOption}) => {
     return (
         <ClassOptionsContainer>
             <h2>課程選項</h2>
@@ -21,6 +21,7 @@ const ClassOptions = ({classOptions}) => {
                     return <OptionItem 
                     option={data}
                     key={index}
+                    setClickedOption={setClickedOption}
                     />
                 })
             }

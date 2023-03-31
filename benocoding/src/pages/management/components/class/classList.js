@@ -1,7 +1,7 @@
 
 
 import styled from "styled-components";
-import ClassItem from "./classItem";
+import ClassItem from "./classItem.js";
 
 const ClassListContainer = styled.div`
     height: 80%;
@@ -13,7 +13,7 @@ const ClassListContainer = styled.div`
     margin: 0 10px;
 `;
 
-const ClassList = ({classInfos, chooseClass}) => {
+const ClassList = ({classInfos, chooseClass, setViewData}) => {
 
     return (
         <ClassListContainer>
@@ -25,6 +25,7 @@ const ClassList = ({classInfos, chooseClass}) => {
                     key={data.classId} 
                     chooseClass={chooseClass}
                     classId={data.classId}
+                    setViewData={setViewData}
                     />
                 })
             }

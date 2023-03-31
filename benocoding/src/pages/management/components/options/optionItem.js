@@ -1,7 +1,7 @@
 
 import styled, { keyframes } from "styled-components";
 
-const fadeIn = keyframes`
+const slideIn = keyframes`
     from {
         opacity: 0;
         margin-top: -15px;
@@ -37,13 +37,19 @@ const OptionButton = styled.button`
     &:hover {
         background-color: green;
     }
-    animation: ${fadeIn} .2s ease-in-out;
+    animation: ${slideIn} .2s ease-in-out;
 `;
 
-const OptionItem = ({option}) => {
+
+
+const OptionItem = ({option, setClickedOption}) => {
+
+    function changeView(event) {
+        setClickedOption(event.target.textContent);
+    }
 
     return (
-        <OptionButton>
+        <OptionButton onClick={changeView}>
             {option}
         </OptionButton>
     )
