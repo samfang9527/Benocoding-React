@@ -2,6 +2,7 @@
 
 import styled from "styled-components";
 import ClassItem from "./classItem.js";
+import { useState } from "react";
 
 const ClassListContainer = styled.div`
     height: 80%;
@@ -28,6 +29,8 @@ const Heading = styled.h2`
 
 const ClassList = ({classInfos, chooseClass, setViewData}) => {
 
+    const noClasses = 'No classes';
+
     return (
         <ClassListContainer>
             <Heading>你的課程</Heading>
@@ -42,6 +45,7 @@ const ClassList = ({classInfos, chooseClass, setViewData}) => {
                     />
                 })
             }
+            <div style={{fontSize: '24px'}}>{classInfos.length === 0 ? noClasses : ''}</div>
         </ClassListContainer>
     )
 }

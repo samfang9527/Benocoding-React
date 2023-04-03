@@ -1,2 +1,0 @@
-# Benocoding-React
-Benocoding frontend

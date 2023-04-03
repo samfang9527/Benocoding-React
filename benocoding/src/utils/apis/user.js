@@ -24,6 +24,10 @@ async function fetchUserData(setClassInfos) {
     const data = await res.json();
     
     const { me } = data.data;
+    if ( !me ) {
+        setClassInfos([]);
+        return;
+    }
     setClassInfos(me.class);
 }
 

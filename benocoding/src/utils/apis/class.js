@@ -34,7 +34,6 @@ async function fetchOptionData(chooseClass, classId, setViewData) {
         })
     })
     const data = await res.json();
-    console.log(data);
     const { classTeacherOptions } = data.data.class;
     chooseClass(classTeacherOptions);
     setViewData(data.data.class);

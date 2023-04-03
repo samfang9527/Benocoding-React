@@ -12,6 +12,7 @@ const OptionViewContainer = styled.div`
     margin: 0 10px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     overflow: scroll;
 `;
 

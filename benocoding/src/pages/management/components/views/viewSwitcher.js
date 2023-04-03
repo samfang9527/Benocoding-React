@@ -1,11 +1,16 @@
 
 import ViewClassInfo from "./viewClassInfo";
+import ViewChatroom from "./viewChatroom";
 
 function chooseView(viewData, clickedOption) {
     if ( clickedOption === "classInfo" ) {
-        console.log('Hi I am here');
         return <ViewClassInfo viewData={viewData}/>
     }
+
+    if ( clickedOption === "Chatroom" ) {
+        return <ViewChatroom viewData={viewData}/>
+    }
+
 }
 
 const ViewSwitcher = ({viewData, clickedOption}) => {
