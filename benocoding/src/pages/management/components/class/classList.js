@@ -2,7 +2,6 @@
 
 import styled from "styled-components";
 import ClassItem from "./classItem.js";
-import { useState } from "react";
 
 const ClassListContainer = styled.div`
     height: 80%;
@@ -18,7 +17,7 @@ const ClassListContainer = styled.div`
 `;
 
 const Heading = styled.h2`
-    height: 34px;
+    height: 55px;
     position: sticky;
     top: 10px;
     background-color: rgba(10, 170, 120, 95%);

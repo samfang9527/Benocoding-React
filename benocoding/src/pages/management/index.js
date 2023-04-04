@@ -1,6 +1,4 @@
 
-import Header from "../../components/header";
-import Footer from "../../components/footer";
 import Main from "./components/main";
 import { useState, useEffect } from "react";
 import { socket } from "../../utils/socket/socket";
@@ -29,9 +27,7 @@ const Management = () => {
       }, []);
 
     return <div>
-        <Header />
         <Main />
-        <Footer />
     </div>
 }
 

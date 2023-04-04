@@ -16,7 +16,7 @@ const ClassOptionsContainer = styled.div`
 `;
 
 const Heading = styled.h2`
-    height: 34px;
+    height: 60px;
     position: sticky;
     top: 10px;
     background-color: rgba(10, 170, 120, 95%);
