@@ -17,11 +17,12 @@ async function fetchUserData(setClassInfos) {
                 }
             `,
             variables: {
-                meId: '64268831f4e06c2967eb55b5'
+                meId: '642bfa7de0cb3322463c877c'
             }
         })
     })
     const data = await res.json();
+    console.log(data);
     
     const { me } = data.data;
     if ( !me ) {

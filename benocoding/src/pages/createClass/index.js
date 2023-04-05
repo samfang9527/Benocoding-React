@@ -2,13 +2,8 @@
 import styled from "styled-components";
 import axios from "axios";
 import { useState } from "react";
-
-import { LinearProgress, Box } from "@mui/material";
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { cyan, amber } from '@mui/material/colors';
-
+import { LinearProgress, Box} from "@mui/material";
+import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 import Milestone from "./components/milestone";
 import Tags from "./components/tags";
 
@@ -22,7 +17,7 @@ const Wrapper = styled.div`
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    width: 60%;
+    width: 70%;
     overflow: scroll;
     background-color: rgba(40, 40, 40, 50%);
     justify-content: space-between;
@@ -168,6 +163,24 @@ const RemoveMilestoneBtn = styled.button`
     }
 `;
 
+const LoadingPage = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 50%;
+    height: 40%;
+    background-color: rgba(0, 0, 0, 90%);
+    border-radius: 30px;
+    z-index: 100;
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    top: 50%;
+    margin-top: -25%;
+`;
+
 
 const CreateClass = () => {
 
@@ -178,6 +191,7 @@ const CreateClass = () => {
     const [uploadImageCancel, setUploadImageCancel] = useState(null);
     const [uploadVideoCancel, setUploadVideoCancel] = useState(null);
     const [milestones, setMilestones] = useState([0]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function handleImageUpload(e) {
         e.preventDefault();
@@ -213,10 +227,11 @@ const CreateClass = () => {
                 })
 
                 const fileUrl = url.data.split('?')[0];
+                const fileName = fileUrl.slice(fileUrl.lastIndexOf('\/') + 1);
                 
                 // store image url in span
                 const imageSpan = document.getElementById('image-url');
-                imageSpan.value = fileUrl;
+                imageSpan.value = fileName;
 
             } catch (err) {
                 console.error(err);
@@ -261,11 +276,11 @@ const CreateClass = () => {
                 })
 
                 const fileUrl = url.data.split('?')[0];
-                file.name = fileUrl;
+                const fileName = fileUrl.slice(fileUrl.lastIndexOf('/') + 1);
 
                 // store video url in span
                 const videoSpan = document.getElementById('video-url');
-                videoSpan.value = fileUrl;
+                videoSpan.value = fileName;
 
             } catch (err) {
                 console.error(err);
@@ -322,18 +337,18 @@ const CreateClass = () => {
         }
     }
 
-    function addMilestone() {
+    function addMilestone(e) {
+        e.preventDefault();
         setMilestones([...milestones, milestones.length]);
     }
 
-    function removeMilestone() {
+    function removeMilestone(e) {
+        e.preventDefault();
         setMilestones(milestones.slice(0, milestones.length-1));
     }
 
     async function createClass(e) {
         e.preventDefault();
-
-        // graphql mutaion => add classInfo
 
         const ownerId = "642bfa7de0cb3322463c877c";
         const className = document.getElementById('class-name').value;
@@ -351,6 +366,7 @@ const CreateClass = () => {
                 classTags.push(tag.lastChild.textContent);
             }   
         }
+        console.log(classTags);
         const classMilestones = milestones.map((ele) => {
             const milestoneData = document.getElementById(`milestone-${ele}`);
             const milestone = milestoneData.getElementsByClassName('milestone-name')[0].value;
@@ -359,7 +375,8 @@ const CreateClass = () => {
             return {
                 milestone,
                 milestoneDesc,
-                autoTest
+                autoTest,
+                passed: false
             }
         })
 
@@ -394,6 +411,7 @@ const CreateClass = () => {
         }
 
         try {
+            setIsSubmitting(true);
             const { data } = await axios({
                 method: "POST",
                 url: "http://localhost:8080/graphql",
@@ -403,19 +421,50 @@ const CreateClass = () => {
                 data: graphqlMutation
             })
 
-            console.log(data);
-
+            setTimeout(() => {
+                setIsSubmitting(false);
+                window.location.assign('/')
+            }, 3000);
             
-
         } catch (err) {
             console.error(err);
         }
-        
+    }
+
+    function showLoading() {
+        return (
+            <LoadingPage>
+                <p style={{
+                    marginBottom: '100px'
+                }}>課程建立中</p>
+                <ClimbingBoxLoader
+                    color="darkorange"
+                    size={50}
+                    loading={isSubmitting}
+                ></ClimbingBoxLoader>
+            </LoadingPage>
+        )
     }
 
     return (
         <Wrapper>
+            {isSubmitting ? showLoading() : ''}
             <Form onSubmit={createClass}>
+                <Block style={{
+                    position: "sticky",
+                    top: "0",
+                    margin: "0"
+                }}>
+                    <Title style={{
+                        backgroundColor: "#27AE60",
+                        width: "100%",
+                        height: "100px",
+                        textAlign: "center",
+                        fontSize: "40px",
+                        padding: "20px 0",
+                        margin: "0 0 30px 0"
+                    }}>開始建立課程</Title>
+                </Block>
                 <Block>
                     <Title>課程名稱</Title>
                     <SingleLineQuestion id="class-name" name="className" placeholder="課程名稱" required/>

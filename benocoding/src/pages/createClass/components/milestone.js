@@ -162,10 +162,10 @@ const Milestone = ({id}) => {
                 })
 
                 const fileUrl = url.data.split('?')[0];
-                file.name = fileUrl;
+                const fileName = fileUrl.slice(fileUrl.lastIndexOf('/') + 1);
 
-                const fileSpan = document.getElementById(`file-${id}`);
-                fileSpan.value = fileUrl;
+                const fileSpan = document.getElementById(`milestone-file-${id}`);
+                fileSpan.value = fileName;
 
             } catch (err) {
                 console.error(err);
@@ -184,7 +184,7 @@ const Milestone = ({id}) => {
             <MultiLineQuestion className="milestone-desc" placeholder="milestone description" required/>
             <Title>Upload auto-test file</Title>
             <CustomFIleUpload type="file" accept=".js" onChange={handleFileUpload}/>   
-            <span id={`file-${id}`} className="milestone-file" hidden></span>      
+            <span id={`milestone-file-${id}`} className="milestone-file" hidden></span>      
             <div>{showUpload(isUploadingFile, uploadFilePercent)}</div>
             <Title></Title>
         </MilestoneWrapper>
