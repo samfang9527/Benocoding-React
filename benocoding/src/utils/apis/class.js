@@ -10,21 +10,18 @@ async function fetchOptionData(chooseClass, classId, setViewData) {
             query: `
                 query getClassOptions($classId: String!) {
                     class(classId: $classId) {
-                        classTeacherOptions,
+                        teacherOptions,
                         className,
                         classDesc,
                         classStartDate,
                         classEndDate,
-                        maxStudentsNumber,
-                        minStudentsNumber,
-                        _id,
-                        classMilestones {
+                        id,
+                        milestones {
                           milestone,
                           milestoneDesc,
-                          milestoneAutoTestCode,
+                          autoTest,
                           passed
-                        },
-                        teacherList
+                        }
                     }
                 }
             `,
@@ -34,8 +31,9 @@ async function fetchOptionData(chooseClass, classId, setViewData) {
         })
     })
     const data = await res.json();
-    const { classTeacherOptions } = data.data.class;
-    chooseClass(classTeacherOptions);
+    console.log(data);
+    const { teacherOptions } = data.data.class;
+    chooseClass(teacherOptions);
     setViewData(data.data.class);
 }
 

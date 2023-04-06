@@ -35,11 +35,9 @@ const ViewClassInfo = ({viewData}) => {
     const [id, setId] = useState(viewData._id)
     const [className, setClassName] = useState(viewData.className);
     const [classDesc, setClassDesc] = useState(viewData.classDesc);
-    const [maxStudentNums, setMaxStudentNums] = useState(viewData.maxStudentsNumber);
-    const [minStudentNums, setMinStudentNums] = useState(viewData.minStudentsNumber);
     const [startDate, setStartDate] = useState(viewData.classStartDate);
     const [endDate, setEndDate] = useState(viewData.classEndDate);
-    const [milestones, setMilestones] = useState(viewData.classMilestones);
+    const [milestones, setMilestones] = useState(viewData.milestones);
 
     return (
         <Title>
@@ -50,8 +48,6 @@ const ViewClassInfo = ({viewData}) => {
             </BlockUl>
             <SplitLine></SplitLine>
             <BlockUl>
-                <TitleLi>Min number of students: {minStudentNums}</TitleLi>
-                <TitleLi>Max number of students: {maxStudentNums}</TitleLi>
                 <TitleLi>Start date:<br></br>{startDate}</TitleLi>
                 <TitleLi>End date:<br></br>{endDate}</TitleLi>
             </BlockUl>

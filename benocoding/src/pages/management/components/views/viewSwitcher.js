@@ -3,11 +3,11 @@ import ViewClassInfo from "./viewClassInfo";
 import ViewChatroom from "./viewChatroom";
 
 function chooseView(viewData, clickedOption) {
-    if ( clickedOption === "classInfo" ) {
+    if ( clickedOption === "class info" ) {
         return <ViewClassInfo viewData={viewData}/>
     }
 
-    if ( clickedOption === "Chatroom" ) {
+    if ( clickedOption === "chatroom" ) {
         return <ViewChatroom viewData={viewData}/>
     }
 

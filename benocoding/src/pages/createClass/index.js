@@ -170,7 +170,7 @@ const LoadingPage = styled.div`
     align-items: center;
     position: fixed;
     width: 50%;
-    height: 40%;
+    height: 60%;
     background-color: rgba(0, 0, 0, 90%);
     border-radius: 30px;
     z-index: 100;
