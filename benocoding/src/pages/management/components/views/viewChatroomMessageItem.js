@@ -8,17 +8,24 @@ const MessageBlock = styled.div`
     padding: 0 0 15px 40px;
 `;
 
-const SplitLine = styled.hr`
-    width: 95%;
-    border: 1px solid gray;
-    margin-bottom: 15px;
+const Message = styled.p`
+    margin: 0;
+    height: 20px;
 `;
 
 const ViewChatroomMessageItem = ({msg}) => {
 
+    const msgArray = msg.split('\n');
+
     return (
         <>
-            <MessageBlock>{msg}</MessageBlock>
+            <MessageBlock>
+                {
+                    msgArray.map((text, idx) => {
+                        return <Message key={idx}>{text}</Message>
+                    })
+                }
+            </MessageBlock>
         </>
     )
 }

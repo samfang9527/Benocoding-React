@@ -21,7 +21,8 @@ async function fetchOptionData(chooseClass, classId, setViewData) {
                           milestoneDesc,
                           autoTest,
                           passed
-                        }
+                        },
+                        chatroomId
                     }
                 }
             `,

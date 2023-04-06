@@ -11,17 +11,17 @@ const InputForm = styled.form`
 
 const Textarea = styled.textarea`
     width: 95%;
-    height: 20px;
-    border: 2px solid #ccc;
+    height: 40px;
+    border: 1px solid #ccc;
     border-radius: 20px;
     background-color: #f8f8f8;
     font-size: 18px;
-    padding: 15px 0 15px 15px;
+    padding: 5px 0 5px 15px;
 `;
 
 function calculateHeight(value) {
     const numberOfLineBreaks = (value.match(/\n/g) || []).length;
-    return 20 + numberOfLineBreaks * 20;
+    return 40 + numberOfLineBreaks * 20;
 }
 
 const ViewChatroomInput = () => {
@@ -40,7 +40,7 @@ const ViewChatroomInput = () => {
     function resize(e) {
         if ( e.keyCode == 13 && e.shiftKey == false ) {
             e.target.value = '';
-            e.target.style.height = '20px';
+            e.target.style.height = '40px';
             return;
         }
         const value = e.target.value;

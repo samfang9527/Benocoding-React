@@ -10,10 +10,9 @@ const OptionViewContainer = styled.div`
     border: 1px solid white;
     border-radius: 10px;
     margin: 0 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     overflow: scroll;
+    display: grid;
+    align-content: space-between;
 `;
 
 const Heading = styled.h2`
