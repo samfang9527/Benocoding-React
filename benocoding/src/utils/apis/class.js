@@ -11,6 +11,7 @@ async function fetchOptionData(chooseClass, classId, setViewData) {
                 query getClassOptions($classId: String!) {
                     class(classId: $classId) {
                         teacherOptions,
+                        studentOptions,
                         className,
                         classDesc,
                         classStartDate,
@@ -22,7 +23,8 @@ async function fetchOptionData(chooseClass, classId, setViewData) {
                           autoTest,
                           passed
                         },
-                        chatroomId
+                        chatroomId,
+                        classImage
                     }
                 }
             `,

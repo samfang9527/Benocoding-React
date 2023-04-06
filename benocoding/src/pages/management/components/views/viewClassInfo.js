@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import ViewClassInfoItem from "./viewClassInfoItem";
+import { CDN_DOMAIN } from "../../../../global/constant.js";
 
 const Title = styled.div`
     height: 30%;
@@ -29,6 +30,15 @@ const SplitLine = styled.hr`
     width: 98%;
 `;
 
+const ClassImage = styled.img`
+    width: 100%;
+    align-self: center;
+    position: relative;
+    left: 50%;
+    margin-left: -50%;
+    z-index: -10;
+`;
+
 
 const ViewClassInfo = ({viewData}) => {
     
@@ -41,6 +51,10 @@ const ViewClassInfo = ({viewData}) => {
 
     return (
         <Title>
+            <BlockUl>
+                <ClassImage src={`${CDN_DOMAIN + viewData.classImage}`}></ClassImage>
+            </BlockUl>
+            <SplitLine></SplitLine>
             <BlockUl>
                 <TitleLi>Class: {className}</TitleLi>
                 <TitleLi>Class Description:</TitleLi>
