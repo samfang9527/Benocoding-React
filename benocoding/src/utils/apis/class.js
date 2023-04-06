@@ -24,7 +24,8 @@ async function fetchOptionData(chooseClass, classId, setViewData) {
                           passed
                         },
                         chatroomId,
-                        classImage
+                        classImage,
+                        classVideo
                     }
                 }
             `,

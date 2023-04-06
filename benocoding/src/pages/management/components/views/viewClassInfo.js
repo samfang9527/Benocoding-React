@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import ViewClassInfoItem from "./viewClassInfoItem";
 import { CDN_DOMAIN } from "../../../../global/constant.js";
+import ReactPlayer from "react-player";
 
 const Title = styled.div`
     height: 30%;
@@ -31,12 +32,18 @@ const SplitLine = styled.hr`
 `;
 
 const ClassImage = styled.img`
-    width: 100%;
+    width: 90%;
     align-self: center;
     position: relative;
     left: 50%;
-    margin-left: -50%;
+    margin-left: -45%;
     z-index: -10;
+`;
+
+const ClassVideo = styled(ReactPlayer)`
+    position: relative;
+    left: 50%;
+    margin-left: -45%;
 `;
 
 
@@ -53,6 +60,10 @@ const ViewClassInfo = ({viewData}) => {
         <Title>
             <BlockUl>
                 <ClassImage src={`${CDN_DOMAIN + viewData.classImage}`}></ClassImage>
+            </BlockUl>
+            <SplitLine></SplitLine>
+            <BlockUl>
+                <ClassVideo controls={true} width={'90%'} height={'auto'} url={`${CDN_DOMAIN + viewData.classVideo}`}></ClassVideo>
             </BlockUl>
             <SplitLine></SplitLine>
             <BlockUl>

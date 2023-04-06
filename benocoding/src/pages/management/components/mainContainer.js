@@ -7,10 +7,14 @@ import { useEffect, useState } from "react";
 import { fetchUserData } from "../../../utils/apis/user.js";
 
 const Container = styled.div`
-    height: 100%;
+    height: 90vh;
+    width: 90%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    position: relative;
+    left: 50%;
+    margin-left: -45%;
 `;
 
 const MainContainer = () => {
