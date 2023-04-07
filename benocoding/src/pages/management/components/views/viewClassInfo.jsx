@@ -44,6 +44,7 @@ const ClassVideo = styled(ReactPlayer)`
     position: relative;
     left: 50%;
     margin-left: -45%;
+    z-index: -10;
 `;
 
 

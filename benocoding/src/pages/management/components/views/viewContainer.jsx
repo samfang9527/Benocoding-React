@@ -12,7 +12,7 @@ const OptionViewContainer = styled.div`
     margin: 0 10px;
     overflow: scroll;
     display: grid;
-    align-content: space-between;
+    align-content: flex-start;
 `;
 
 const Heading = styled.h2`

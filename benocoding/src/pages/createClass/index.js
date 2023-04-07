@@ -421,9 +421,11 @@ const CreateClass = () => {
                 data: graphqlMutation
             })
 
+            console.log(data);
+
             setTimeout(() => {
                 setIsSubmitting(false);
-                window.location.assign('/')
+                // window.location.assign('/')
             }, 3000);
             
         } catch (err) {

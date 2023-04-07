@@ -1,5 +1,5 @@
 
-async function fetchOptionData(chooseClass, classId, setViewData) {
+async function fetchOptionData(chooseClass, userClassId, setViewData) {
     chooseClass([]);
     const res = await fetch('http://localhost:8080/graphql', {
         method: 'POST',
@@ -8,8 +8,8 @@ async function fetchOptionData(chooseClass, classId, setViewData) {
         },
         body: JSON.stringify({
             query: `
-                query getClassOptions($classId: String!) {
-                    class(classId: $classId) {
+                query getClassOptions($userClassId: String!, $userId: String!) {
+                    class(userClassId: $userClassId, userId: $userId) {
                         teacherOptions,
                         studentOptions,
                         className,
@@ -18,19 +18,25 @@ async function fetchOptionData(chooseClass, classId, setViewData) {
                         classEndDate,
                         id,
                         milestones {
-                          milestone,
-                          milestoneDesc,
-                          autoTest,
-                          passed
+                            milestone,
+                            milestoneDesc,
+                            autoTest,
+                            passed
                         },
                         chatroomId,
                         classImage,
-                        classVideo
+                        classVideo,
+                        classMembers {
+                            userId,
+                            username,
+                            email
+                        }
                     }
                 }
             `,
             variables: {
-                classId: classId
+                userClassId: userClassId,
+                userId: "642bfa7de0cb3322463c877c"
             }
         })
     })
