@@ -2,7 +2,7 @@
 import styled from "styled-components";
 
 const HeaderWrapper = styled.div`
-    height: 150px;
+    height: 10%;
 `;
 
 const LogoStyle = styled.h1`
@@ -12,35 +12,35 @@ const LogoStyle = styled.h1`
     display: inline-block;
 `;
 
-const SigninStyle = styled.button`
-    height: 30px;
-    width: 100px;
+const Btn = styled.button`
+    height: 50px;
+    width: 180px;
     margin: auto 10px;
     background-color: orange;
     border-radius: 6px;
     position: absolute;
-    right: 180px;
+    right: 5%;
     top: 50px;
-`;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
 
-const SignupStyle = styled.button`
-    height: 30px;
-    width: 100px;
-    margin: auto 10px;
-    background-color: orange;
-    border-radius: 6px;
-    position: absolute;
-    right: 50px;
-    top: 50px;
+    :hover {
+        background-color: darkorange;
+    }
 `;
 
 
 const Header = () => {
+
+    function toLoginPage() {
+        window.location.assign('/login');
+    }
+
     return (
         <HeaderWrapper>
             <LogoStyle>Benocoding</LogoStyle>
-            <SigninStyle>Sign-in</SigninStyle>
-            <SignupStyle>Sign-up</SignupStyle>
+            <Btn onClick={toLoginPage}>Sign-in / Sign-up</Btn>
         </HeaderWrapper>
     )
 }
