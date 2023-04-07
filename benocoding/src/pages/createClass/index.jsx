@@ -211,7 +211,7 @@ const CreateClass = () => {
                 setUploadImageCancel(source);
                 
                 // uploading file
-                const res = await axios.put(url.data, file, {
+                await axios.put(url.data, file, {
                     headers: {
                         "Content-Type": type
                     },
@@ -227,7 +227,7 @@ const CreateClass = () => {
                 })
 
                 const fileUrl = url.data.split('?')[0];
-                const fileName = fileUrl.slice(fileUrl.lastIndexOf('\/') + 1);
+                const fileName = fileUrl.slice(fileUrl.lastIndexOf('/') + 1);
                 
                 // store image url in span
                 const imageSpan = document.getElementById('image-url');
@@ -260,7 +260,7 @@ const CreateClass = () => {
                 setUploadVideoCancel(source);
                 
                 // uploading file
-                const res = await axios.put(url.data, file, {
+                await axios.put(url.data, file, {
                     headers: {
                         "Content-Type": type
                     },

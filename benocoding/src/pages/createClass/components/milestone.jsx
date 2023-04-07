@@ -146,7 +146,7 @@ const Milestone = ({id}) => {
                 setUploadFileCancel(source);
                 
                 // uploading file
-                const res = await axios.put(url.data, file, {
+                await axios.put(url.data, file, {
                     headers: {
                         "Content-Type": type
                     },

@@ -1,7 +1,7 @@
 
 
 import styled from "styled-components";
-import ClassItem from "./classItem.js";
+import ClassItem from "./classItem";
 
 const ClassListContainer = styled.div`
     height: 80%;
