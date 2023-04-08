@@ -1,34 +1,72 @@
 
 import Main from "./components/main";
-import { useState, useEffect } from "react";
-import { socket } from "../../utils/socket/socket";
+import { useState, useEffect, createContext } from "react";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../global/constant.js";
 
+const UserContext = createContext(null);
 
 const Management = () => {
 
-    const [isConnected, setIsConnected] = useState(socket.connected);
+    const [userInfo, setUserInfo] = useState({});
+
+    async function jwtValidation(jwt) { 
+      try {
+        const data = await axios({
+          url: BACKEND_API_URL,
+          headers: {
+            "Content-Type": "application/json",
+            "token": jwt
+          },
+          method: "POST",
+          data: {
+            query: `
+              query {
+                jwtValidate {
+                  userId,
+                  username
+                }
+              }
+            `
+          }
+        })
+        return data;
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
     useEffect(() => {
-        function onConnect() {
-          setIsConnected(true);
-        }
-    
-        function onDisconnect() {
-          setIsConnected(false);
-        }
-    
-        socket.on('connect', onConnect);
-        socket.on('disconnect', onDisconnect);
-    
-        return () => {
-          socket.off('connect', onConnect);
-          socket.off('disconnect', onDisconnect);
-        };
-      }, []);
+      const jwt = window.localStorage.getItem('jwt');
+      if ( !jwt ) {
+        alert('Please sign in to continue');
+        window.location.assign('/login');
+      }
 
-    return <div>
-        <Main />
-    </div>
+      (async () => {
+        try {
+          const result = await jwtValidation(jwt);
+          if ( !result ) {
+            alert('Authorization failed, please sign in again');
+            window.location.assign('/login');
+          } else {
+            setUserInfo(result);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+
+    }, []);
+
+    return (
+      <UserContext.Provider value={userInfo}>
+        <div>
+          <Main />
+        </div>
+      </UserContext.Provider>
+    )
+    
 }
 
 export default Management;
