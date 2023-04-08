@@ -14,7 +14,8 @@ async function fetchUserData(userId) {
                         me(id: $meId) {
                             class {
                                 classId,
-                                className
+                                className,
+                                role
                             }
                         }
                     }

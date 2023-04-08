@@ -1,11 +1,12 @@
 
 import styled from "styled-components";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LinearProgress, Box} from "@mui/material";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 import Milestone from "./components/milestone";
 import Tags from "./components/tags";
+import { BACKEND_API_URL } from "../../global/constant.js";
 
 const Wrapper = styled.div`
     width: 100vw;
@@ -192,6 +193,7 @@ const CreateClass = () => {
     const [uploadVideoCancel, setUploadVideoCancel] = useState(null);
     const [milestones, setMilestones] = useState([0]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [userInfo, setUserInfo] = useState({});
 
     async function handleImageUpload(e) {
         e.preventDefault();
@@ -350,7 +352,7 @@ const CreateClass = () => {
     async function createClass(e) {
         e.preventDefault();
 
-        const ownerId = "642bfa7de0cb3322463c877c";
+        const ownerId = userInfo.userId;
         const className = document.getElementById('class-name').value;
         const classDesc = document.getElementById('class-desc').value;
         const teacherName = "tester001";
@@ -366,7 +368,6 @@ const CreateClass = () => {
                 classTags.push(tag.lastChild.textContent);
             }   
         }
-        console.log(classTags);
         const classMilestones = milestones.map((ele) => {
             const milestoneData = document.getElementById(`milestone-${ele}`);
             const milestone = milestoneData.getElementsByClassName('milestone-name')[0].value;
@@ -426,7 +427,7 @@ const CreateClass = () => {
             setTimeout(() => {
                 setIsSubmitting(false);
                 // window.location.assign('/')
-            }, 3000);
+            }, 1000);
             
         } catch (err) {
             console.error(err);
@@ -447,6 +448,55 @@ const CreateClass = () => {
             </LoadingPage>
         )
     }
+
+    async function jwtValidation(jwt) { 
+      try {
+        const data = await axios({
+          url: BACKEND_API_URL,
+          headers: {
+            "Content-Type": "application/json",
+            "token": jwt
+          },
+          method: "POST",
+          data: {
+            query: `
+              query {
+                jwtValidate {
+                  userId,
+                  username
+                }
+              }
+            `
+          }
+        })
+        return data;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    useEffect(() => {
+        const jwt = window.localStorage.getItem('jwt');
+        if ( !jwt ) {
+          alert('Please sign in to continue');
+          window.location.assign('/login');
+        }
+  
+        (async () => {
+          try {
+            const result = await jwtValidation(jwt);
+            if ( !result ) {
+              alert('Authorization failed, please sign in again');
+              window.location.assign('/login');
+            } else {
+              setUserInfo(result.data.data.jwtValidate);
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        })();
+  
+    }, []);
 
     return (
         <Wrapper>

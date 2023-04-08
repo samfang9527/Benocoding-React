@@ -1,15 +1,17 @@
 
-async function fetchOptionData(chooseClass, userId, userClassId, setViewData) {
+import { BACKEND_API_URL } from "../../global/constant.js";
+
+async function fetchOptionData(chooseClass, role, classId, setViewData) {
     chooseClass([]);
-    const res = await fetch('http://localhost:8080/graphql', {
+    const res = await fetch(BACKEND_API_URL, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
             query: `
-                query getClassOptions($userClassId: String!, $userId: String!) {
-                    class(userClassId: $userClassId, userId: $userId) {
+                query getClassOptions($classId: String!) {
+                    class(classId: $classId) {
                         teacherOptions,
                         studentOptions,
                         className,
@@ -35,15 +37,14 @@ async function fetchOptionData(chooseClass, userId, userClassId, setViewData) {
                 }
             `,
             variables: {
-                userClassId: userClassId,
-                userId: userId
+                classId: classId,
             }
         })
     })
     const data = await res.json();
-    console.log(data);
     const { teacherOptions } = data.data.class;
-    chooseClass(teacherOptions);
+    const { studentOptions } = data.data.class;
+    chooseClass(role === 'teacher' ? teacherOptions : studentOptions);
     setViewData(data.data.class);
 }
 
