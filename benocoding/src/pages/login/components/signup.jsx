@@ -1,5 +1,9 @@
 
 import styled from "styled-components";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../global/constant.js";
+import { useState } from "react";
+import Alert from '@mui/material/Alert';
 
 const SignUpContainer = styled.div`
     width: 50%;
@@ -46,27 +50,98 @@ const SignUpBtn = styled.button`
     }
 `;
 
+async function signUp(username, email, password) {
+
+    const graphqlMutation = {
+        query: `
+            mutation($data: UserData!) {
+                signup(data: $data) {
+                    jwt
+                }
+            }
+        `,
+        variables: {
+            data: {
+                username: username,
+                email: email,
+                password: password
+            }
+        }
+    }
+
+    try {
+        const { data } = await axios({
+            url: BACKEND_API_URL,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: graphqlMutation        
+        })
+
+        return data;
+
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+
 const SignUp = () => {
 
-    function handleSignUp(e) {
+    const [signUpFail, setSignUpFail] = useState(false);
+    const [signUpSuccess, setSignUpSucess] = useState(false);
+
+    async function handleSignUp(e) {
         e.preventDefault();
-        
+
+        const username = document.getElementById('name-input').value;
+        const email = document.getElementById('email-input').value;
+        const password = document.getElementById('pwd-input').value;
+
+        if ( !username || !email || !password ) {
+            setSignUpFail(true);
+            return;
+        }
+
+        const result = await signUp(username, email, password);
+        const { signup } = result.data;
+
+        if ( !signup ) {
+            setSignUpFail(true);
+            return;
+        }
+
+        // put jwt at localstorage
+        window.localStorage.setItem("jwt", signup.jwt);
+        setSignUpFail(false);
+        setSignUpSucess(true);
+        setTimeout(() => {
+            window.location.assign('/');
+        }, 1000)
+
     }
 
     return (
         <SignUpContainer>
             <InputBlock>
                 <Label for="name-input">Username</Label>
-                <TextInput type="text" id="name-input" name="username"></TextInput>    
+                <TextInput type="text" id="name-input" name="username" minLength={2} maxLength={16}></TextInput>    
             </InputBlock>
             <InputBlock>
                 <Label for="email-input">Email</Label>
-                <TextInput type="text" id="email-input" name="email"></TextInput>    
+                <TextInput type="email" id="email-input" name="email"></TextInput>    
             </InputBlock>
             <InputBlock>
                 <Label for="pwd-input">Password</Label>
-                <TextInput type="password" id="pwd-input" name="password"></TextInput>    
+                <TextInput type="password" id="pwd-input" name="password" minLength={8} maxLength={20}></TextInput>    
             </InputBlock>
+            {signUpFail ? <Alert severity="error" sx={{
+                width: "95%"
+            }}>Signup failed, please check your input format</Alert> : ''}
+            {signUpSuccess ? <Alert severity="success" sx={{
+                width: "95%"
+            }}>Successfully sign up 🍀</Alert> : ''}
             <SignUpBtn onClick={handleSignUp}>Submit</SignUpBtn>
         </SignUpContainer>
     )
