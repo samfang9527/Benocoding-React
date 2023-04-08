@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import ClassContainer from "./mainContainer";
+import MainContainer from "./mainContainer";
 
 const MainWrapper = styled.div`
     height: 80vh;
@@ -9,7 +9,7 @@ const MainWrapper = styled.div`
 const Main = () => {
     return (
         <MainWrapper>
-            <ClassContainer />
+            <MainContainer />
         </MainWrapper>
     )
 }

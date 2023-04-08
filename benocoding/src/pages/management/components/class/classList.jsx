@@ -29,6 +29,7 @@ const Heading = styled.h2`
 const ClassList = ({classInfos, chooseClass, setViewData}) => {
 
     const noClasses = 'No classes';
+    console.log(classInfos);
 
     return (
         <ClassListContainer>

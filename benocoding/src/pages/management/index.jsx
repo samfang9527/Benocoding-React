@@ -4,7 +4,7 @@ import { useState, useEffect, createContext } from "react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../global/constant.js";
 
-const UserContext = createContext(null);
+export const UserContext = createContext(null);
 
 const Management = () => {
 
@@ -50,7 +50,7 @@ const Management = () => {
             alert('Authorization failed, please sign in again');
             window.location.assign('/login');
           } else {
-            setUserInfo(result);
+            setUserInfo(result.data.data.jwtValidate);
           }
         } catch (err) {
           console.error(err);
@@ -61,9 +61,7 @@ const Management = () => {
 
     return (
       <UserContext.Provider value={userInfo}>
-        <div>
-          <Main />
-        </div>
+        <Main />
       </UserContext.Provider>
     )
     

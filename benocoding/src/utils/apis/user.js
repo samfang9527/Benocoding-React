@@ -1,35 +1,37 @@
 
-async function fetchUserData(setClassInfos) {
-    const res = await fetch('http://localhost:8080/graphql', {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            query: `
-                query GetMyInfo($meId: String!) {
-                    me(id: $meId) {
-                        class {
-                            classId,
-                            className
+import { BACKEND_API_URL } from "../../global/constant.js";
+
+async function fetchUserData(userId) {
+    try {
+        const res = await fetch(BACKEND_API_URL, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                query: `
+                    query GetMyInfo($meId: String!) {
+                        me(id: $meId) {
+                            class {
+                                classId,
+                                className
+                            }
                         }
                     }
+                `,
+                variables: {
+                    meId: userId
                 }
-            `,
-            variables: {
-                meId: '642bfa7de0cb3322463c877c'
-            }
+            })
         })
-    })
-    const data = await res.json();
-    console.log(data);
-    
-    const { me } = data.data;
-    if ( !me ) {
-        setClassInfos([]);
-        return;
+        const data = await res.json();
+        if ( data.errors ) {
+            return;
+        }
+        return data;
+    } catch (err) {
+        console.error(err);
     }
-    setClassInfos(me.class);
 }
 
 export {
