@@ -1,6 +1,8 @@
 
 import styled from "styled-components";
 import { fetchOptionData } from "../../../../utils/apis/class.js";
+import { UserContext } from "../../index.jsx";
+import { useContext } from "react";
 
 const ClassButton = styled.button`
     width: 90%;
@@ -23,8 +25,10 @@ const ClassButton = styled.button`
 
 const ClassItem = ({className, classId, chooseClass, setViewData}) => {
 
+    const userData = useContext(UserContext);
+
     function showOptions() {
-        fetchOptionData(chooseClass, classId, setViewData)
+        fetchOptionData(chooseClass, userData.userId, classId, setViewData)
     }
 
     return (

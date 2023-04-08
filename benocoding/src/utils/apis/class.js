@@ -1,5 +1,5 @@
 
-async function fetchOptionData(chooseClass, userClassId, setViewData) {
+async function fetchOptionData(chooseClass, userId, userClassId, setViewData) {
     chooseClass([]);
     const res = await fetch('http://localhost:8080/graphql', {
         method: 'POST',
@@ -36,7 +36,7 @@ async function fetchOptionData(chooseClass, userClassId, setViewData) {
             `,
             variables: {
                 userClassId: userClassId,
-                userId: "642bfa7de0cb3322463c877c"
+                userId: userId
             }
         })
     })
