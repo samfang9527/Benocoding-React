@@ -5,7 +5,7 @@ import ClassItem from "./classItem";
 
 const ClassListContainer = styled.div`
     height: 80%;
-    width: 200px;
+    width: 10%;
     text-align: center;
     padding: 0 10px;
     border: 1px solid white;
@@ -14,10 +14,12 @@ const ClassListContainer = styled.div`
     display: flex;
     flex-direction: column;
     overflow: scroll;
+    align-items: center;
 `;
 
 const Heading = styled.h2`
-    height: 55px;
+    height: 60px;
+    width: 95%; 
     position: sticky;
     top: 10px;
     background-color: rgba(10, 170, 120, 95%);
@@ -29,7 +31,6 @@ const Heading = styled.h2`
 const ClassList = ({classInfos, chooseClass, setViewData}) => {
 
     const noClasses = 'No classes';
-    console.log(classInfos);
 
     return (
         <ClassListContainer>

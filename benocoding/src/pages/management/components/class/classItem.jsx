@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { fetchOptionData } from "../../../../utils/apis/class.js";
 
 const ClassButton = styled.button`
-    width: 100%;
-    height: 40px;
+    width: 90%;
+    height: 50px;
     border: none;
     background-color: #4CAF50;
     color: white;
@@ -12,7 +12,7 @@ const ClassButton = styled.button`
     display: block;
     margin: 10px 0;
     position: relative;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 550;
     letter-spacing: 2px;
     cursor: pointer;
