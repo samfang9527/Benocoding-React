@@ -1,5 +1,9 @@
 
 import styled from "styled-components";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../global/constant.js";
+import { useState } from "react";
+import Alert from '@mui/material/Alert';
 
 const SignInContainer = styled.div`
     width: 50%;
@@ -46,11 +50,69 @@ const SignInBtn = styled.button`
     }
 `;
 
+
+async function signIn(email, password) {
+
+    const graphqlMutation = {
+        query: `
+            mutation($data: UserData!) {
+                signin(data: $data) {
+                    jwt
+                }
+            }
+        `,
+        variables: {
+            data: {
+                email: email,
+                password: password
+            }
+        }
+    }
+
+    try {
+        const { data } = await axios({
+            url: BACKEND_API_URL,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: graphqlMutation        
+        })
+
+        return data;
+
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+
 const SignIn = () => {
 
-    function handleSignIn(e) {
+    const [signinFail, setSignInFail] = useState(false);
+    const [signinSuccess, setSignInSucess] = useState(false);
+
+    async function handleSignIn(e) {
         e.preventDefault();
 
+        const email = document.getElementById('email-input').value;
+        const password = document.getElementById('pwd-input').value;
+
+        const result = await signIn(email, password);
+        const { signin } = result.data;
+
+        if ( !signin ) {
+            setSignInFail(true);
+            return;
+        }
+
+        // put jwt at localstorage
+        window.localStorage.setItem("jwt", signin.jwt);
+        setSignInFail(false);
+        setSignInSucess(true);
+        setTimeout(() => {
+            window.location.assign('/');
+        }, 1000)
     }
 
     return (
@@ -63,6 +125,12 @@ const SignIn = () => {
                 <Label for="pwd-input">Password</Label>
                 <TextInput type="password" id="pwd-input" name="password"></TextInput>    
             </InputBlock>
+            {signinFail ? <Alert severity="error" sx={{
+                width: "95%"
+            }}>Wrong email or password</Alert> : ''}
+            {signinSuccess ? <Alert severity="success" sx={{
+                width: "95%"
+            }}>Successfully sign in 🍀</Alert> : ''}
             <SignInBtn onClick={handleSignIn}>Submit</SignInBtn>
         </SignInContainer>
     )
