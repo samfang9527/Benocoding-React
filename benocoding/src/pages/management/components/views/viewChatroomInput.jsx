@@ -3,10 +3,11 @@ import styled from "styled-components";
 import { socket } from "../../../../utils/socket/socket";
 
 const InputForm = styled.form`
-    margin-bottom: 30px;
     width: 100%;
     position: sticky;
-    bottom: 30px;
+    bottom: 0;
+    padding: 10px 0;
+    background-color: #434343ff;
 `;
 
 const Textarea = styled.textarea`
