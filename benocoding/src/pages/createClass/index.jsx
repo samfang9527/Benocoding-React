@@ -417,7 +417,8 @@ const CreateClass = () => {
                 method: "POST",
                 url: "http://localhost:8080/graphql",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "token": window.localStorage.getItem("jwt")
                 },
                 data: graphqlMutation
             })

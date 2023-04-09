@@ -38,13 +38,10 @@ const ClassList = ({classInfos, chooseClass, setViewData}) => {
             <Heading>你的課程</Heading>
             {
                 classInfos.map((data)=> {
-                    console.log(data);
                     return <ClassItem 
-                    className={data.className} 
+                    data={data}
                     key={data.classId} 
                     chooseClass={chooseClass}
-                    role={data.role}
-                    classId={data.classId}
                     setViewData={setViewData}
                     />
                 })

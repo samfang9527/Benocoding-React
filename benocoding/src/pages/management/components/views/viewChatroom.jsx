@@ -1,9 +1,12 @@
 
+import axios from "axios";
 import styled from "styled-components";
 import React, { useState, useEffect, useRef } from "react";
 import ViewChatroomMessageItem from "./viewChatroomMessageItem";
 import ViewChatroomInput from "./viewChatroomInput";
 import { socket } from "../../../../utils/socket/socket.js";
+import { BACKEND_API_URL } from "../../../../global/constant.js";
+import { io } from "socket.io-client";
 
 
 const Container = styled.div`
@@ -26,20 +29,56 @@ const ViewChatroom = ({viewData}) => {
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
-      socket.emit('joinChatroom', viewData.chatroomId);
-      console.log('run');
+        // update messages from DB
+        axios({
+            url: BACKEND_API_URL,
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: {
+                query: `
+                    query($chatroomId: String!) {
+                        getMessages(chatroomId: $chatroomId) {
+                            messages {
+                                time,
+                                from,
+                                message
+                            }
+                        }
+                    }
+                `,
+                variables: {
+                    chatroomId: viewData.chatroomId
+                }
+            }
+        })
+        .then(res => {
+            const data = res.data;
+            const msgs = data.data.getMessages.messages;
+            if ( !msgs ) {
+                setMessages([]);
+            } else {
+                setMessages([msgs]);
+            }
+        })
+        .catch(err => {console.error(err)})
 
-      function onUpdateEvent(message) {
-          setMessages(prev => [...prev, message]);
-      }
+        socket.emit('joinChatroom', viewData.chatroomId);
 
-      socket.on('update', onUpdateEvent);
+        function onUpdateEvent(message) {
+            setMessages(prev => [...prev, message]);
+        }
 
-      return () => {
-          socket.off('update', onUpdateEvent);
-      };
+        socket.on('update', onUpdateEvent);
 
-    }, [])
+        return () => {
+            socket.off('update', onUpdateEvent);
+            socket.disconnect();
+            socket.connect();
+        };
+
+    }, [viewData.chatroomId])
 
     useEffect(() => {
       // 👇️ scroll to bottom every time messages change

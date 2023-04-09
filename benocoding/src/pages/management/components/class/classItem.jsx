@@ -21,15 +21,15 @@ const ClassButton = styled.button`
     }
 `;
 
-const ClassItem = ({className, classId, chooseClass, role, setViewData}) => {
+const ClassItem = ({data, chooseClass, setViewData}) => {
 
     function showOptions() {
-        fetchOptionData(chooseClass, role, classId, setViewData)
+        fetchOptionData(chooseClass, data.role, data.classId, setViewData)
     }
 
     return (
         <ClassButton onClick={showOptions}>
-            {className}
+            {data.className}
         </ClassButton>
     )
 }
