@@ -84,7 +84,7 @@ const ViewChatroom = ({viewData}) => {
           <Wrapper>
               {
                   messages.map((msg, idx) => {
-                      return <ViewChatroomMessageItem msg={msg} key={idx}/>
+                      return <ViewChatroomMessageItem msg={msg} key={idx + msg.time}/>
                   })
               }
               <div ref={bottomRef} />

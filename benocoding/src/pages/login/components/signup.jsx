@@ -125,15 +125,15 @@ const SignUp = () => {
     return (
         <SignUpContainer>
             <InputBlock>
-                <Label for="name-input">Username</Label>
+                <Label htmlFor="name-input">Username</Label>
                 <TextInput type="text" id="name-input" name="username" minLength={2} maxLength={16}></TextInput>    
             </InputBlock>
             <InputBlock>
-                <Label for="email-input">Email</Label>
+                <Label htmlFor="email-input">Email</Label>
                 <TextInput type="email" id="email-input" name="email"></TextInput>    
             </InputBlock>
             <InputBlock>
-                <Label for="pwd-input">Password</Label>
+                <Label htmlFor="pwd-input">Password</Label>
                 <TextInput type="password" id="pwd-input" name="password" minLength={8} maxLength={20}></TextInput>    
             </InputBlock>
             {signUpFail ? <Alert severity="error" sx={{

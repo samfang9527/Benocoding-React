@@ -1,6 +1,6 @@
 
 import Main from "./components/main";
-import { useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { AuthContext } from "../../global/authContext";
 
 export const UserContext = createContext(null);
@@ -15,7 +15,6 @@ const Management = () => {
           alert('Please sign in to continue');
           window.location.assign('/login');
         }
-        setUserInfo(authContext.user)
       }
     }, [authContext]);
 

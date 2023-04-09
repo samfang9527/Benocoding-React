@@ -30,7 +30,7 @@ const Username = styled.p`
     display: inline-block;
 `;
 
-const Time = styled.p`
+const Time = styled.span`
     font-size: 14px;
     display: inline;
     margin-left: 10px;
@@ -51,7 +51,7 @@ const ViewChatroomMessageItem = ({msg}) => {
                 {
                     msgArray.map((text, idx) => {
                         return (
-                            <Wrapper>
+                            <Wrapper key={idx + text + msg.time}>
                                 <AccessibleForwardIcon sx={{
                                     height: "40px",
                                     width: "40px"

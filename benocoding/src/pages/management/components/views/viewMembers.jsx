@@ -7,8 +7,6 @@ import ViewMemberItem from "./viewMemberItem";
 const ViewMembers = ({viewData}) => {
 
     const members = viewData.classMembers;
-    console.log('members', members);
-    console.log('viewData', viewData);
 
     return (
         members.map((member, idx) => {

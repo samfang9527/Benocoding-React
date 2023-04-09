@@ -57,6 +57,7 @@ export const AuthContextProvider = ({children}) => {
     useEffect(() => {
         const jwt = window.localStorage.getItem('jwt');
         if ( !jwt ) {
+            setIsLoding(false);
             return;
         }
 

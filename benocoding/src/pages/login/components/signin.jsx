@@ -121,11 +121,11 @@ const SignIn = () => {
     return (
         <SignInContainer>
             <InputBlock>
-                <Label for="email-input">Email</Label>
+                <Label htmlFor="email-input">Email</Label>
                 <TextInput type="text" id="email-input" name="email"></TextInput>    
             </InputBlock>
             <InputBlock>
-                <Label for="pwd-input">Password</Label>
+                <Label htmlFor="pwd-input">Password</Label>
                 <TextInput type="password" id="pwd-input" name="password"></TextInput>    
             </InputBlock>
             {signinFail ? <Alert severity="error" sx={{
