@@ -1,12 +1,12 @@
 
 import axios from "axios";
 import styled from "styled-components";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import ViewChatroomMessageItem from "./viewChatroomMessageItem";
 import ViewChatroomInput from "./viewChatroomInput";
 import { socket } from "../../../../utils/socket/socket.js";
 import { BACKEND_API_URL } from "../../../../global/constant.js";
-import { io } from "socket.io-client";
+import { UserContext } from "../..";
 
 
 const Container = styled.div`
@@ -27,6 +27,8 @@ const ViewChatroom = ({viewData}) => {
     const bottomRef = useRef(null);
 
     const [messages, setMessages] = useState([]);
+    
+    const userInfo = useContext(UserContext);
 
     useEffect(() => {
         // update messages from DB
@@ -40,11 +42,9 @@ const ViewChatroom = ({viewData}) => {
                 query: `
                     query($chatroomId: String!) {
                         getMessages(chatroomId: $chatroomId) {
-                            messages {
-                                time,
-                                from,
-                                message
-                            }
+                            time,
+                            from,
+                            message
                         }
                     }
                 `,
@@ -55,19 +55,16 @@ const ViewChatroom = ({viewData}) => {
         })
         .then(res => {
             const data = res.data;
-            const msgs = data.data.getMessages.messages;
-            if ( !msgs ) {
-                setMessages([]);
-            } else {
-                setMessages([msgs]);
-            }
+            const msgs = data.data.getMessages;
+            console.log(msgs);
+            setMessages(msgs);
         })
         .catch(err => {console.error(err)})
 
         socket.emit('joinChatroom', viewData.chatroomId);
 
-        function onUpdateEvent(message) {
-            setMessages(prev => [...prev, message]);
+        function onUpdateEvent(msgData) {
+            setMessages(prev => [...prev, msgData]);
         }
 
         socket.on('update', onUpdateEvent);
@@ -95,7 +92,7 @@ const ViewChatroom = ({viewData}) => {
               }
               <div ref={bottomRef} />
           </Wrapper>
-          <ViewChatroomInput/>
+          <ViewChatroomInput username={userInfo.username}/>
       </Container>
   )
 }

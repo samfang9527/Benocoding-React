@@ -24,13 +24,14 @@ function calculateHeight(value) {
     return 40 + numberOfLineBreaks * 20;
 }
 
-const ViewChatroomInput = () => {
+const ViewChatroomInput = ({username}) => {
 
     function sendmessage(e) {
         if ( e.keyCode == 13 ) {
             if ( e.shiftKey == false ) {
                 // submit message
                 socket.emit('newMessage', {
+                    username: username,
                     message: e.target.value
                 })
             }

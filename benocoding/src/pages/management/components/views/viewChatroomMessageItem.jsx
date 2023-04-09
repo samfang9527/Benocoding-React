@@ -14,8 +14,8 @@ const Message = styled.p`
 `;
 
 const ViewChatroomMessageItem = ({msg}) => {
-
-    const msgArray = msg.split('\n');
+    const text = msg.message;
+    const msgArray = text.split('\n');
 
     return (
         <>

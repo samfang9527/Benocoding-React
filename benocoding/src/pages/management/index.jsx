@@ -24,7 +24,8 @@ const Management = () => {
               query {
                 jwtValidate {
                   userId,
-                  username
+                  username,
+                  email
                 }
               }
             `
