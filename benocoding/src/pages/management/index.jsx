@@ -1,69 +1,26 @@
 
 import Main from "./components/main";
-import { useState, useEffect, createContext } from "react";
-import axios from "axios";
-import { BACKEND_API_URL } from "../../global/constant.js";
+import { useEffect, createContext, useContext } from "react";
+import { AuthContext } from "../../global/authContext";
 
 export const UserContext = createContext(null);
 
 const Management = () => {
 
-    const [userInfo, setUserInfo] = useState({});
-
-    async function jwtValidation(jwt) { 
-      try {
-        const data = await axios({
-          url: BACKEND_API_URL,
-          headers: {
-            "Content-Type": "application/json",
-            "token": jwt
-          },
-          method: "POST",
-          data: {
-            query: `
-              query {
-                jwtValidate {
-                  userId,
-                  username,
-                  email
-                }
-              }
-            `
-          }
-        })
-        return data;
-      } catch (err) {
-        console.error(err);
-      }
-    }
+    const authContext = useContext(AuthContext);
 
     useEffect(() => {
-      const jwt = window.localStorage.getItem('jwt');
-      if ( !jwt ) {
-        alert('Please sign in to continue');
-        window.location.assign('/login');
-      }
-
-      (async () => {
-        try {
-          const result = await jwtValidation(jwt);
-          if ( !result ) {
-            alert('Authorization failed, please sign in again');
-            window.location.assign('/login');
-          } else {
-            setUserInfo(result.data.data.jwtValidate);
-          }
-        } catch (err) {
-          console.error(err);
+      if ( !authContext.isLoading ) {
+        if ( !authContext.isLogin ) {
+          alert('Please sign in to continue');
+          window.location.assign('/login');
         }
-      })();
-
-    }, []);
+        setUserInfo(authContext.user)
+      }
+    }, [authContext]);
 
     return (
-      <UserContext.Provider value={userInfo}>
-        <Main />
-      </UserContext.Provider>
+      <Main />
     )
     
 }

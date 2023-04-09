@@ -6,7 +6,7 @@ import ViewChatroomMessageItem from "./viewChatroomMessageItem";
 import ViewChatroomInput from "./viewChatroomInput";
 import { socket } from "../../../../utils/socket/socket.js";
 import { BACKEND_API_URL } from "../../../../global/constant.js";
-import { UserContext } from "../..";
+import { AuthContext } from "../../../../global/authContext";
 
 
 const Container = styled.div`
@@ -25,10 +25,8 @@ const Wrapper = styled.div`
 const ViewChatroom = ({viewData}) => {
 
     const bottomRef = useRef(null);
-
     const [messages, setMessages] = useState([]);
-    
-    const userInfo = useContext(UserContext);
+    const authContext = useContext(AuthContext);
 
     useEffect(() => {
         // update messages from DB
@@ -56,7 +54,6 @@ const ViewChatroom = ({viewData}) => {
         .then(res => {
             const data = res.data;
             const msgs = data.data.getMessages;
-            console.log(msgs);
             setMessages(msgs);
         })
         .catch(err => {console.error(err)})
@@ -92,7 +89,7 @@ const ViewChatroom = ({viewData}) => {
               }
               <div ref={bottomRef} />
           </Wrapper>
-          <ViewChatroomInput username={userInfo.username}/>
+          <ViewChatroomInput username={authContext.user.username}/>
       </Container>
   )
 }

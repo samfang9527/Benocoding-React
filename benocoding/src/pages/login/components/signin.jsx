@@ -2,8 +2,9 @@
 import styled from "styled-components";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../../global/constant.js";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Alert from '@mui/material/Alert';
+import { AuthContext } from "../../../global/authContext.jsx";
 
 const SignInContainer = styled.div`
     width: 50%;
@@ -91,6 +92,7 @@ const SignIn = () => {
 
     const [signinFail, setSignInFail] = useState(false);
     const [signinSuccess, setSignInSucess] = useState(false);
+    const authContext = useContext(AuthContext);
 
     async function handleSignIn(e) {
         e.preventDefault();
@@ -108,6 +110,7 @@ const SignIn = () => {
 
         // put jwt at localstorage
         window.localStorage.setItem("jwt", signin.jwt);
+        authContext.login(signin.jwt);
         setSignInFail(false);
         setSignInSucess(true);
         setTimeout(() => {

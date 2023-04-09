@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { createGlobalStyle } from "styled-components";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import { AuthContextProvider } from './global/authContext';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -22,9 +23,11 @@ function App() {
     return (
       <>
         <GlobalStyle />
-            <Header />
-            <Outlet />
-            <Footer />
+        <AuthContextProvider>
+          <Header />
+          <Outlet />
+          <Footer />
+        </AuthContextProvider>
       </>
     );
   }

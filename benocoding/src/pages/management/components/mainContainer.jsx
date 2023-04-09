@@ -5,7 +5,7 @@ import OptionList from "./options/optionList";
 import ViewContainer from "./views/viewContainer";
 import { useEffect, useState, useContext } from "react";
 import { fetchUserData } from "../../../utils/apis/user.js";
-import { UserContext } from "..";
+import { AuthContext } from "../../../global/authContext";
 
 const Container = styled.div`
     height: 90vh;
@@ -25,16 +25,16 @@ const MainContainer = () => {
     const [viewData, setViewData] = useState({});
     const [clickedOption, setClickedOption] = useState('');
 
-    const userData = useContext(UserContext);
+    const authContext = useContext(AuthContext);
     useEffect(() => {
-        fetchUserData(userData.userId)
+        fetchUserData(authContext.user.userId)
             .then(data => {
                 if ( data ) {
                     setClassInfos(data.data.me.class);
                 }
             })
             .catch(err => {console.error(err)})
-    }, [userData.userId])
+    }, [authContext])
 
     return (
         <Container>
