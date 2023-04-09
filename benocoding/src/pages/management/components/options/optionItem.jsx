@@ -30,7 +30,7 @@ const OptionButton = styled.button`
     display: block;
     margin: 10px 0;
     position: relative;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 550;
     letter-spacing: 2px;
     cursor: pointer;

@@ -24,8 +24,9 @@ const Heading = styled.h2`
     top: 10px;
     background-color: rgba(10, 170, 120, 95%);
     margin: 10px;
-    padding: 10px 0;
+    padding: 15px 0;
     border-radius: 10px;
+    font-size: 20px;
 `;
 
 const ClassList = ({classInfos, chooseClass, setViewData}) => {
