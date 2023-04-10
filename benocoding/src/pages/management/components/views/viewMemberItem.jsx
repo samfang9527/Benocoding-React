@@ -107,7 +107,7 @@ const ViewMemberItem = ({username, email, userId, classId}) => {
                     <Info>Current at milestone {curMilestone}</Info>
                     <Info>Progress： {(curMilestone / milestones.length) * 100}%</Info>
                 </InfoBlock>
-                <EmailIcon sx={{ fontSize: 40 }} />
+                <a href={`mailto:${email}`} style={{textDecoration: "none", color: "white"}}><EmailIcon sx={{ fontSize: 40 }}/></a>
             </Item>
             
         </ItemList>
