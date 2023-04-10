@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useContext } from "react";
 import { Fragment } from "react";
 import { MilestoneContext } from "..";
+import { useEffect } from "react";
 
 const Wrapper = styled.div`
     width: 100%;
@@ -50,7 +51,7 @@ const TestCaseContainer = styled.div`
 
 const FunctionTest = ({milestoneIdx}) => {
 
-    const milestoneContext = useContext(MilestoneContext);
+    const { testCases } = useContext(MilestoneContext);
 
     return (
         <Wrapper>
@@ -58,11 +59,11 @@ const FunctionTest = ({milestoneIdx}) => {
             <FunctionName></FunctionName>
             <TestCaseContainer>
                 {
-                    milestoneContext.testCases.map((ele, idx) => {
+                    testCases.map((ele, idx) => {
                         return (
                             <Fragment key={ele + idx}>
                                 <TestCaseBlock>
-                                    <Title>Test Case {ele}</Title>
+                                    <Title>Test Case {idx}</Title>
                                     <Description>Params</Description>
                                     <TestCaseParam></TestCaseParam>
                                     <Description>Values</Description>

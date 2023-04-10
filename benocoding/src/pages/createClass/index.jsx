@@ -231,6 +231,7 @@ const CreateClass = () => {
     const [functionName, setFunctionName] = useState('');
     const [testCases, setTestCases] = useState([]);
 
+    useEffect(()=>console.log(milestones),[milestones])
 
     async function handleImageUpload(e) {
         e.preventDefault();

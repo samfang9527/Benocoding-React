@@ -83,28 +83,33 @@ const ControlBtn = styled.button`
 
 const Milestone = ({idx}) => {
 
-    const milestoneContext = useContext(MilestoneContext);
-    console.log(milestoneContext);
-
-    const [ useTest, setUseTest ] = useState(milestoneContext.useAutoTest);
-    const [ useFunctionTest, setUseFunctionTest ] = useState(milestoneContext.useFunctionTest);
-    const [ testCases, setTestCases ] = useState(milestoneContext.testCases);
+    const {   
+        useAutoTest,
+        setUseAutoTest,
+        useFunctionTest,
+        setUseFunctionTest,
+        functionName,
+        setFunctionName,
+        testCases,
+        setTestCases,
+        milestones,
+        setMilestones} = useContext(MilestoneContext);
 
     function functionTest(e) {
         e.preventDefault();
-        milestoneContext.setUseFunctionTest(true);
-        milestoneContext.setUseAutoTest(true);
+        setUseFunctionTest(true);
+        setUseAutoTest(true);
     }
 
     function apiTest(e) {
         e.preventDefault();
-        milestoneContext.setUseFunctionTest(false);
-        milestoneContext.setUseAutoTest(true);
+        setUseFunctionTest(false);
+        setUseAutoTest(true);
     }
 
     function noneTest(e) {
         e.preventDefault();
-        milestoneContext.setUseAutoTest(false);
+        setUseAutoTest(false);
     }
 
     function addCases(e) {
@@ -114,27 +119,25 @@ const Milestone = ({idx}) => {
             values: '',
             result: ''
         };
-        const newArray = [...milestoneContext.testCases, newTestCase];
-        milestoneContext.setTestCases(newArray);
-        console.log(newArray);
+        const newArray = [...testCases, newTestCase];
+        setTestCases(newArray);
     }
 
     function removeCases(e) {
         e.preventDefault();
-        const newArray = milestoneContext.testCases.slice(0, -1);
-        milestoneContext.setTestCases(newArray);
-        console.log(newArray);
+        const newArray = testCases.slice(0, -1);
+        setTestCases(newArray);
     }
 
     function setMilestoneName(e) {
-        milestoneContext.setMilestones(prev => {
+        setMilestones(prev => {
             prev[idx].milestone = e.target.value
             return [...prev];
         })
     }
 
     function setMilestoneDesc(e) {
-        milestoneContext.setMilestones(prev => {
+        setMilestones(prev => {
             prev[idx].milestoneDesc = e.target.value
             return [...prev];
         })
@@ -152,7 +155,7 @@ const Milestone = ({idx}) => {
                 <OptionButton onClick={apiTest}>API Test</OptionButton>
                 <OptionButton onClick={noneTest}>None</OptionButton>
             </OptionButtonBlock>
-            { useTest ?
+            { useAutoTest ?
                 <>
                     { useFunctionTest ? <FunctionTest milestoneIdx={idx}/> : <ApiTest milestoneIdx={idx}/> }
                     <ControlBtnContainer>
