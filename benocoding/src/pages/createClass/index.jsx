@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, createContext } from "react";
 import { LinearProgress, Box} from "@mui/material";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 import Milestone from "./components/milestone";
@@ -182,8 +182,29 @@ const LoadingPage = styled.div`
     margin-top: -25%;
 `;
 
+export const MilestoneContext = createContext({
+    useAutoTest: true,
+    setUseAutoTest: ()=>{},
+    useFunctionTest: true,
+    setUseFunctionTest: ()=>{},
+    functionName: '',
+    setFunctionName: ()=>{},
+    testCases: [],
+    setTestCases: ()=>{},
+    milestones: [],
+    setMilestones: ()=>{}
+})
 
 const CreateClass = () => {
+
+    // Ref
+    const className = useRef(null);
+    const classDesc = useRef(null);
+    const classStartDate = useRef(null);
+    const classEndDate = useRef(null);
+    const classImage = useRef(null);
+    const classVideo = useRef(null);
+
 
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [isUploadingVideo, setIsUploadingVideo] = useState(false);
@@ -191,9 +212,25 @@ const CreateClass = () => {
     const [uploadVideoPercent, setUploadVideoPercent] = useState(0);
     const [uploadImageCancel, setUploadImageCancel] = useState(null);
     const [uploadVideoCancel, setUploadVideoCancel] = useState(null);
-    const [milestones, setMilestones] = useState([0]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [userInfo, setUserInfo] = useState({});
+
+    // for milestones
+    const [milestones, setMilestones] = useState([
+        {
+            milestone: '',
+            milestoneDesc: '',
+            autoTest: false,
+            testFunctionName: '',
+            testCases: [],
+            passed: false
+        }
+    ]);
+    const [useAutoTest, setUseAutoTest] = useState(false);
+    const [useFunctionTest, setUseFunctionTest] = useState(false);
+    const [functionName, setFunctionName] = useState('');
+    const [testCases, setTestCases] = useState([]);
+
 
     async function handleImageUpload(e) {
         e.preventDefault();
@@ -353,13 +390,7 @@ const CreateClass = () => {
         e.preventDefault();
 
         const ownerId = userInfo.userId;
-        const className = document.getElementById('class-name').value;
-        const classDesc = document.getElementById('class-desc').value;
         const teacherName = "tester001";
-        const classStartDate = document.getElementById('start-date').value;
-        const classEndDate = document.getElementById('end-date').value;
-        const classImage = document.getElementById('image-url').value;
-        const classVideo = document.getElementById('video-url').value;
         const classTags = [];
         const tagsElements = document.getElementsByClassName('class-tags');
         for ( const tag of tagsElements ) {
@@ -368,30 +399,18 @@ const CreateClass = () => {
                 classTags.push(tag.lastChild.textContent);
             }   
         }
-        const classMilestones = milestones.map((ele) => {
-            const milestoneData = document.getElementById(`milestone-${ele}`);
-            const milestone = milestoneData.getElementsByClassName('milestone-name')[0].value;
-            const milestoneDesc = milestoneData.getElementsByClassName('milestone-desc')[0].value;
-            const autoTest = milestoneData.getElementsByClassName('milestone-file')[0].value;
-            return {
-                milestone,
-                milestoneDesc,
-                autoTest,
-                passed: false
-            }
-        })
 
         const data = {
             ownerId,
-            className,
-            classDesc,
+            className: className.current.value,
+            classDesc: classDesc.current.value,
             teacherName,
-            classStartDate,
-            classEndDate,
-            classImage,
-            classVideo,
+            classStartDate: classStartDate.current.value,
+            classEndDate: classEndDate.current.value,
+            classImage: classImage.current.value,
+            classVideo: classVideo.current.value,
             classTags,
-            milestones: classMilestones
+            milestones
         }
 
         const graphqlMutation = {
@@ -413,17 +432,17 @@ const CreateClass = () => {
 
         try {
             setIsSubmitting(true);
-            const { data } = await axios({
-                method: "POST",
-                url: "http://localhost:8080/graphql",
-                headers: {
-                    "Content-Type": "application/json",
-                    "token": window.localStorage.getItem("jwt")
-                },
-                data: graphqlMutation
-            })
+            // const { data } = await axios({
+            //     method: "POST",
+            //     url: "http://localhost:8080/graphql",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //         "token": window.localStorage.getItem("jwt")
+            //     },
+            //     data: graphqlMutation
+            // })
 
-            console.log(data);
+            // console.log(data);
 
             setTimeout(() => {
                 setIsSubmitting(false);
@@ -500,76 +519,92 @@ const CreateClass = () => {
     }, []);
 
     return (
-        <Wrapper>
-            {isSubmitting ? showLoading() : ''}
-            <Form onSubmit={createClass}>
-                <Block style={{
-                    position: "sticky",
-                    top: "0",
-                    margin: "0"
-                }}>
-                    <Title style={{
-                        backgroundColor: "#27AE60",
-                        width: "100%",
-                        height: "100px",
-                        textAlign: "center",
-                        fontSize: "40px",
-                        padding: "20px 0",
-                        margin: "0 0 30px 0"
-                    }}>開始建立課程</Title>
-                </Block>
-                <Block>
-                    <Title>課程名稱</Title>
-                    <SingleLineQuestion id="class-name" name="className" placeholder="課程名稱" required/>
-                </Block>
-                <Block>
-                    <Title>課程簡介</Title>
-                    <MultiLineQuestion id="class-desc" name="classDesc" placeholder="課程簡介" required/>
-                </Block>
-                <Block>
-                    <Title>課程開始日期</Title>
-                    <SingleLineQuestion id="start-date" type="date" required/>
-                </Block>
-                <Block>
-                    <Title>課程結束日期</Title>
-                    <SingleLineQuestion id="end-date" type="date" required/>
-                </Block>
-                <Block>
-                    <Title>課程封面</Title>
-                    <CustomFIleUpload id="upload-image" type="file" accept="image/*" onChange={handleImageUpload} required/>
-                    <span id="image-url" hidden></span>
-                    <div>{showUpload("image", isUploadingImage, uploadImagePercent)}</div>
-                </Block>
-                <Block>
-                    <Title>課程影片</Title>
-                    <CustomFIleUpload type="file" accept="video/*" onChange={handleVideoUpload}/>    
-                    <span id="video-url" hidden></span>     
-                    <div>{showUpload("video", isUploadingVideo, uploadVideoPercent)}</div>
-                </Block>
-                <Block>
-                    <Title>課程標籤</Title>
-                    <Tags />
-                </Block>
-                <Block>
-                    <Title>課程安排</Title>
-                    {
-                        milestones.map((ele, idx) => {
-                            return (
-                                <Milestone key={idx} id={idx}/>
-                            )
-                        })
-                    }
-                    <MilestoneBtnContainer>
-                        <AddMilestoneBtn onClick={addMilestone}>+</AddMilestoneBtn>
-                        {showRemoveBtn()}
-                    </MilestoneBtnContainer>
-                    
-                </Block>
-                <Block>
-                    <SubmitBtn>建立課程</SubmitBtn>
-                </Block>
-            </Form>
-        </Wrapper>
+        <MilestoneContext.Provider value={{
+            useAutoTest,
+            setUseAutoTest,
+            useFunctionTest,
+            setUseFunctionTest,
+            functionName,
+            setFunctionName,
+            testCases,
+            setTestCases,
+            milestones,
+            setMilestones
+        }}>
+            <Wrapper>
+                {isSubmitting ? showLoading() : ''}
+                <Form onSubmit={createClass}>
+                    <Block style={{
+                        position: "sticky",
+                        top: "0",
+                        margin: "0"
+                    }}>
+                        <Title style={{
+                            backgroundColor: "#27AE60",
+                            width: "100%",
+                            height: "100px",
+                            textAlign: "center",
+                            fontSize: "40px",
+                            padding: "20px 0",
+                            margin: "0 0 30px 0"
+                        }}>開始建立課程</Title>
+                    </Block>
+                    <Block>
+                        <Title>課程名稱</Title>
+                        <SingleLineQuestion id="class-name" name="className" placeholder="課程名稱" ref={className} required/>
+                    </Block>
+                    <Block>
+                        <Title>課程簡介</Title>
+                        <MultiLineQuestion id="class-desc" name="classDesc" placeholder="課程簡介" ref={classDesc} required/>
+                    </Block>
+                    <Block>
+                        <Title>課程開始日期</Title>
+                        <SingleLineQuestion id="start-date" type="date" ref={classStartDate} required/>
+                    </Block>
+                    <Block>
+                        <Title>課程結束日期</Title>
+                        <SingleLineQuestion id="end-date" type="date" ref={classEndDate} required/>
+                    </Block>
+                    <Block>
+                        <Title>課程封面</Title>
+                        <CustomFIleUpload id="upload-image" type="file" accept="image/*" onChange={handleImageUpload} required/>
+                        <span id="image-url" hidden ref={classImage}></span>
+                        <div>{showUpload("image", isUploadingImage, uploadImagePercent)}</div>
+                    </Block>
+                    <Block>
+                        <Title>課程影片</Title>
+                        <CustomFIleUpload type="file" accept="video/*" onChange={handleVideoUpload}/>    
+                        <span id="video-url" hidden ref={classVideo}></span>     
+                        <div>{showUpload("video", isUploadingVideo, uploadVideoPercent)}</div>
+                    </Block>
+                    <Block>
+                        <Title>課程標籤</Title>
+                        <Tags />
+                    </Block>
+                    <Block>
+                        <Title>課程安排</Title>
+                        {
+                            milestones.map((ele, idx) => {
+                                return (
+                                    <Milestone
+                                        key={idx}
+                                        idx={idx}
+                                    />
+                                )
+                            })
+                        }
+                        <MilestoneBtnContainer>
+                            <AddMilestoneBtn onClick={addMilestone}>+</AddMilestoneBtn>
+                            {showRemoveBtn()}
+                        </MilestoneBtnContainer>
+                        
+                    </Block>
+                    <Block>
+                        <SubmitBtn>建立課程</SubmitBtn>
+                    </Block>
+                </Form>
+            </Wrapper>
+        </MilestoneContext.Provider>
     )
 }
 
