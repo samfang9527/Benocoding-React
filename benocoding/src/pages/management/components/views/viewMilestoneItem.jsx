@@ -2,7 +2,9 @@
 import styled from "styled-components";
 import Popup from 'reactjs-popup';
 import Dropzone from 'react-dropzone'
-import { useState } from "react";
+import { useRef } from "react";
+import { BACKEND_DOMAIN } from "../../../../global/constant.js";
+import axios from "axios";
 
 const MilestoneBlock = styled.div`
     height: 100px;
@@ -31,19 +33,34 @@ const MilestoneStatus = styled.p`
     margin: 0 20px;
 `;
 
-const DropzoneBlock = styled.div`
+const InputBlock = styled.div`
     width: 400px;
     height: 100px;
-    text-align: center;
-    font-size: 26px;
-    letter-spacing: 2px;
     background-color: rgba(0, 0, 0, 0.4);
+`;
+
+const CustomFIleUpload = styled.input`
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    padding: 5%;
+    font-size: 22px;
     cursor: pointer;
-    padding: 5px;
-    overflow: scroll;
+
+    ::file-selector-button {
+        cursor: pointer;
+        background-color: darkorange;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        padding: 5px 5px;
+        margin: 5px 20px 0 10px;
+        width: 150px;
+        letter-spacing: 2px;
+    }
 
     :hover {
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(20, 20, 20, 0.3);
     }
 `;
 
@@ -55,11 +72,27 @@ const MilestoneDesc = styled.div`
     border-bottom: none;
 `;
 
+const UploadBtn = styled.button`
+    width: 40%;
+    height: 50px;
+    position: relative;
+    left: 50%;
+    margin: 20px 0 10px -20%;
+    background-color: orange;
+    color: white;
+    border: none;
+    font-size: 22px;
+    letter-spacing: 2px;
+    cursor: pointer;
+
+    :hover {
+        background-color: darkorange;
+    }
+`;
+
 const ViewMilestoneItem = ({milestone, idx}) => {
 
-    const handleOpen = () => {
-        
-    };
+    const homeworkInput = useRef(null);
 
     const contentStyle = {
         backgroundColor: 'white',
@@ -73,10 +106,31 @@ const ViewMilestoneItem = ({milestone, idx}) => {
         backgroundColor: 'rgba(0, 0, 0, 0.4)'
     }
 
+    async function handleSubmit(e) {
+        e.preventDefault();
+        try {
+            const homework = homeworkInput.current.files[0];
+            
+            const result = await axios.post(
+                `${BACKEND_DOMAIN}/autoTest`,
+                { homework: homework },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                }
+            )
+            console.log(result);
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     return (
         <Popup
             trigger={
-                <MilestoneBlock onClick={handleOpen}>
+                <MilestoneBlock>
                     <MilestoneNumber>Milestone: {idx} |</MilestoneNumber>
                     <MilestoneName>Title: {milestone.milestone} |</MilestoneName>
                     <MilestoneStatus>Passed: {`${milestone.passed}`}</MilestoneStatus>
@@ -87,21 +141,13 @@ const ViewMilestoneItem = ({milestone, idx}) => {
             overlayStyle={overlayStyle}
         >
             {
-                <>
+                <form method="post" onSubmit={handleSubmit} encType="multipart/form-data">
                     <MilestoneDesc>Description：<br></br>{milestone.milestoneDesc}</MilestoneDesc>
-                    <Dropzone
-                        onDrop={acceptedFiles => console.log(acceptedFiles)}
-                    >
-                        {({getRootProps, getInputProps, isDragActive, isDragReject}) => (
-                            <DropzoneBlock>
-                                <div {...getRootProps()}>
-                                    <input type={"file"} {...getInputProps()} />
-                                    <p>拖放或點擊上傳檔案</p>
-                                </div>
-                            </DropzoneBlock>
-                        )}
-                    </Dropzone>
-                </>
+                    <InputBlock>
+                        <CustomFIleUpload type={"file"} name={'homework'} ref={homeworkInput}/>
+                    </InputBlock>
+                    <UploadBtn type="submit">Upload</UploadBtn>
+                </form>
             }
         </Popup>
     )
