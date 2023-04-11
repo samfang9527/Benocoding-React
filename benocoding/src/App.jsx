@@ -1,4 +1,5 @@
 
+import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
 import { createGlobalStyle } from "styled-components";
 import Header from "./components/header";
@@ -11,25 +12,37 @@ const GlobalStyle = createGlobalStyle`
   }
   
   body {
+    background-color: Honeydew;
     margin: 0;
-    background-color: #434343ff;
-    color: white;
+    color: black;
     font-family: 'Livvic';
     font-size: 16px;
   }
 `;
 
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const MainContent = styled.div`
+  flex-grow: 1;
+`;
+
 function App() {
-    return (
-      <>
-        <GlobalStyle />
-        <AuthContextProvider>
-          <Header />
+  return (
+    <PageContainer>
+      <GlobalStyle />
+      <AuthContextProvider>
+        <Header />
+        <MainContent>
           <Outlet />
-          <Footer />
-        </AuthContextProvider>
-      </>
-    );
-  }
+        </MainContent>
+        <Footer />
+      </AuthContextProvider>
+    </PageContainer>
+  );
+}
   
   export default App;

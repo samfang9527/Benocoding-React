@@ -1,0 +1,111 @@
+
+import styled from "styled-components";
+import { getClassList } from "../../utils/apis/class.js";
+import { useContext, useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
+import { AuthContext } from "../../global/authContext.jsx";
+import ClassItem from "./components/classItem.jsx";
+import { MoonLoader } from "react-spinners";
+import { Fragment } from "react";
+
+
+const Section = styled.section`
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin: 30px 0 30px -40%;
+    align-items: center;
+    position: relative;
+    left: 50%;
+`;
+
+const SectionTitle = styled.h1`
+    padding: 20px 0;
+    font-size: 40px;
+    letter-spacing: 2px;
+`;
+
+const ClassList = styled.ul`
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+`;
+
+const SeperateLine = styled.hr`
+    width: 80%;
+    border: 3px solid Chocolate;
+    border-radius: 5px;
+`;
+
+const CustomLoader = styled(MoonLoader)`
+    margin: 50px 0 0 0;
+`;
+
+
+function getPaging(location) {
+    const queryString = location.search;
+    const params = new URLSearchParams(queryString);
+    return params.get('paging');
+}
+
+const Learner = () => {
+
+    const location = useLocation();
+    const authContext = useContext(AuthContext);
+
+    // state
+    const [ classList, setClassList ] = useState([]);
+    const [ isLoading, setIsLoading ] = useState(true);
+
+    useEffect(() => {
+        // check if authContext is still loading
+        if ( !authContext.isLoading ) {
+            const { user } = authContext;
+
+            // get user classList
+            ( async () => {
+                setIsLoading(true)
+                try {
+                    let pageNum = getPaging(location);
+                    if ( !pageNum || pageNum === '' ) {
+                        pageNum = 0;
+                    }
+                    const response = await getClassList(user.userId, Number(pageNum), 'Learner');
+                    setClassList(response.getLearnerClassList);
+                    setIsLoading(false)
+                } catch (err) {
+                    console.error(err);
+                }
+            })();
+        }
+    }, [authContext, location]);
+
+
+
+    return (
+        <Section>
+            <SectionTitle>Hi! {authContext.user.username}</SectionTitle>
+            <SectionTitle style={{padding: "0", marginTop: "-10px"}}>Welcome to your learner lobby</SectionTitle>
+            <SeperateLine></SeperateLine>
+            {
+                isLoading ? <CustomLoader color="Crimson" size={100}></CustomLoader> :
+                <Fragment>
+                    <ClassList>
+                        {
+                            classList.map((class_, idx) => {
+                                return (
+                                    <ClassItem key={class_.id} classData={class_}></ClassItem>
+                                )
+                            })
+                        }
+                    </ClassList>
+                    { classList.length === 0 ? <SectionTitle style={{color: "FireBrick"}}>You have no classes</SectionTitle> : '' }
+                </Fragment>
+            }
+        </Section>
+    )
+}
+
+export default Learner;

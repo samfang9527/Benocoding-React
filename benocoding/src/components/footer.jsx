@@ -1,8 +1,8 @@
 
 import styled from "styled-components";
 
-const FooterContainer = styled.div`
-    position: fixed;
+const FooterContainer = styled.footer`
+    position: block;
     bottom: 0;
     height: 10%;
     width: 100%;
@@ -10,12 +10,15 @@ const FooterContainer = styled.div`
     font-family: 'pacifico';
     text-align: center;
     letter-spacing: 5px;
+    padding: 2% 0;
+    background-color: DarkSlateGray;
+    color: white;
 `;
 
 const Footer = () => {
-    return <footer>
+    return (
         <FooterContainer>-------Being not just coding-------</FooterContainer>
-    </footer>
+    )
 }
 
 export default Footer;

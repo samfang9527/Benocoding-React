@@ -1,8 +1,13 @@
 
 import styled from "styled-components";
 
-const HeaderWrapper = styled.div`
+const HeaderWrapper = styled.header`
     height: 10%;
+    border-bottom: 1px solid white;
+    background-color: DarkSlateGray;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 `;
 
 const LogoStyle = styled.h1`
@@ -10,6 +15,7 @@ const LogoStyle = styled.h1`
     font-family: 'pacifico';
     margin-left: 50px;
     display: inline-block;
+    color: white;
 `;
 
 const Btn = styled.button`
