@@ -101,7 +101,37 @@ async function getClassList(userId, pageNum, role) {
     }
 }
 
+async function getPageQuantity(userId, role) {
+
+    const graphqlQuery = {
+        query: `
+            query($userId: String!) {
+                get${role}ClassNums(userId: $userId)
+            }
+        `,
+        variables: {
+            userId: userId
+        }
+    }
+
+    try {
+        const { data } = await axios({
+            method: 'POST',
+            url: BACKEND_API_URL,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: graphqlQuery
+        })
+
+        return data.data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 export {
     fetchOptionData,
-    getClassList
+    getClassList,
+    getPageQuantity
 };

@@ -1,12 +1,13 @@
 
 import styled from "styled-components";
-import { getClassList } from "../../utils/apis/class.js";
+import { getClassList, getPageQuantity } from "../../utils/apis/class.js";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from "../../global/authContext.jsx";
 import ClassItem from "./components/classItem.jsx";
 import { MoonLoader } from "react-spinners";
 import { Fragment } from "react";
+import Pagination from "@mui/material/Pagination";
 
 
 const Section = styled.section`
@@ -50,6 +51,13 @@ function getPaging(location) {
     return params.get('paging');
 }
 
+function setQueryString(location, value) {
+    const queryString = location.search;
+    const params = new URLSearchParams(queryString);
+    params.set('paging', value);
+    window.location.search = params;
+}
+
 const Learner = () => {
 
     const location = useLocation();
@@ -58,6 +66,11 @@ const Learner = () => {
     // state
     const [ classList, setClassList ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(true);
+    const [ pageQuantity, setPageQuantity ] = useState(1);
+
+    function handlePageChange(e, value) {
+        setQueryString(location, value-1);
+    }
 
     useEffect(() => {
         // check if authContext is still loading
@@ -65,24 +78,33 @@ const Learner = () => {
             const { user } = authContext;
 
             // get user classList
-            ( async () => {
-                setIsLoading(true)
-                try {
-                    let pageNum = getPaging(location);
-                    if ( !pageNum || pageNum === '' ) {
-                        pageNum = 0;
-                    }
-                    const response = await getClassList(user.userId, Number(pageNum), 'Learner');
+            setIsLoading(true)
+            let pageNum = getPaging(location);
+            if ( !pageNum || pageNum === '' ) {
+                pageNum = 0;
+            }
+            getClassList(user.userId, Number(pageNum), 'Learner')
+                .then(response => {
                     setClassList(response.getLearnerClassList);
-                    setIsLoading(false)
-                } catch (err) {
-                    console.error(err);
-                }
-            })();
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+                .finally(() => setIsLoading(false))
         }
     }, [authContext, location]);
 
+    useEffect(() => {
+        if ( !authContext.isLoading ) {
+            const { user } = authContext;
 
+            getPageQuantity(user.userId, 'Learner')
+                .then(response => {
+                    setPageQuantity(response.getLearnerClassNums);
+                })
+                .catch(err => console.error(err))
+        }
+    }, [authContext])
 
     return (
         <Section>
@@ -102,6 +124,7 @@ const Learner = () => {
                         }
                     </ClassList>
                     { classList.length === 0 ? <SectionTitle style={{color: "FireBrick"}}>You have no classes</SectionTitle> : '' }
+                    <Pagination count={pageQuantity} size="large" style={{marginBottom: "20px"}} onChange={handlePageChange}></Pagination>
                 </Fragment>
             }
         </Section>
