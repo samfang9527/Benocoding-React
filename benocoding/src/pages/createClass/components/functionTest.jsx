@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useContext } from "react";
 import { Fragment } from "react";
 import { MilestoneContext } from "..";
-import { useEffect } from "react";
 
 const Wrapper = styled.div`
     width: 100%;
