@@ -130,6 +130,40 @@ async function getPageQuantity(userId, role) {
     }
 }
 
+async function getClassData(classId) {
+
+    const graphqlQuery = {
+        query : `
+            query ($classId: String!) {
+                class(classId: $classId) {
+                    teacherOptions,
+                    studentOptions,
+                    className,
+                    classDesc,
+                    classStartDate,
+                    classEndDate,
+                    id,
+                    milestones {
+                        milestone,
+                        milestoneDesc,
+                        autoTest,
+                        passed
+                    },
+                    chatroomId,
+                    classImage,
+                    classVideo,
+                    classMembers {
+                        userId,
+                        username,
+                        email
+                    }
+                }
+            }
+        `
+    }
+
+}
+
 export {
     fetchOptionData,
     getClassList,

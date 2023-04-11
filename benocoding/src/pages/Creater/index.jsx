@@ -4,7 +4,10 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from "../../global/authContext.jsx";
 import CreaterClassItem from "./components/createrClassItem.jsx";
-import { getClassList } from "../../utils/apis/class.js";
+import { getClassList, getPageQuantity } from "../../utils/apis/class.js";
+import { MoonLoader } from "react-spinners";
+import { Fragment } from "react";
+import Pagination from "@mui/material/Pagination";
 
 const Section = styled.section`
     width: 80%;
@@ -36,10 +39,21 @@ const SeperateLine = styled.hr`
     border-radius: 5px;
 `;
 
+const CustomLoader = styled(MoonLoader)`
+    margin: 50px 0 0 0;
+`;
+
 function getPaging(location) {
     const queryString = location.search;
     const params = new URLSearchParams(queryString);
     return params.get('paging');
+}
+
+function setQueryString(location, value) {
+    const queryString = location.search;
+    const params = new URLSearchParams(queryString);
+    params.set('paging', value);
+    window.location.search = params;
 }
 
 const Creater = () => {
@@ -49,6 +63,12 @@ const Creater = () => {
 
     // state
     const [ classList, setClassList ] = useState([]);
+    const [ isLoading, setIsLoading ] = useState(true);
+    const [ pageQuantity, setPageQuantity ] = useState(1);
+
+    function handlePageChange(e, value) {
+        setQueryString(location, value-1);
+    }
 
     useEffect(() => {
         // check if authContext is still loading
@@ -56,34 +76,55 @@ const Creater = () => {
             const { user } = authContext;
 
             // get user classList
-            ( async () => {
-                let pageNum = getPaging(location);
-                if ( !pageNum || pageNum === '' ) {
-                    pageNum = 0;
-                }
-                const response = await getClassList(user.userId, Number(pageNum), 'Creater');
-                setClassList(response.getCreaterClassList);
-            })();
+            setIsLoading(true)
+            let pageNum = getPaging(location);
+            if ( !pageNum || pageNum === '' ) {
+                pageNum = 0;
+            }
+            getClassList(user.userId, Number(pageNum), 'Creater')
+                .then(response => {
+                    setClassList(response.getCreaterClassList);
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+                .finally(() => setIsLoading(false))
         }
     }, [authContext, location]);
 
+    useEffect(() => {
+        if ( !authContext.isLoading ) {
+            const { user } = authContext;
 
+            getPageQuantity(user.userId, 'Creater')
+                .then(response => {
+                    setPageQuantity(response.getCreaterClassNums);
+                })
+                .catch(err => console.error(err))
+        }
+    }, [authContext])
 
     return (
         <Section>
             <SectionTitle>Hi! {authContext.user.username}</SectionTitle>
             <SectionTitle style={{padding: "0", marginTop: "-10px"}}>Welcome to your creater lobby</SectionTitle>
             <SeperateLine></SeperateLine>
-            <ClassList>
-                {
-                    classList.map((class_, idx) => {
-                        return (
-                            <CreaterClassItem key={class_.id} classData={class_}></CreaterClassItem>
-                        )
-                    })
-                }
-            </ClassList>
-            { classList.length === 0 ? <SectionTitle style={{color: "FireBrick"}}>You have no classes</SectionTitle> : '' }
+            {
+                isLoading ? <CustomLoader color="Crimson" size={100}></CustomLoader> :
+                <Fragment>
+                    <ClassList>
+                        {
+                            classList.map((class_, idx) => {
+                                return (
+                                    <CreaterClassItem key={class_.id} classData={class_}></CreaterClassItem>
+                                )
+                            })
+                        }
+                    </ClassList>
+                    { classList.length === 0 ? <SectionTitle style={{color: "FireBrick"}}>You have no classes</SectionTitle> : '' }
+                    <Pagination count={pageQuantity} size="large" style={{marginBottom: "20px"}} onChange={handlePageChange}></Pagination>
+                </Fragment>
+            }
         </Section>
     )
 
