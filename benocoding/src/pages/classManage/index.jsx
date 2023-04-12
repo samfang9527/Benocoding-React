@@ -9,6 +9,7 @@ import StudentNavOption from "./components/studentNavOption.jsx";
 import Chatroom from "./components/chatroom.jsx";
 import Members from "./components/members.jsx";
 import ClassInfo from "./components/classInfo.jsx";
+import Milestone from "./components/milestone.jsx";
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 
@@ -69,7 +70,11 @@ const ClassManage = () => {
         }
 
         if ( chosenOption === "chatroom" ) {
-            return <Chatroom classData={classData} />
+            return <Chatroom classData={classData} />;
+        }
+
+        if ( chosenOption === "milestones" ) {
+            return <Milestone milestoneData={milestones} />;
         }
     }
 
