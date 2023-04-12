@@ -53,6 +53,7 @@ const OptionButton = styled.button`
     color: white;
     margin: 0 15px;
     cursor: pointer;
+    border: none;
 
     :hover {
         background-color: ForestGreen;

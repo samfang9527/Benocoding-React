@@ -107,7 +107,6 @@ const FunctionTest = ({milestoneIdx}) => {
 
         testCases[targetIdx].case = value;
         setMilestones(milestones.slice());
-        console.log('case', testCases);
     }
 
     function handleInputsChange(e) {
@@ -120,7 +119,6 @@ const FunctionTest = ({milestoneIdx}) => {
 
         testCases[targetIdx].inputs = value;
         setMilestones(milestones.slice());
-        console.log('inputs', testCases);
     }
 
     function handleResultChange(e) {
@@ -133,7 +131,6 @@ const FunctionTest = ({milestoneIdx}) => {
 
         testCases[targetIdx].result = value;
         setMilestones(milestones.slice());
-        console.log('result', testCases);
     }
 
     return (
