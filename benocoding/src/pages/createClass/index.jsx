@@ -185,7 +185,9 @@ const LoadingPage = styled.div`
 
 export const MilestoneContext = createContext({
     milestones: [],
-    setMilestones: ()=>{}
+    setMilestones: ()=>{},
+    functionName: '',
+    setFunctionName: ()=>{}
 })
 
 const CreateClass = () => {
@@ -218,6 +220,7 @@ const CreateClass = () => {
             passed: false
         }
     ]);
+    const [functionName, setFunctionName] = useState('');
 
     async function handleImageUpload(e) {
         e.preventDefault();
@@ -365,7 +368,15 @@ const CreateClass = () => {
 
     function addMilestone(e) {
         e.preventDefault();
-        setMilestones([...milestones, milestones.length]);
+        const newMilestone = {
+            milestone: '',
+            milestoneDesc: '',
+            autoTest: false,
+            testFunctionName: '',
+            testCases: [],
+            passed: false
+        }
+        setMilestones([...milestones, newMilestone]);
     }
 
     function removeMilestone(e) {
@@ -419,6 +430,7 @@ const CreateClass = () => {
 
         try {
             setIsSubmitting(true);
+            console.log(data);
             // const { data } = await axios({
             //     method: "POST",
             //     url: "http://localhost:8080/graphql",
@@ -508,7 +520,8 @@ const CreateClass = () => {
     return (
         <MilestoneContext.Provider value={{
             milestones,
-            setMilestones
+            setMilestones,
+            setFunctionName
         }}>
             <Wrapper>
                 {isSubmitting ? showLoading() : ''}
@@ -546,7 +559,7 @@ const CreateClass = () => {
                     </Block>
                     <Block>
                         <Title>課程封面</Title>
-                        <CustomFIleUpload id="upload-image" type="file" accept="image/*" onChange={handleImageUpload} required/>
+                        <CustomFIleUpload id="upload-image" type="file" accept="image/*" onChange={handleImageUpload}/>
                         <span id="image-url" hidden ref={classImage}></span>
                         <div>{showUpload("image", isUploadingImage, uploadImagePercent)}</div>
                     </Block>

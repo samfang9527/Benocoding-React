@@ -73,7 +73,12 @@ const ColumnName = styled.p`
 const FunctionTest = ({milestoneIdx}) => {
 
     const milestoneContext = useContext(MilestoneContext);
-    const { milestones, setMilestones } = milestoneContext;
+    const {
+        milestones,
+        setMilestones,
+        setFunctionName
+    } = milestoneContext;
+
     const testCases = milestones[milestoneIdx].testCases;
 
     const [ rows, setRows ] = useState([]);
@@ -133,10 +138,15 @@ const FunctionTest = ({milestoneIdx}) => {
         setMilestones(milestones.slice());
     }
 
+    function handleFuncitonName(e) {
+        e.preventDefault();
+        setFunctionName(e.target.value);
+    }
+
     return (
         <Wrapper>
             <Title>Function Name</Title>
-            <FunctionName></FunctionName>
+            <FunctionName onChange={handleFuncitonName}></FunctionName>
             {
                 rows.map((row, idx) => {
                     return (

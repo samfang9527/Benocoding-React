@@ -69,7 +69,7 @@ const Milestone = ({idx}) => {
     const [useAutoTest, setUseAutoTest] = useState(false);
     const [useFunctionTest, setUseFunctionTest] = useState(false);
 
-    const { setMilestones } = useContext(MilestoneContext);
+    const { milestones, setMilestones } = useContext(MilestoneContext);
 
     function functionTest(e) {
         e.preventDefault();
