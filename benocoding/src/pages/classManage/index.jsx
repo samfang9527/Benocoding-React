@@ -6,12 +6,14 @@ import { getClassData } from "../../utils/apis/class.js";
 import { AuthContext } from "../../global/authContext.jsx";
 import TeacherNavOption from "./components/teacherNavOption.jsx";
 import StudentNavOption from "./components/studentNavOption.jsx";
+import Members from "./components/members.jsx";
 import ClassInfo from "./components/classInfo.jsx";
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 
 const MainContainer = styled.main`
     display: flex;
+    min-height: 80vh;
 `;
 
 const SideNavWrapper = styled.div`
@@ -22,7 +24,7 @@ const SideNavWrapper = styled.div`
 `;
 
 const SideNavBlock = styled.nav`
-    width: ${props => props.isExpanded ? '200px' : '50px'};
+    width: ${props => props.isExpanded ? '200px' : '80px'};
     color: rgba(0, 0, 0, 0.9);
     z-index: 1;
     border-radius: 0 8px 8px 0;
@@ -60,6 +62,10 @@ const ClassManage = () => {
     function handleView() {
         if ( chosenOption === "class-info" ) {
             return <ClassInfo data={classData} />;
+        }
+
+        if ( chosenOption === "class-member" ) {
+            return <Members data={members} classData={classData} />;
         }
     }
 

@@ -142,6 +142,7 @@ async function getClassData(classId) {
                     classDesc,
                     classStartDate,
                     classEndDate,
+                    id,
                     ownerId,
                     milestones {
                         milestone,

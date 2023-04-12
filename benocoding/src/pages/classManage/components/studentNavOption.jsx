@@ -12,14 +12,16 @@ const IconWrapper = styled.div`
     align-items: center;
 `;
 
-const EachIcon = styled.div`
+const EachIcon = styled.button`
     display: flex;
     align-items: center;
     justify-content: flex-start;
     cursor: pointer;
-    font-weight: bolder;
+    font-weight: medium;
     padding: 22px;
     width: 100%;
+    background-color: bisque;
+    border: none;
 
     :hover {
         background-color: NavajoWhite;
