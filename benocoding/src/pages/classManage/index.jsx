@@ -49,7 +49,6 @@ const ClassManage = () => {
     const { user } = authContext;
 
     const [ classData, setClassData ] = useState({});
-    const [ sideNavOptions, setSideNavOptions ] = useState([]);
     const [ members, setMembers ] = useState([]);
     const [ milestones, setMilestones ] = useState([]);
     const [ isCreater, setIsCreater ] = useState(true);
@@ -86,13 +85,7 @@ const ClassManage = () => {
                     setClassData(classData);
 
                     // options
-                    if ( classData.ownerId === user.userId ) {
-                        setSideNavOptions(classData.teacherOptions)
-                        setIsCreater(true);
-                    } else {
-                        setSideNavOptions(classData.studentOptions);
-                        setIsCreater(false);
-                    }
+                    classData.ownerId === user.userId ? setIsCreater(true) : setIsCreater(false);
                     
                     // members
                     setMembers(classData.classMembers);
