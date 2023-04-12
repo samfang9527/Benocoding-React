@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { getClassData } from "../../utils/apis/class.js";
 import { AuthContext } from "../../global/authContext.jsx";
 import TeacherNavOption from "./components/teacherNavOption.jsx";
+import StudentNavOption from "./components/studentNavOption.jsx";
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 
@@ -46,7 +47,8 @@ const ClassManage = () => {
     const [ sideNavOptions, setSideNavOptions ] = useState([]);
     const [ members, setMembers ] = useState([]);
     const [ milestones, setMilestones ] = useState([]);
-    const [isNavExpanded, setIsNavExpanded] = useState(false);
+    const [ isCreater, setIsCreater ] = useState(true);
+    const [ isNavExpanded, setIsNavExpanded ] = useState(false);
     
     function handleExpand() {
         isNavExpanded ? setIsNavExpanded(false) : setIsNavExpanded(true);
@@ -64,9 +66,13 @@ const ClassManage = () => {
                     setClassData(classData);
 
                     // options
-                    classData.ownerId === user.userId ? 
-                        setSideNavOptions(classData.teacherOptions) :
+                    if ( classData.ownerId === user.userId ) {
+                        setSideNavOptions(classData.teacherOptions)
+                        setIsCreater(true);
+                    } else {
                         setSideNavOptions(classData.studentOptions);
+                        setIsCreater(false);
+                    }
                     
                     // members
                     setMembers(classData.classMembers);
@@ -87,7 +93,10 @@ const ClassManage = () => {
                 <SideNavBlock
                     isExpanded={isNavExpanded}
                 >
-                    <TeacherNavOption isExpanded={isNavExpanded}/>
+                    {
+                        isCreater ?
+                            <TeacherNavOption isExpanded={isNavExpanded}/> : <StudentNavOption isExpanded={isNavExpanded}></StudentNavOption>
+                    }
                 </SideNavBlock>
             </SideNavWrapper>
             <ViewWrapper></ViewWrapper>
