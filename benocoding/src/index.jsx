@@ -23,7 +23,7 @@ root.render(
           <Route path='login' element={<Login />} />
           <Route path='learner' element={<Learner />} />
           <Route path='creater' element={<Creater />} />
-          <Route path='userclass' element={<ClassManage />} />
+          <Route path='userclass/:classId' element={<ClassManage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -41,7 +41,7 @@ const CreaterClassItem = ({classData}) => {
     const startDate = classData.classStartDate.slice(0, classData.classStartDate.lastIndexOf('T'));
 
     function toClassManagePage() {
-        window.location.assign('/userclass');
+        window.location.assign(`/userclass/${classData.id}`);
     }
 
     return (

@@ -142,7 +142,7 @@ async function getClassData(classId) {
                     classDesc,
                     classStartDate,
                     classEndDate,
-                    id,
+                    ownerId,
                     milestones {
                         milestone,
                         milestoneDesc,
@@ -159,13 +159,30 @@ async function getClassData(classId) {
                     }
                 }
             }
-        `
+        `,
+        variables: {
+            classId: classId
+        }
     }
 
+    try {
+        const { data } = await axios({
+            method: 'POST',
+            url: BACKEND_API_URL,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: graphqlQuery
+        })
+        return data.data;
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 export {
     fetchOptionData,
     getClassList,
-    getPageQuantity
+    getPageQuantity,
+    getClassData
 };

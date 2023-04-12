@@ -1,32 +1,97 @@
 
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState, useContext } from "react";
+import { useLocation } from 'react-router-dom';
+import { getClassData } from "../../utils/apis/class.js";
+import { AuthContext } from "../../global/authContext.jsx";
+import TeacherNavOption from "./components/teacherNavOption.jsx";
+import MenuIcon from '@mui/icons-material/Menu';
+import IconButton from '@mui/material/IconButton';
+
+const MainContainer = styled.main`
+    display: flex;
+`;
+
+const SideNavWrapper = styled.div`
+    background-color: Bisque;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+`;
 
 const SideNavBlock = styled.nav`
-    width: 100px;
-    position: relative;
-    top: 50px;
-    border: 1px solid black;
+    width: ${props => props.isExpanded ? '200px' : '50px'};
+    color: rgba(0, 0, 0, 0.9);
+    z-index: 1;
+    border-radius: 0 8px 8px 0;
+    transition: width 0.2s ease-in-out;
 `
+
+const CustomIconBtn = styled(IconButton)`
+    height: 80px;
+    width: 80px;
+`;
 
 const ViewWrapper = styled.div`
     height: 100vh;
-    position: relative;
-    left: 130px;
-    border: 1px solid black;
 `
 
 const ClassManage = () => {
 
-    useEffect(() => {
+    const location = useLocation();
+    const authContext = useContext(AuthContext);
+    const { user } = authContext;
 
-    }, [])
+    const [ classData, setClassData ] = useState({});
+    const [ sideNavOptions, setSideNavOptions ] = useState([]);
+    const [ members, setMembers ] = useState([]);
+    const [ milestones, setMilestones ] = useState([]);
+    const [isNavExpanded, setIsNavExpanded] = useState(false);
+    
+    function handleExpand() {
+        isNavExpanded ? setIsNavExpanded(false) : setIsNavExpanded(true);
+    }
+
+    useEffect(() => {
+        if ( !authContext.isLoading ) {
+            const path = location.pathname;
+            const classId = path.slice(path.lastIndexOf('/') + 1);
+
+            getClassData(classId)
+                .then(response => {
+                    const classData = response.class;
+                    console.log(classData);
+                    setClassData(classData);
+
+                    // options
+                    classData.ownerId === user.userId ? 
+                        setSideNavOptions(classData.teacherOptions) :
+                        setSideNavOptions(classData.studentOptions);
+                    
+                    // members
+                    setMembers(classData.classMembers);
+
+                    // milestones
+                    setMilestones(classData.milestones);
+                })
+                .catch(err => console.error(err))
+        }
+    }, [authContext.isLoading, location, user.userId])
 
     return (
-        <main>
-            <SideNavBlock></SideNavBlock>
+        <MainContainer>
+            <SideNavWrapper>
+                <CustomIconBtn onClick={handleExpand} sx={{color: "darkgreen"}}>
+                    <MenuIcon fontSize="large" />
+                </CustomIconBtn>
+                <SideNavBlock
+                    isExpanded={isNavExpanded}
+                >
+                    <TeacherNavOption isExpanded={isNavExpanded}/>
+                </SideNavBlock>
+            </SideNavWrapper>
             <ViewWrapper></ViewWrapper>
-        </main>  
+        </MainContainer>  
     )
 }
 
