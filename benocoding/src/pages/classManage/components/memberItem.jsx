@@ -98,16 +98,18 @@ const MemberItem = ({userInfo, classData}) => {
     } = classData
 
     useEffect(() => {
-        fetchUserMilestones(classId, userId)
-            .then(response => {
-                const { milestones } = response.data;
-                setMilestones(milestones);
+        if ( classId && userId ) {
+            fetchUserMilestones(classId, userId)
+                .then(response => {
+                    const { milestones } = response.data;
+                    setMilestones(milestones);
 
-                // cur milestone
-                const curMilestone = calculateProgress(milestones);
-                setCurMilestone(curMilestone);
-            })
-            .catch(err => console.error(err))
+                    // cur milestone
+                    const curMilestone = calculateProgress(milestones);
+                    setCurMilestone(curMilestone);
+                })
+                .catch(err => console.error(err))
+        }
     }, [classId, userId])
 
     return (

@@ -45,8 +45,6 @@ async function fetchChatroomMsgs(chatroomId) {
             }
         }
     })
-
-    console.log(data);
     return data;
 }
 

@@ -41,36 +41,30 @@ const Title = styled.p`
 
 const TeacherNavOption = ({isExpanded, setChosenOption}) => {
 
-    function chooseOption(e) {
-        e.preventDefault();
-        const option = e.target.id;
-        setChosenOption(option);
-    }
-
     return (
         <IconWrapper>
-            <EachIcon id="class-info" onClick={chooseOption}>
+            <EachIcon onClick={() => setChosenOption('class-info')}>
                 <DescriptionOutlinedIcon sx={{
                     width: 30,
                     height: 30
                 }}></DescriptionOutlinedIcon>
                 <Title isExpanded={isExpanded}>Class info</Title>
             </EachIcon>
-            <EachIcon id="class-member" onClick={chooseOption}>
+            <EachIcon onClick={() => setChosenOption('class-member')}>
                 <GroupsOutlinedIcon sx={{
                     width: 30,
                     height: 30
                 }}></GroupsOutlinedIcon>
                 <Title isExpanded={isExpanded}>Class member</Title>
             </EachIcon>
-            <EachIcon id="chatroom" onClick={chooseOption}>
+            <EachIcon onClick={() => setChosenOption('chatroom')}>
                 <ChatOutlinedIcon sx={{
                     width: 30,
                     height: 30
                 }}></ChatOutlinedIcon>
                 <Title isExpanded={isExpanded}>Chatroom</Title>
             </EachIcon>
-            <EachIcon id="pull-request" onClick={chooseOption}>
+            <EachIcon onClick={() => setChosenOption('pull-request')}>
                 <BsGithub size={30} style={{minWidth: 30}}></BsGithub>
                 <Title isExpanded={isExpanded}>Pull request</Title>
             </EachIcon>
