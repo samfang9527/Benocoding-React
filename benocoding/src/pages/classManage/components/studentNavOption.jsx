@@ -40,36 +40,36 @@ const Title = styled.p`
 
 `;
 
-const StudentNavOption = ({isExpanded}) => {
+const StudentNavOption = ({isExpanded, setChosenOption}) => {
 
     return (
         <IconWrapper>
-            <EachIcon>
+            <EachIcon onClick={() => setChosenOption('class-info')}>
                 <DescriptionOutlinedIcon sx={{
                     width: 30,
                     height: 30
                 }}></DescriptionOutlinedIcon>
                 <Title isExpanded={isExpanded}>Class info</Title>
             </EachIcon>
-            <EachIcon>
+            <EachIcon onClick={() => setChosenOption('class-member')}>
                 <GroupsOutlinedIcon sx={{
                     width: 30,
                     height: 30
                 }}></GroupsOutlinedIcon>
                 <Title isExpanded={isExpanded}>Class member</Title>
             </EachIcon>
-            <EachIcon>
+            <EachIcon onClick={() => setChosenOption('chatroom')}>
                 <ChatOutlinedIcon sx={{
                     width: 30,
                     height: 30
                 }}></ChatOutlinedIcon>
                 <Title isExpanded={isExpanded}>Chatroom</Title>
             </EachIcon>
-            <EachIcon>
+            <EachIcon onClick={() => setChosenOption('pull-request')}>
                 <BsGithub size={30} style={{minWidth: 30}}></BsGithub>
                 <Title isExpanded={isExpanded}>Pull request</Title>
             </EachIcon>
-            <EachIcon>
+            <EachIcon onClick={() => setChosenOption('milestones')}>
                 <AssignmentIcon sx={{
                     width: 30,
                     height: 30

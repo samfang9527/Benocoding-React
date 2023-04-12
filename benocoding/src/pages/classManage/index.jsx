@@ -6,6 +6,7 @@ import { getClassData } from "../../utils/apis/class.js";
 import { AuthContext } from "../../global/authContext.jsx";
 import TeacherNavOption from "./components/teacherNavOption.jsx";
 import StudentNavOption from "./components/studentNavOption.jsx";
+import ClassInfo from "./components/classInfo.jsx";
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 
@@ -34,7 +35,8 @@ const CustomIconBtn = styled(IconButton)`
 `;
 
 const ViewWrapper = styled.div`
-    height: 100vh;
+    height: 'fit-content';
+    width: 95%;
 `
 
 const ClassManage = () => {
@@ -49,9 +51,16 @@ const ClassManage = () => {
     const [ milestones, setMilestones ] = useState([]);
     const [ isCreater, setIsCreater ] = useState(true);
     const [ isNavExpanded, setIsNavExpanded ] = useState(false);
+    const [ chosenOption, setChosenOption ] = useState('class-info');
     
     function handleExpand() {
         isNavExpanded ? setIsNavExpanded(false) : setIsNavExpanded(true);
+    }
+
+    function handleView() {
+        if ( chosenOption === "class-info" ) {
+            return <ClassInfo data={classData} />;
+        }
     }
 
     useEffect(() => {
@@ -95,11 +104,14 @@ const ClassManage = () => {
                 >
                     {
                         isCreater ?
-                            <TeacherNavOption isExpanded={isNavExpanded}/> : <StudentNavOption isExpanded={isNavExpanded}></StudentNavOption>
+                            <TeacherNavOption isExpanded={isNavExpanded} setChosenOption={setChosenOption} /> :
+                            <StudentNavOption isExpanded={isNavExpanded} setChosenOption={setChosenOption} />
                     }
                 </SideNavBlock>
             </SideNavWrapper>
-            <ViewWrapper></ViewWrapper>
+            <ViewWrapper>
+                { handleView() }
+            </ViewWrapper>
         </MainContainer>  
     )
 }
