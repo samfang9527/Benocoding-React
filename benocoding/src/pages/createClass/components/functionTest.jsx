@@ -1,7 +1,6 @@
 
 import styled from "styled-components";
-import { useContext } from "react";
-import { Fragment } from "react";
+import { useState, useContext } from "react";
 import { MilestoneContext } from "..";
 
 const Wrapper = styled.div`
@@ -11,6 +10,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 `;
 
 const Title = styled.p`
@@ -23,58 +23,156 @@ const FunctionName = styled.input`
     font-size: 22px;
     text-align: center;
     padding: 20px 0;
-`
-
-const TestCaseBlock = styled.div`
-    border: 1px solid white;
-    margin: 15px;
-    padding: 10px;
 `;
 
-const Description = styled.p`
-    padding: 5px 20px;
-    margin: 30px 0 10px 0;
+const CaseControlBlock = styled.div`
+
 `;
 
-const TestCaseParam = styled.input`
-    font-size: 20px;
-    padding: 5px;
-    text-align: center;
-`
+const CaseControlBtn = styled.button`
+    width: 150px;
+    height: 30px;
+    border: none;
+    margin: 10px;
+    cursor: pointer;
+    background-color: orange;
+    color: white;
+    font-size: 18px;
 
-const TestCaseContainer = styled.div`
+    :hover {
+        background-color: darkorange;
+    }
+`;
+
+const TableRow = styled.div`
+    width: 900px;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
+    margin: 10px 0;
 `;
+
+const EachInput = styled.input`
+    width: 100px;
+    height: 30px;
+    font-size: 18px;
+    text-align: center;
+    margin: 0 10px;
+`;
+
+const ColumnName = styled.p`
+    font-size: 16px;
+`;
+
+// const rowExample = {
+//     id: Number,
+//     caseName: String,
+//     params: Array,
+//     result: String
+// }
 
 const FunctionTest = ({milestoneIdx}) => {
 
-    const { testCases } = useContext(MilestoneContext);
+    const milestoneContext = useContext(MilestoneContext);
+    const { milestones, setMilestones } = milestoneContext;
+    const testCases = milestones[milestoneIdx].testCases;
+
+    const [ rows, setRows ] = useState([]);
+
+    function handleAddCase(e) {
+        e.preventDefault();
+        const newRow = { id: rows.length, case: "", inputs: "", result: "" };
+        setRows([...rows, newRow]);
+        testCases.push(newRow);
+        setMilestones(milestones.slice());
+    }
+
+    function handleRemoveCase(e) {
+        e.preventDefault();
+        if (rows.length > 0) {
+            const newRows = rows.slice(0, rows.length - 1);
+            setRows(newRows);
+
+            testCases.pop();
+            setMilestones(milestones.slice());
+        }
+    }
+
+    function handleCaseChange(e) {
+        e.preventDefault();
+        const classNames = e.target.className.split(' ');
+        const targetIdx = classNames[classNames.length - 1];
+        const value = e.target.value;
+        rows[targetIdx].case = value;
+        setRows([...rows]);
+
+        testCases[targetIdx].case = value;
+        setMilestones(milestones.slice());
+        console.log('case', testCases);
+    }
+
+    function handleInputsChange(e) {
+        e.preventDefault();
+        const classNames = e.target.className.split(' ');
+        const value = e.target.value;
+        const targetIdx = classNames[classNames.length - 1];
+        rows[targetIdx].inputs = value;
+        setRows([...rows]);
+
+        testCases[targetIdx].inputs = value;
+        setMilestones(milestones.slice());
+        console.log('inputs', testCases);
+    }
+
+    function handleResultChange(e) {
+        e.preventDefault();
+        const classNames = e.target.className.split(' ');
+        const value = e.target.value;
+        const targetIdx = classNames[classNames.length - 1];
+        rows[targetIdx].result = value;
+        setRows([...rows]);
+
+        testCases[targetIdx].result = value;
+        setMilestones(milestones.slice());
+        console.log('result', testCases);
+    }
 
     return (
         <Wrapper>
             <Title>Function Name</Title>
             <FunctionName></FunctionName>
-            <TestCaseContainer>
-                {
-                    testCases.map((ele, idx) => {
-                        return (
-                            <Fragment key={ele + idx}>
-                                <TestCaseBlock>
-                                    <Title>Test Case {idx}</Title>
-                                    <Description>Params</Description>
-                                    <TestCaseParam></TestCaseParam>
-                                    <Description>Values</Description>
-                                    <TestCaseParam></TestCaseParam>
-                                    <Description>Expected output</Description>
-                                    <TestCaseParam style={{marginBottom: "20px"}}></TestCaseParam>
-                                </TestCaseBlock>
-                            </Fragment>
-                        )
-                    })
-                }
-            </TestCaseContainer>
+            {
+                rows.map((row, idx) => {
+                    return (
+                        <TableRow key={idx}>
+                            <div>
+                                <ColumnName>Case</ColumnName>
+                                <EachInput
+                                    className={`${idx}`}
+                                    onChange={handleCaseChange}
+                                ></EachInput>
+                            </div>
+                            <div>
+                                <ColumnName>Inputs</ColumnName>
+                                <EachInput
+                                    className={`${idx}`}
+                                    onChange={handleInputsChange}
+                                ></EachInput>
+                            </div>
+                            <div>
+                                <ColumnName>Result</ColumnName>
+                                <EachInput
+                                    className={`${idx}`}
+                                    onChange={handleResultChange}
+                                ></EachInput>
+                            </div>
+                        </TableRow>
+                    )
+                })
+            }
+            <CaseControlBlock>
+                <CaseControlBtn onClick={handleAddCase}>Add case</CaseControlBtn>
+                <CaseControlBtn onClick={handleRemoveCase}>Remove case</CaseControlBtn>
+            </CaseControlBlock>
         </Wrapper>
     )
 }

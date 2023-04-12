@@ -29,7 +29,6 @@ const Tags = ({ checkedTags, setCheckedTags }) => {
                                 color: amber[100],
                             },
                             '& .MuiSvgIcon-root': { fontSize: 28 },
-                            zIndex: -1
                         }}/>} label={ele} key={idx}/>
                     )
                 })

@@ -8,19 +8,20 @@ import Milestone from "./components/milestone";
 import Tags from "./components/tags";
 import { BACKEND_API_URL } from "../../global/constant.js";
 
+
 const Wrapper = styled.div`
     width: 100vw;
-    height: 80vh;
     display: flex;
     justify-content: center;
+    margin: 40px 0;
 `;
 
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 80%;
     overflow: scroll;
-    background-color: rgba(40, 40, 40, 50%);
+    background-color: DimGrey;
     justify-content: space-between;
 `;
 
@@ -183,14 +184,6 @@ const LoadingPage = styled.div`
 `;
 
 export const MilestoneContext = createContext({
-    useAutoTest: true,
-    setUseAutoTest: ()=>{},
-    useFunctionTest: true,
-    setUseFunctionTest: ()=>{},
-    functionName: '',
-    setFunctionName: ()=>{},
-    testCases: [],
-    setTestCases: ()=>{},
     milestones: [],
     setMilestones: ()=>{}
 })
@@ -204,7 +197,6 @@ const CreateClass = () => {
     const classEndDate = useRef(null);
     const classImage = useRef(null);
     const classVideo = useRef(null);
-
 
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [isUploadingVideo, setIsUploadingVideo] = useState(false);
@@ -226,12 +218,6 @@ const CreateClass = () => {
             passed: false
         }
     ]);
-    const [useAutoTest, setUseAutoTest] = useState(false);
-    const [useFunctionTest, setUseFunctionTest] = useState(false);
-    const [functionName, setFunctionName] = useState('');
-    const [testCases, setTestCases] = useState([]);
-
-    useEffect(()=>console.log(milestones),[milestones])
 
     async function handleImageUpload(e) {
         e.preventDefault();
@@ -521,14 +507,6 @@ const CreateClass = () => {
 
     return (
         <MilestoneContext.Provider value={{
-            useAutoTest,
-            setUseAutoTest,
-            useFunctionTest,
-            setUseFunctionTest,
-            functionName,
-            setFunctionName,
-            testCases,
-            setTestCases,
             milestones,
             setMilestones
         }}>
@@ -598,7 +576,6 @@ const CreateClass = () => {
                             <AddMilestoneBtn onClick={addMilestone}>+</AddMilestoneBtn>
                             {showRemoveBtn()}
                         </MilestoneBtnContainer>
-                        
                     </Block>
                     <Block>
                         <SubmitBtn>建立課程</SubmitBtn>

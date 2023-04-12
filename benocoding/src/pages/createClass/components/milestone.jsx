@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import FunctionTest from "./functionTest";
 import ApiTest from "./apiTest";
 import { MilestoneContext } from "..";
@@ -63,37 +63,12 @@ const OptionButton = styled.button`
     }
 `;
 
-const ControlBtnContainer = styled.div`
-    display: flex;
-`;
-
-const ControlBtn = styled.button`
-    height: 40px;
-    width: 40px;
-    background-color: DeepPink;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    margin: 0 10px;
-
-    :hover {
-        background-color: HotPink;
-    }
-`;
-
 const Milestone = ({idx}) => {
 
-    const {   
-        useAutoTest,
-        setUseAutoTest,
-        useFunctionTest,
-        setUseFunctionTest,
-        functionName,
-        setFunctionName,
-        testCases,
-        setTestCases,
-        milestones,
-        setMilestones} = useContext(MilestoneContext);
+    const [useAutoTest, setUseAutoTest] = useState(false);
+    const [useFunctionTest, setUseFunctionTest] = useState(false);
+
+    const { setMilestones } = useContext(MilestoneContext);
 
     function functionTest(e) {
         e.preventDefault();
@@ -110,23 +85,6 @@ const Milestone = ({idx}) => {
     function noneTest(e) {
         e.preventDefault();
         setUseAutoTest(false);
-    }
-
-    function addCases(e) {
-        e.preventDefault();
-        const newTestCase = {
-            params: '',
-            values: '',
-            result: ''
-        };
-        const newArray = [...testCases, newTestCase];
-        setTestCases(newArray);
-    }
-
-    function removeCases(e) {
-        e.preventDefault();
-        const newArray = testCases.slice(0, -1);
-        setTestCases(newArray);
     }
 
     function setMilestoneName(e) {
@@ -158,10 +116,6 @@ const Milestone = ({idx}) => {
             { useAutoTest ?
                 <>
                     { useFunctionTest ? <FunctionTest milestoneIdx={idx}/> : <ApiTest milestoneIdx={idx}/> }
-                    <ControlBtnContainer>
-                        <ControlBtn onClick={addCases}>+</ControlBtn>
-                        { testCases.length > 1 ? <ControlBtn onClick={removeCases}>-</ControlBtn> : ''}
-                    </ControlBtnContainer>
                 </>
             : ''}
             <Title></Title>
