@@ -6,6 +6,7 @@ import { getClassData } from "../../utils/apis/class.js";
 import { AuthContext } from "../../global/authContext.jsx";
 import TeacherNavOption from "./components/teacherNavOption.jsx";
 import StudentNavOption from "./components/studentNavOption.jsx";
+import Chatroom from "./components/chatroom.jsx";
 import Members from "./components/members.jsx";
 import ClassInfo from "./components/classInfo.jsx";
 import MenuIcon from '@mui/icons-material/Menu';
@@ -61,11 +62,15 @@ const ClassManage = () => {
 
     function handleView() {
         if ( chosenOption === "class-info" ) {
-            return <ClassInfo data={classData} />;
+            return <ClassInfo classData={classData} />;
         }
 
         if ( chosenOption === "class-member" ) {
-            return <Members data={members} classData={classData} />;
+            return <Members memberData={members} classData={classData} />;
+        }
+
+        if ( chosenOption === "chatroom" ) {
+            return <Chatroom classData={classData} />
         }
     }
 

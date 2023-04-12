@@ -17,6 +17,7 @@ const ImageBackground = styled.img`
     height: 40vh;
     object-fit: cover
     z-index: -20;
+    object-fit: cover;
 `;
 
 const ClassVideo = styled(ReactPlayer)`
@@ -45,9 +46,8 @@ function formatDate(dateString) {
     return '';
 }
 
-const ClassInfo = ({data}) => {
+const ClassInfo = ({classData}) => {
 
-    console.log(data);
     const {
         classImage,
         classVideo,
@@ -55,7 +55,7 @@ const ClassInfo = ({data}) => {
         classDesc,
         classStartDate,
         classEndDate,
-    } = data;
+    } = classData;
 
     return (
         <MainContainer>

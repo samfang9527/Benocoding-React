@@ -1,13 +1,11 @@
 
-import ViewMemberItem from "./memberItem";
+import MemberItem from "./memberItem";
 
-const Members = ({data, classData}) => {
-
-    console.log(data);
+const Members = ({memberData, classData}) => {
 
     return (
-        data.map((member, idx) => {
-            return <ViewMemberItem userInfo={member} classData={classData} key={idx + member.userId}/>
+        memberData.map((member, idx) => {
+            return <MemberItem userInfo={member} classData={classData} key={idx + member.userId}/>
         })  
     );
 

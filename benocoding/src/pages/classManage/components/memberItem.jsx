@@ -81,7 +81,7 @@ function calculateProgress(milestones) {
     return milestones.length;
 }
 
-const ViewMemberItem = ({userInfo, classData}) => {
+const MemberItem = ({userInfo, classData}) => {
 
     const [milestones, setMilestones] = useState([]);
     const [curMilestone, setCurMilestone] = useState(0);
@@ -132,4 +132,4 @@ const ViewMemberItem = ({userInfo, classData}) => {
 
 }
 
-export default ViewMemberItem;
+export default MemberItem;
