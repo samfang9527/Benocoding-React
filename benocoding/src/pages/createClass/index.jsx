@@ -186,8 +186,6 @@ const LoadingPage = styled.div`
 export const MilestoneContext = createContext({
     milestones: [],
     setMilestones: ()=>{},
-    functionName: '',
-    setFunctionName: ()=>{}
 })
 
 const CreateClass = () => {
@@ -216,12 +214,11 @@ const CreateClass = () => {
             milestoneDesc: '',
             autoTest: false,
             functionTest: false,
-            testFunctionName: '',
+            functionName: '',
             testCases: [],
             passed: false
         }
     ]);
-    const [functionName, setFunctionName] = useState('');
 
     async function handleImageUpload(e) {
         e.preventDefault();
@@ -374,7 +371,7 @@ const CreateClass = () => {
             milestoneDesc: '',
             autoTest: false,
             functionTest: false,
-            testFunctionName: '',
+            functionName: '',
             testCases: [],
             passed: false
         }
@@ -400,7 +397,7 @@ const CreateClass = () => {
             }   
         }
 
-        const data = {
+        const postData = {
             ownerId,
             className: className.current.value,
             classDesc: classDesc.current.value,
@@ -410,8 +407,7 @@ const CreateClass = () => {
             classImage: classImage.current.value,
             classVideo: classVideo.current.value,
             classTags,
-            milestones,
-            functionName
+            milestones
         }
 
         const graphqlMutation = {
@@ -427,24 +423,23 @@ const CreateClass = () => {
                 }
             `,
             variables: {
-                data: data
+                data: postData
             }
         }
 
         try {
             setIsSubmitting(true);
-            console.log(data);
-            // const { data } = await axios({
-            //     method: "POST",
-            //     url: "http://localhost:8080/graphql",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //         "token": window.localStorage.getItem("jwt")
-            //     },
-            //     data: graphqlMutation
-            // })
+            const { data } = await axios({
+                method: "POST",
+                url: "http://localhost:8080/graphql",
+                headers: {
+                    "Content-Type": "application/json",
+                    "token": window.localStorage.getItem("jwt")
+                },
+                data: graphqlMutation
+            })
 
-            // console.log(data);
+            console.log(data);
 
             setTimeout(() => {
                 setIsSubmitting(false);
@@ -523,8 +518,7 @@ const CreateClass = () => {
     return (
         <MilestoneContext.Provider value={{
             milestones,
-            setMilestones,
-            setFunctionName
+            setMilestones
         }}>
             <Wrapper>
                 {isSubmitting ? showLoading() : ''}

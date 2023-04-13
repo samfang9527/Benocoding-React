@@ -81,7 +81,6 @@ const FunctionTest = ({milestoneIdx}) => {
     const {
         milestones,
         setMilestones,
-        setFunctionName
     } = milestoneContext;
 
     const testCases = milestones[milestoneIdx].testCases;
@@ -145,7 +144,8 @@ const FunctionTest = ({milestoneIdx}) => {
 
     function handleFuncitonName(e) {
         e.preventDefault();
-        setFunctionName(e.target.value);
+        milestones[milestoneIdx].functionName = e.target.value;
+        setMilestones(milestones.slice());
     }
 
     return (

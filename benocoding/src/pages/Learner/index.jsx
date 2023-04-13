@@ -85,7 +85,14 @@ const Learner = () => {
             }
             getClassList(user.userId, Number(pageNum), 'Learner')
                 .then(response => {
-                    setClassList(response.getLearnerClassList);
+                    const responseData = response.getLearnerClassList;
+                    const cleanData = responseData.reduce((acc, cur) => {
+                        if ( cur ) {
+                            return [...acc, cur];
+                        }
+                        return acc;
+                    }, [])
+                    setClassList(cleanData);
                 })
                 .catch(err => {
                     console.error(err)
