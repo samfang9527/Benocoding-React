@@ -63,6 +63,11 @@ const ColumnName = styled.p`
     font-size: 16px;
 `;
 
+const RowNumber = styled.p`
+    align-self: flex-end;
+    margin: 0;
+`;
+
 // const rowExample = {
 //     id: Number,
 //     caseName: String,
@@ -151,6 +156,7 @@ const FunctionTest = ({milestoneIdx}) => {
                 rows.map((row, idx) => {
                     return (
                         <TableRow key={idx}>
+                            <RowNumber>{idx}</RowNumber>
                             <div>
                                 <ColumnName>Case</ColumnName>
                                 <EachInput

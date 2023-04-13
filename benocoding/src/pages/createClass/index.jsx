@@ -215,6 +215,7 @@ const CreateClass = () => {
             milestone: '',
             milestoneDesc: '',
             autoTest: false,
+            functionTest: false,
             testFunctionName: '',
             testCases: [],
             passed: false
@@ -372,6 +373,7 @@ const CreateClass = () => {
             milestone: '',
             milestoneDesc: '',
             autoTest: false,
+            functionTest: false,
             testFunctionName: '',
             testCases: [],
             passed: false
@@ -408,7 +410,8 @@ const CreateClass = () => {
             classImage: classImage.current.value,
             classVideo: classVideo.current.value,
             classTags,
-            milestones
+            milestones,
+            functionName
         }
 
         const graphqlMutation = {

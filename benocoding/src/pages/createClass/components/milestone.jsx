@@ -75,17 +75,29 @@ const Milestone = ({idx}) => {
         e.preventDefault();
         setUseFunctionTest(true);
         setUseAutoTest(true);
+
+        // set milestone 
+        milestones[idx].autoTest = true;
+        milestones[idx].functionTest = true;
+        setMilestones(milestones.slice());
     }
 
     function apiTest(e) {
         e.preventDefault();
         setUseFunctionTest(false);
         setUseAutoTest(true);
+
+        milestones[idx].autoTest = true;
+        milestones[idx].functionTest = false;
+        setMilestones(milestones.slice());
     }
 
     function noneTest(e) {
         e.preventDefault();
         setUseAutoTest(false);
+
+        milestones[idx].autoTest = false;
+        setMilestones(milestones.slice());
     }
 
     function setMilestoneName(e) {
