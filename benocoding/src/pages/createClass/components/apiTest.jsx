@@ -14,18 +14,6 @@ const Wrapper = styled.div`
     justify-content: center;
 `;
 
-const Title = styled.p`
-    margin: 20px 0 10px 0;
-    font-size: 30px;
-`;
-
-const FunctionName = styled.input`
-    height: 30px;
-    font-size: 22px;
-    text-align: center;
-    padding: 20px 0;
-`;
-
 const CaseControlBlock = styled.div`
 
 `;
@@ -53,23 +41,23 @@ const TableRow = styled.div`
 `;
 
 const EachInput = styled.input`
-    width: 100px;
-    height: 30px;
+    width: 200px;
+    height: 40px;
     font-size: 18px;
     text-align: center;
+    margin: 0 10px;
+`;
+
+const CustomTextArea = styled.textarea`
+    width: 200px;
+    height: 200px;
+    font-size: 18px;
     margin: 0 10px;
 `;
 
 const ColumnName = styled.p`
     font-size: 16px;
 `;
-
-// const rowExample = {
-//     id: Number,
-//     caseName: String,
-//     params: Array,
-//     result: String
-// }
 
 const ApiTest = ({milestoneIdx}) => {
 
@@ -81,7 +69,7 @@ const ApiTest = ({milestoneIdx}) => {
 
     function handleAddCase(e) {
         e.preventDefault();
-        const newRow = { id: rows.length, case: "", inputs: "", result: "" };
+        const newRow = { id: rows.length, case: "", method: "", statusCode: "", result: "" };
         setRows([...rows, newRow]);
         testCases.push(newRow);
         setMilestones(milestones.slice());
@@ -102,7 +90,7 @@ const ApiTest = ({milestoneIdx}) => {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
         const targetIdx = classNames[classNames.length - 1];
-        const value = e.target.value;
+        const value = JSON.stringify(e.target.value);
         rows[targetIdx].case = value;
         setRows([...rows]);
 
@@ -110,22 +98,34 @@ const ApiTest = ({milestoneIdx}) => {
         setMilestones(milestones.slice());
     }
 
-    function handleInputsChange(e) {
+    function handleMethodChange(e) {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
-        const value = e.target.value;
+        const value = JSON.stringify(e.target.value);
         const targetIdx = classNames[classNames.length - 1];
-        rows[targetIdx].inputs = value;
+        rows[targetIdx].method = value;
         setRows([...rows]);
 
-        testCases[targetIdx].inputs = value;
+        testCases[targetIdx].method = value;
+        setMilestones(milestones.slice());
+    }
+
+    function handleStatusCodeChange(e) {
+        e.preventDefault();
+        const classNames = e.target.className.split(' ');
+        const value = JSON.stringify(e.target.value);
+        const targetIdx = classNames[classNames.length - 1];
+        rows[targetIdx].statusCode = value;
+        setRows([...rows]);
+
+        testCases[targetIdx].statusCode = value;
         setMilestones(milestones.slice());
     }
 
     function handleResultChange(e) {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
-        const value = e.target.value;
+        const value = JSON.stringify(e.target.value);
         const targetIdx = classNames[classNames.length - 1];
         rows[targetIdx].result = value;
         setRows([...rows]);
@@ -136,8 +136,6 @@ const ApiTest = ({milestoneIdx}) => {
 
     return (
         <Wrapper>
-            <Title>Function Name</Title>
-            <FunctionName></FunctionName>
             {
                 rows.map((row, idx) => {
                     return (
@@ -150,18 +148,25 @@ const ApiTest = ({milestoneIdx}) => {
                                 ></EachInput>
                             </div>
                             <div>
-                                <ColumnName>Inputs</ColumnName>
+                                <ColumnName>Method</ColumnName>
                                 <EachInput
                                     className={`${idx}`}
-                                    onChange={handleInputsChange}
+                                    onChange={handleMethodChange}
+                                ></EachInput>
+                            </div>
+                            <div>
+                                <ColumnName>Status Code</ColumnName>
+                                <EachInput
+                                    className={`${idx}`}
+                                    onChange={handleStatusCodeChange}
                                 ></EachInput>
                             </div>
                             <div>
                                 <ColumnName>Result</ColumnName>
-                                <EachInput
+                                <CustomTextArea
                                     className={`${idx}`}
                                     onChange={handleResultChange}
-                                ></EachInput>
+                                ></CustomTextArea>
                             </div>
                         </TableRow>
                     )

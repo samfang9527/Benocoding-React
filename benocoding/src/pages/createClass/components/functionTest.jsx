@@ -52,8 +52,8 @@ const TableRow = styled.div`
 `;
 
 const EachInput = styled.input`
-    width: 100px;
-    height: 30px;
+    width: 200px;
+    height: 40px;
     font-size: 18px;
     text-align: center;
     margin: 0 10px;
@@ -67,13 +67,6 @@ const RowNumber = styled.p`
     align-self: flex-end;
     margin: 0;
 `;
-
-// const rowExample = {
-//     id: Number,
-//     caseName: String,
-//     params: Array,
-//     result: String
-// }
 
 const FunctionTest = ({milestoneIdx}) => {
 
@@ -110,7 +103,7 @@ const FunctionTest = ({milestoneIdx}) => {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
         const targetIdx = classNames[classNames.length - 1];
-        const value = e.target.value;
+        const value = JSON.stringify(e.target.value);
         rows[targetIdx].case = value;
         setRows([...rows]);
 
@@ -121,7 +114,7 @@ const FunctionTest = ({milestoneIdx}) => {
     function handleInputsChange(e) {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
-        const value = e.target.value;
+        const value = JSON.stringify(e.target.value);
         const targetIdx = classNames[classNames.length - 1];
         rows[targetIdx].inputs = value;
         setRows([...rows]);
@@ -133,7 +126,7 @@ const FunctionTest = ({milestoneIdx}) => {
     function handleResultChange(e) {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
-        const value = e.target.value;
+        const value = JSON.stringify(e.target.value);
         const targetIdx = classNames[classNames.length - 1];
         rows[targetIdx].result = value;
         setRows([...rows]);
