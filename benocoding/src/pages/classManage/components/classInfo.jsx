@@ -15,9 +15,8 @@ const SectionTitle = styled.p`
 const ImageBackground = styled.img`
     width: 100%;
     height: 40vh;
-    object-fit: cover
     z-index: -20;
-    object-fit: cover;
+    object-fit: contain;
 `;
 
 const ClassVideo = styled(ReactPlayer)`

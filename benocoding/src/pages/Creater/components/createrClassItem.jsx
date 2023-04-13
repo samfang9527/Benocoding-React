@@ -33,6 +33,7 @@ const ClassDescription = styled.p`
     padding: 0 10px;
     font-size: 18px;
     margin: 10px 0;
+    overflow: hidden;
 `;
 
 

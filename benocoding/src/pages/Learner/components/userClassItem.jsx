@@ -33,10 +33,11 @@ const ClassDescription = styled.p`
     padding: 0 10px;
     font-size: 18px;
     margin: 10px 0;
+    overflow: hidden;
 `;
 
 
-const ClassItem = ({classData}) => {
+const UserClassItem = ({classData}) => {
 
     const startDate = classData.classStartDate.slice(0, classData.classStartDate.lastIndexOf('T'));
 
@@ -56,4 +57,4 @@ const ClassItem = ({classData}) => {
 
 }
 
-export default ClassItem;
+export default UserClassItem;

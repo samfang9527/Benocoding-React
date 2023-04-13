@@ -4,7 +4,7 @@ import { getClassList, getPageQuantity } from "../../utils/apis/class.js";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from "../../global/authContext.jsx";
-import ClassItem from "./components/classItem.jsx";
+import UserClassItem from "./components/userClassItem.jsx";
 import { MoonLoader } from "react-spinners";
 import { Fragment } from "react";
 import Pagination from "@mui/material/Pagination";
@@ -125,7 +125,7 @@ const Learner = () => {
                         {
                             classList.map((class_, idx) => {
                                 return (
-                                    <ClassItem key={class_.id} classData={class_}></ClassItem>
+                                    <UserClassItem key={class_.id} classData={class_}></UserClassItem>
                                 )
                             })
                         }
