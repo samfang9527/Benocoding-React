@@ -145,10 +145,19 @@ async function getClassData(classId) {
                     id,
                     ownerId,
                     milestones {
+                        functionName,
+                        autoTest,
+                        functionTest,
                         milestone,
                         milestoneDesc,
-                        autoTest,
-                        passed
+                        passed,
+                        testCases {
+                          case,
+                          inputs,
+                          method,
+                          result,
+                          statusCode
+                        }
                     },
                     chatroomId,
                     classImage,

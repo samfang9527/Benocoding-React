@@ -6,11 +6,12 @@ const MilestoneWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 40px 0 0 0;
 `;
 
 const Milestone = ({milestoneData}) => {
 
-    const { milestone } = milestoneData;
+    console.log(milestoneData);
 
     return (
         <MilestoneWrapper>
@@ -18,7 +19,7 @@ const Milestone = ({milestoneData}) => {
                 milestoneData.map((milestone, idx) => {
                     return (
                         <MilestoneItem
-                            key={idx + milestone}
+                            key={idx + milestone.milestone}
                             milestone={milestone}
                             idx={idx}
                         ></MilestoneItem>
