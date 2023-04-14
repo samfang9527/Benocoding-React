@@ -6,7 +6,7 @@ const MilestoneWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 40px 0 0 0;
+    margin: 40px 0;
 `;
 
 const Milestone = ({milestoneData}) => {

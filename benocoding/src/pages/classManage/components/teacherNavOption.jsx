@@ -36,7 +36,7 @@ const Title = styled.p`
     font-size: 20px;
     letter-spacing: 1px;
     transition: display 1s ease-in-out;
-
+    text-align: left;
 `;
 
 const TeacherNavOption = ({isExpanded, setChosenOption}) => {
