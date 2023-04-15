@@ -127,7 +127,8 @@ const MilestoneItem = ({milestone, idx}) => {
     const testfile = useRef(null);
 
     const [ isShowContent, setIsShowContent ] = useState(false);
-    const [ isUploading, setIsUploading ] = useState(false);
+    const [ isTesting, setIsTesting ] = useState(false);
+    const [ testResults, setTestResults ] = useState([]);
 
     const {
         autoTest,
@@ -149,6 +150,7 @@ const MilestoneItem = ({milestone, idx}) => {
         formData.append('testCases', JSON.stringify(testCases));
 
         // post function test api
+        setIsTesting(true);
         const { data } = await axios.post(
             BACKEND_DOMAIN + '/api/1.0/autotest/functiontest',
             formData,
@@ -158,8 +160,8 @@ const MilestoneItem = ({milestone, idx}) => {
                 }
             }
         )
-        console.log(data);
-
+        setTestResults(data.testResults);
+        setIsTesting(false);
     }
 
     function handleAPITest(e) {

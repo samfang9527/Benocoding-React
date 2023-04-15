@@ -4,7 +4,7 @@ import styled from "styled-components";
 const HeaderWrapper = styled.header`
     height: 10%;
     border-bottom: 1px solid white;
-    background-color: DarkSlateGray;
+    background-color: #38686A;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -30,6 +30,7 @@ const Btn = styled.button`
     font-size: 18px;
     color: white;
     cursor: pointer;
+    border: none;
 
     :hover {
         background-color: darkorange;

@@ -13,8 +13,9 @@ const SignUpContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: MediumSeaGreen;
+    background: #81B29A;
     border-top: 5px solid Honeydew;
+    color: white;
 `;
 
 const InputBlock = styled.div`

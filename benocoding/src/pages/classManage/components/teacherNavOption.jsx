@@ -19,13 +19,15 @@ const EachIcon = styled.div`
     font-weight: bolder;
     padding: 22px;
     width: 100%;
+    color: black;
+    background: #E0E2DB;
 
     :hover {
-        background-color: NavajoWhite;
+        background-color: #D2D4C8;
     }
 
     :focus {
-        background-color: NavajoWhite;
+        background-color: #D2D4C8;
     }
 `;
 

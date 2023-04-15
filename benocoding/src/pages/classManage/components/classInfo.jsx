@@ -32,9 +32,9 @@ const Content = styled.p`
 `;
 
 const SplitLine = styled.hr`
-    border: 10px solid khaki;
+    border: 10px solid #D3EFBD;
     border-radius: 5px;
-    width: 100%;
+    width: 98%;
 `;
 
 

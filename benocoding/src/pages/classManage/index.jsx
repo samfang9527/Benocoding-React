@@ -19,7 +19,7 @@ const MainContainer = styled.main`
 `;
 
 const SideNavWrapper = styled.div`
-    background-color: Bisque;
+    background-color: #E0E2DB;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

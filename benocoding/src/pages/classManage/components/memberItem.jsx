@@ -10,7 +10,7 @@ const ItemList = styled.ul`
     flex-direction: column;
     padding: 0;
     width: 90%;
-    background-color: MediumAquamarine;
+    background-color: #C6D8D3;
     position: relative;
     left: 50%;
     margin: 40px 0 40px -45%;

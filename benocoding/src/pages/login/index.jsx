@@ -24,11 +24,12 @@ const SignInBtn = styled.button`
     left: 50%;
     margin-left: -25%;
     border: none;
-    background-color: MediumSeaGreen;
+    background-color: #2F9C95;
     color: white;
     font-size: 34px;
     padding: 0 50px;
     cursor: pointer;
+    border-radius: 2px;
 `;
 
 const SignUpBtn = styled.button`
@@ -37,10 +38,11 @@ const SignUpBtn = styled.button`
     position: relative;
     left: 50%;
     border: none;
-    background-color: #434343ff;
+    background-color: #2F9C95;
     color: white;
     font-size: 34px;
     cursor: pointer;
+    border-radius: 2px;
 `;
 
 const Login = () => {
@@ -67,14 +69,16 @@ const Login = () => {
                 onClick={chooseSignIn}
                 style={
                     {
-                        backgroundColor: isSignIn ? "MediumSeaGreen" : "#434343ff",
+                        backgroundColor: isSignIn ? "#2F9C95" : "#2F9C95",
+                        opacity: isSignIn ? "1" : "0.7"
                     }
                 }>Sign-In</SignInBtn>
                 <SignUpBtn
                 onClick={chooseSignUp}
                 style={
                     {
-                        backgroundColor: isSignUp ? "MediumSeaGreen" : "#434343ff",
+                        backgroundColor: isSignUp ? "#2F9C95" : "#2F9C95",
+                        opacity: isSignUp ? "1" : "0.7"
                     }
                 }>Sign-Up</SignUpBtn>
                 <>{isSignIn ? <SignIn /> : <SignUp />}</>

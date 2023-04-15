@@ -20,15 +20,16 @@ const EachIcon = styled.button`
     font-weight: medium;
     padding: 22px;
     width: 100%;
-    background-color: bisque;
     border: none;
+    color: black;
+    background: #E0E2DB;
 
     :hover {
-        background-color: NavajoWhite;
+        background-color: #D2D4C8;
     }
 
     :focus {
-        background-color: NavajoWhite;
+        background-color: #D2D4C8;
     }
 `;
 

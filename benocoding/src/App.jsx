@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
   }
   
   body {
-    background-color: Snow;
+    background-color: white;
     margin: 0;
     color: black;
     font-family: 'Livvic';
