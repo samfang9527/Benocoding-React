@@ -49,7 +49,6 @@ const CreaterClassItem = ({classData}) => {
         <Block onClick={toClassManagePage}>
             <ClassImage src={`${CDN_DOMAIN + classData.classImage}`}/>
             <ClassTitle>{classData.className}</ClassTitle>
-            <ClassDescription>{classData.classDesc}</ClassDescription>
             <ClassDescription>Creater: {classData.teacherName}</ClassDescription>
             <ClassDescription>Start date: {startDate}</ClassDescription>
         </Block>
