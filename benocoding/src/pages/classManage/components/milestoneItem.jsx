@@ -168,9 +168,27 @@ const MilestoneItem = ({milestone, idx}) => {
         setIsTesting(false);
     }
 
-    function handleAPITest(e) {
+    async function handleAPITest(e) {
         e.preventDefault();
+        const targetUrl = apiInput.current.value;
+
         // post api test api
+        setIsTesting(true);
+        const { data } = await axios.post(
+            BACKEND_DOMAIN + '/api/1.0/autotest/apitest',
+            {
+                targetUrl,
+                testCases: JSON.stringify(testCases)
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        )
+        console.log(data);
+        setTestResults(data);
+        setIsTesting(false);
 
     }
 
@@ -198,7 +216,7 @@ const MilestoneItem = ({milestone, idx}) => {
                                             testResults.length > 0 ? <TestResultContainer>
                                                 {
                                                     testResults.map((res, idx) => {
-                                                        return <TestResultItem passed={res.passed}>
+                                                        return <TestResultItem passed={res.passed} key={idx + res.case}>
                                                             <TestResultDescription>Case: {res.case}</TestResultDescription>
                                                             <TestResultDescription>Inputs: {res.inputs}</TestResultDescription>
                                                             <TestResultDescription>Expect {res.expectedResult} | Got {res.execResult}</TestResultDescription>
@@ -220,11 +238,27 @@ const MilestoneItem = ({milestone, idx}) => {
                                     </> : <>
                                         <Notification>API auto-test</Notification>
                                         <List>
-                                            <ListItem>
-                                                Your url: 
-                                                <input ref={apiInput}></input>
-                                            </ListItem>
+                                            {
+                                                isTesting ? <CustomLoader color="Crimson" size={40}></CustomLoader> : 
+                                                <ListItem>
+                                                    Your url: 
+                                                    <input ref={apiInput}></input>
+                                                </ListItem>
+                                            }
                                         </List><br></br>
+                                        {
+                                            testResults.length > 0 ? <TestResultContainer>
+                                                {
+                                                    testResults.map((res, idx) => {
+                                                        return <TestResultItem passed={res.passed} key={idx + res.case}>
+                                                            <TestResultDescription>Case: {res.case}</TestResultDescription>
+                                                            <TestResultDescription>Expect status: {res.expectedStatus} | Got {res.execStatus}</TestResultDescription>
+                                                            <TestResultDescription>Expect result: {res.expectedData} | Got {res.execData}</TestResultDescription>
+                                                        </TestResultItem>
+                                                    })
+                                                }
+                                            </TestResultContainer> : ''
+                                        }
                                         <StartTestBtn onClick={handleAPITest}>Submit</StartTestBtn>
                                     </>
                                 }
