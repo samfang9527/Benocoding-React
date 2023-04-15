@@ -10,6 +10,7 @@ import Chatroom from "./components/chatroom.jsx";
 import Members from "./components/members.jsx";
 import ClassInfo from "./components/classInfo.jsx";
 import Milestone from "./components/milestone.jsx";
+import PullRequest from "./components/pullRequest.jsx";
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 
@@ -75,6 +76,10 @@ const ClassManage = () => {
 
         if ( chosenOption === "milestones" ) {
             return <Milestone milestoneData={milestones} />;
+        }
+
+        if ( chosenOption === "pull-request" ) {
+            return <PullRequest classData={classData}/>
         }
     }
 

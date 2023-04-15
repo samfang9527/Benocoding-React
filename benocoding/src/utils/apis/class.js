@@ -166,6 +166,11 @@ async function getClassData(classId) {
                         userId,
                         username,
                         email
+                    },
+                    gitHub {
+                        repo,
+                        owner,
+                        accessToken
                     }
                 }
             }
@@ -190,9 +195,82 @@ async function getClassData(classId) {
     }
 }
 
+async function getAllPullRequests(userId, classId) {
+    const graphqlQuery = {
+        query : `
+            query($userId: String!, $classId: String!) {
+                getAllPullRequests(userId: $userId, classId: $classId) {
+                    url,
+                    number,
+                    title,
+                    body,
+                    head,
+                    base,
+                    created_at,
+                    updated_at
+                }
+            }
+        `,
+        variables: {
+            userId: userId,
+            classId: classId
+        }
+    }
+
+    try {
+        const { data } = await axios({
+            method: 'POST',
+            url: BACKEND_API_URL,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: graphqlQuery
+        })
+        console.log(data);
+        return data.data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function getPullRequestDetail(userId, classId, number) {
+    const graphqlQuery = {
+        query : `
+            query($userId: String!, $classId: String!, $number: Int!) {
+                getPRDetail(userId: $userId, classId: $classId, number: $number) {
+                    mergeable,
+                    diffData
+                }
+            }
+        `,
+        variables: {
+            userId: userId,
+            classId: classId,
+            number: number
+        }
+    }
+
+    try {
+        const { data } = await axios({
+            method: 'POST',
+            url: BACKEND_API_URL,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: graphqlQuery
+        })
+        console.log(data);
+        return data.data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 export {
     fetchOptionData,
     getClassList,
     getPageQuantity,
-    getClassData
+    getClassData,
+    getAllPullRequests,
+    getPullRequestDetail
 };
