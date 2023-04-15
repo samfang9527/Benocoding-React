@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { BACKEND_DOMAIN } from "../../../global/constant.js";
 import axios from "axios";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { MoonLoader } from "react-spinners";
 
 const Block = styled.div`
     height: 50px;
@@ -26,8 +27,9 @@ const TitleWrapper = styled.div`
 const ContentWrapper = styled.div`
     width: 95%;
     border: 1px solid black;
-    height: ${props => props.isShowContent ? '400px' : '0'};
+    height: ${props => props.isShowContent ? '500px' : '0'};
     transition: height 0.3s ease-in-out;
+    overflow: scroll;
 `;
 
 const ContentContainer = styled.div`
@@ -101,23 +103,24 @@ const StartTestBtn = styled.button`
     }
 `;
 
-const UploadProgress = styled.div`
-    font-size: 24px;
-    color: white;
-    margin: 5px 10px;
+const TestResultContainer = styled.div`
+    display: flex;
+    margin: 20px;
 `;
 
-const UploadCancelBtn = styled.button`
-    width: 80px;
-    height: 40px;
-    font-size: 20px;
-    background-color: orange;
-    color: white;
-    cursor: pointer;
-    :hover {
-        background-color: darkorange;
-    }
-    border: none;
+const TestResultItem = styled.div`
+    height: fit-content;
+    padding: 10px;
+    border: ${props => props.passed ? '4px solid #43C59E' : '4px solid #E07A5F'};
+`;
+
+const TestResultDescription = styled.p`
+    font-size: 18px;
+    margin: 5px 0;
+`;
+
+const CustomLoader = styled(MoonLoader)`
+    margin: 0 20px;
 `;
 
 
@@ -160,6 +163,7 @@ const MilestoneItem = ({milestone, idx}) => {
                 }
             }
         )
+        console.log(data.testResults);
         setTestResults(data.testResults);
         setIsTesting(false);
     }
@@ -174,7 +178,7 @@ const MilestoneItem = ({milestone, idx}) => {
         <>
             <Block onClick={showContent}>
                 <TitleWrapper>
-                    <MenuOpenIcon sx={{fontSize: "50px", cursor: "pointer"}}></MenuOpenIcon>
+                    <MenuOpenIcon sx={{fontSize: "30px", cursor: "pointer"}}></MenuOpenIcon>
                     <BlockTitle>{milestone.milestone}</BlockTitle>
                 </TitleWrapper>
             </Block>
@@ -190,11 +194,29 @@ const MilestoneItem = ({milestone, idx}) => {
                                         <List>
                                             <ListItem>Your function name should be: {functionName}</ListItem>
                                         </List>
-                                        <form encType="multipart/form-data" onSubmit={handleFunctionTest}>
-                                            <Notification>File Upload</Notification>
-                                            <CustomFIleUpload type="file" name="testfile" ref={testfile}></CustomFIleUpload><br></br>
-                                            <StartTestBtn type="submit">Submit</StartTestBtn>
-                                        </form>
+                                        {
+                                            testResults.length > 0 ? <TestResultContainer>
+                                                {
+                                                    testResults.map((res, idx) => {
+                                                        return <TestResultItem passed={res.passed}>
+                                                            <TestResultDescription>Case: {res.case}</TestResultDescription>
+                                                            <TestResultDescription>Inputs: {res.inputs}</TestResultDescription>
+                                                            <TestResultDescription>Expect {res.expectedResult} | Got {res.execResult}</TestResultDescription>
+                                                        </TestResultItem>
+                                                    })
+                                                }
+                                            </TestResultContainer> : ''
+                                        }
+                                        {
+                                            isTesting ? <CustomLoader color="Crimson" size={40}></CustomLoader>
+                                            : <form encType="multipart/form-data" onSubmit={handleFunctionTest}>
+                                                <Notification>File Upload</Notification>
+                                                <CustomFIleUpload type="file" name="testfile" ref={testfile}></CustomFIleUpload><br></br>
+                                                <StartTestBtn type="submit">Submit</StartTestBtn>
+                                            </form>
+                                        }
+                                        
+                                        
                                     </> : <>
                                         <Notification>API auto-test</Notification>
                                         <List>
