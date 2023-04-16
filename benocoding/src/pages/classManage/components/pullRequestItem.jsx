@@ -4,7 +4,6 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../../global/authContext.jsx";
 import { getPullRequestDetail } from "../../../utils/apis/class.js";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { Diff2Html } from "diff2html";
 
 const Block = styled.div`
     height: 50px;
@@ -30,9 +29,9 @@ const BlockTitle = styled.p`
 `;
 
 const ContentWrapper = styled.div`
-    width: 95%;
+    width: 100%;
     border: 1px solid black;
-    height: ${props => props.isShowContent ? '500px' : '0'};
+    height: ${props => props.isShowContent ? '300px' : '0'};
     transition: height 0.3s ease-in-out;
     overflow: scroll;
 `;
@@ -47,17 +46,60 @@ const ContentTitle = styled.p`
     margin: 0;
 `;
 
+const ContentDescription = styled.p`
+    font-size: 20px;
+    margin: 10px;
+    padding: 0 20px;
+    padding: 10px;
+`;
+
+const ChatGPTLogo = styled.img`
+    width: 60px;
+    height: 60px;
+    display: inline;
+    margin: 5px;
+`;
+
+const ChatGPTContainer = styled.div`
+    display: flex;
+    margin: 0 20px;
+    border: 2px solid #E0E2DB;
+    width: fit-content;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #E0E2DB;
+    opacity: 0.8;
+    border-radius: 4px;
+
+    :hover {
+        opacity: 1;
+    }
+`;
+
+
 const PullRequestItem = ({data, classId}) => {
 
     const authContext = useContext(AuthContext);
 
     const [ isShowContent, setIsShowContent ] = useState(false);
-    const [ mergeable, setMergeable ] = useState(false);
-    const [ diffContent, setDiffContent ] = useState('');
+    const [ detailData, setDetailData ] = useState({});
+
+    const {
+        commits,
+        additions,
+        deletions,
+        html_url
+    } = detailData;
 
     function showContent(e) {
         e.preventDefault();
         setIsShowContent(!isShowContent);
+    }
+
+    function handleGPTCodeReview(e) {
+        e.preventDefault();
+        // Generate GPT code review
+
     }
 
     useEffect(() => {
@@ -66,12 +108,12 @@ const PullRequestItem = ({data, classId}) => {
             getPullRequestDetail(user.userId, classId, data.number)
                 .then(response => {
                     const { getPRDetail } = response;
-                    setMergeable(getPRDetail.mergeable);
-                    setDiffContent(getPRDetail.diffData);
+                    setDetailData(getPRDetail);
                 })
                 .catch(err => {console.error(err)})
         }
     }, [authContext, classId, data.number])
+
 
     return (
         <Block>
@@ -83,7 +125,12 @@ const PullRequestItem = ({data, classId}) => {
                 {
                     isShowContent ? <ContentContainer>
                         <ContentTitle>#PR Detail</ContentTitle>
-                        <pre>{diffContent}</pre>
+                        <ContentDescription>Commits: {commits} | Additions: {additions} | Deletions: {deletions}</ContentDescription>
+                        <ContentDescription>Pull request url: <a href={`${html_url}`}>{html_url}</a></ContentDescription>
+                        <ChatGPTContainer onClick={handleGPTCodeReview}>
+                            <ChatGPTLogo src="/ChatGPT_logo.png" alt="chatGPT_logo"></ChatGPTLogo>
+                            <ContentDescription>Generate Code Review</ContentDescription>
+                        </ChatGPTContainer>
                     </ContentContainer> : ''
                 }
             </ContentWrapper>

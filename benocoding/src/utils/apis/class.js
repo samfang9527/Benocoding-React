@@ -239,7 +239,13 @@ async function getPullRequestDetail(userId, classId, number) {
             query($userId: String!, $classId: String!, $number: Int!) {
                 getPRDetail(userId: $userId, classId: $classId, number: $number) {
                     mergeable,
-                    diffData
+                    diffData,
+                    html_url,
+                    state,
+                    merge_commit_sha,
+                    commits,
+                    additions,
+                    deletions,
                 }
             }
         `,
