@@ -9,7 +9,7 @@ const MilestoneWrapper = styled.div`
     margin: 40px 0;
 `;
 
-const Milestone = ({milestoneData}) => {
+const Milestone = ({milestoneData, classData}) => {
 
     console.log(milestoneData);
 
@@ -22,6 +22,7 @@ const Milestone = ({milestoneData}) => {
                             key={idx + milestone.milestone}
                             milestone={milestone}
                             idx={idx}
+                            classId={classData.id}
                         ></MilestoneItem>
                     )
                 })

@@ -1,10 +1,11 @@
 
 import styled from "styled-components";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { BACKEND_DOMAIN } from "../../../global/constant.js";
 import axios from "axios";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { MoonLoader } from "react-spinners";
+import { AuthContext } from "../../../global/authContext.jsx";
 
 const Block = styled.div`
     height: 50px;
@@ -124,8 +125,9 @@ const CustomLoader = styled(MoonLoader)`
 `;
 
 
-const MilestoneItem = ({milestone, idx}) => {
+const MilestoneItem = ({milestone, idx, classId}) => {
 
+    const authContext = useContext(AuthContext);
     const apiInput = useRef(null);
     const testfile = useRef(null);
 
@@ -133,6 +135,7 @@ const MilestoneItem = ({milestone, idx}) => {
     const [ isTesting, setIsTesting ] = useState(false);
     const [ testResults, setTestResults ] = useState([]);
 
+    const { user } = authContext;
     const {
         autoTest,
         functionTest,
@@ -151,6 +154,9 @@ const MilestoneItem = ({milestone, idx}) => {
         formData.append('testfile', testfile);
         formData.append('functionName', functionName);
         formData.append('testCases', JSON.stringify(testCases));
+        formData.append('milestoneIdx', idx);
+        formData.append('classId', classId);
+        formData.append('userId', user.userId);
 
         // post function test api
         setIsTesting(true);
@@ -177,6 +183,9 @@ const MilestoneItem = ({milestone, idx}) => {
         const { data } = await axios.post(
             BACKEND_DOMAIN + '/api/1.0/autotest/apitest',
             {
+                classId,
+                userId: user.userId,
+                milestoneIdx: idx,
                 targetUrl,
                 testCases: JSON.stringify(testCases)
             },

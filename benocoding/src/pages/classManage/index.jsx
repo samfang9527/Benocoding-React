@@ -75,7 +75,7 @@ const ClassManage = () => {
         }
 
         if ( chosenOption === "milestones" ) {
-            return <Milestone milestoneData={milestones} />;
+            return <Milestone milestoneData={milestones} classData={classData} />;
         }
 
         if ( chosenOption === "pull-request" ) {
