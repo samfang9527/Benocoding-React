@@ -4,23 +4,27 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../../global/authContext.jsx";
 import { getPullRequestDetail } from "../../../utils/apis/class.js";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { socket } from "../../../utils/socket/socket.js";
+import { PulseLoader } from "react-spinners";
 
 const Block = styled.div`
     height: 50px;
     width: 95%;
-    border: 1px solid black;
+    border: 4px solid Gray;
     margin: 10px 0 0 0;
-    cursor: pointer;
-    
-    :hover {
-        background-color: bisque;
-    }
+    border-radius: 8px;
 `;
 
 const TitleWrapper = styled.div`
     display: flex;
     align-items: center;
     height: 100%;
+    background-color: Honeydew;
+    cursor: pointer;
+
+    :hover {
+        background-color: bisque;
+    }
 `;
 
 const BlockTitle = styled.p`
@@ -30,10 +34,12 @@ const BlockTitle = styled.p`
 
 const ContentWrapper = styled.div`
     width: 100%;
-    border: 1px solid black;
-    height: ${props => props.isShowContent ? '300px' : '0'};
+    border: 4px solid Gray;
+    height: ${props => props.isShowContent ? '500px' : '0'};
     transition: height 0.3s ease-in-out;
     overflow: scroll;
+    background-color: WhiteSmoke;
+    border-radius: 4px;
 `;
 
 const ContentContainer = styled.div`
@@ -41,16 +47,17 @@ const ContentContainer = styled.div`
 `;
 
 const ContentTitle = styled.p`
-    font-size: 30px;
-    padding: 0 20px;
+    font-size: 32px;
+    padding: 20px;
     margin: 0;
 `;
 
 const ContentDescription = styled.p`
-    font-size: 20px;
+    font-size: 22px;
     margin: 10px;
     padding: 0 20px;
     padding: 10px;
+    white-space: pre-line;
 `;
 
 const ChatGPTLogo = styled.img`
@@ -68,11 +75,12 @@ const ChatGPTContainer = styled.div`
     align-items: center;
     justify-content: space-around;
     background-color: #E0E2DB;
-    opacity: 0.8;
+    opacity: ${props => props.isGeneratingCodeReview ? '0.4' : '0.8'};
     border-radius: 4px;
+    cursor: pointer;
 
     :hover {
-        opacity: 1;
+        opacity: ${props => props.isGeneratingCodeReview ? '0.4' : '1'};
     }
 `;
 
@@ -83,12 +91,15 @@ const PullRequestItem = ({data, classId}) => {
 
     const [ isShowContent, setIsShowContent ] = useState(false);
     const [ detailData, setDetailData ] = useState({});
+    const [ isGeneratingCodeReview, setIsGeneratingCodeReview ] = useState(false);
+    const [ codeReview, setCodeReview ] = useState('');
 
     const {
         commits,
         additions,
         deletions,
-        html_url
+        html_url,
+        body
     } = detailData;
 
     function showContent(e) {
@@ -98,8 +109,13 @@ const PullRequestItem = ({data, classId}) => {
 
     function handleGPTCodeReview(e) {
         e.preventDefault();
-        // Generate GPT code review
 
+        // Generate GPT code review
+        if ( !isGeneratingCodeReview && codeReview === '' ) {
+            setIsGeneratingCodeReview(true);
+            socket.emit('codeReview', detailData.diffData);
+        }
+        
     }
 
     useEffect(() => {
@@ -111,8 +127,26 @@ const PullRequestItem = ({data, classId}) => {
                     setDetailData(getPRDetail);
                 })
                 .catch(err => {console.error(err)})
+            const codeReview = window.localStorage.getItem(`${classId}/${data.number}`);
+            if ( codeReview ) {
+                setCodeReview(codeReview);
+            }
         }
     }, [authContext, classId, data.number])
+
+    useEffect(() => {
+        function onCodeReviewEvent(result) {
+            window.localStorage.setItem(`${classId}/${data.number}`, result);
+            setCodeReview(result);
+            setIsGeneratingCodeReview(false);
+        }
+
+        socket.on('codeReviewResult', onCodeReviewEvent);
+        return () => {
+            socket.off('codeReviewResult', onCodeReviewEvent);
+        };
+
+    }, [data.number, classId])
 
 
     return (
@@ -124,13 +158,20 @@ const PullRequestItem = ({data, classId}) => {
             <ContentWrapper isShowContent={isShowContent}>
                 {
                     isShowContent ? <ContentContainer>
-                        <ContentTitle>#PR Detail</ContentTitle>
+                        <ContentTitle>{body}</ContentTitle>
                         <ContentDescription>Commits: {commits} | Additions: {additions} | Deletions: {deletions}</ContentDescription>
                         <ContentDescription>Pull request url: <a href={`${html_url}`}>{html_url}</a></ContentDescription>
-                        <ChatGPTContainer onClick={handleGPTCodeReview}>
-                            <ChatGPTLogo src="/ChatGPT_logo.png" alt="chatGPT_logo"></ChatGPTLogo>
-                            <ContentDescription>Generate Code Review</ContentDescription>
-                        </ChatGPTContainer>
+                        {
+                            codeReview === '' ? 
+                            <ChatGPTContainer onClick={handleGPTCodeReview} isGeneratingCodeReview={isGeneratingCodeReview}>
+                                <ChatGPTLogo src="/ChatGPT_logo.png" alt="chatGPT_logo"></ChatGPTLogo>
+                                <ContentDescription>Generate Code Review</ContentDescription>
+                                {
+                                    isGeneratingCodeReview ? <PulseLoader></PulseLoader> : ''
+                                } 
+                            </ChatGPTContainer>
+                            : <ContentDescription>{codeReview}</ContentDescription>
+                        }  
                     </ContentContainer> : ''
                 }
             </ContentWrapper>

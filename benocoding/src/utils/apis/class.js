@@ -246,6 +246,7 @@ async function getPullRequestDetail(userId, classId, number) {
                     commits,
                     additions,
                     deletions,
+                    body
                 }
             }
         `,
