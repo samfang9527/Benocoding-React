@@ -1,5 +1,6 @@
 
 import { BACKEND_API_URL } from "../../global/constant.js";
+import axios from "axios";
 
 async function fetchUserData(userId) {
     try {
@@ -35,6 +36,51 @@ async function fetchUserData(userId) {
     }
 }
 
+async function getUserMilestoneData(userId, classId) {
+
+    const graphqlQuery = {
+        query : `
+            query($classId: String!, $userId: String!) {
+                milestones(classId: $classId, userId: $userId) {
+                    functionName,
+                    milestone,
+                    milestoneDesc,
+                    passed,
+                    autoTest,
+                    functionTest,
+                    testCases {
+                        case,
+                        statusCode,
+                        inputs,
+                        method,
+                        result
+                    }
+                }
+            }
+        `,
+        variables: {
+            userId: userId,
+            classId: classId
+        }
+    }
+
+    try {
+        const { data } = await axios({
+            method: 'POST',
+            url: BACKEND_API_URL,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: graphqlQuery
+        })
+        console.log(data);
+        return data.data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 export {
-    fetchUserData
+    fetchUserData,
+    getUserMilestoneData
 }

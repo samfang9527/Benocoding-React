@@ -93,13 +93,13 @@ const MemberItem = ({userInfo, classData}) => {
     } = userInfo;
 
     const {
-        classId,
+        id,
         ownerId
     } = classData
 
     useEffect(() => {
-        if ( classId && userId ) {
-            fetchUserMilestones(classId, userId)
+        if ( id && userId ) {
+            fetchUserMilestones(id, userId)
                 .then(response => {
                     const { milestones } = response.data;
                     setMilestones(milestones);
@@ -107,10 +107,12 @@ const MemberItem = ({userInfo, classData}) => {
                     // cur milestone
                     const curMilestone = calculateProgress(milestones);
                     setCurMilestone(curMilestone);
+
+                    console.log(curMilestone, milestones);
                 })
                 .catch(err => console.error(err))
         }
-    }, [classId, userId])
+    }, [id, userId])
 
     return (
         <ItemList>

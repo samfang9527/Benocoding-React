@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useEffect, useState, useContext } from "react";
 import { useLocation } from 'react-router-dom';
 import { getClassData } from "../../utils/apis/class.js";
+import { getUserMilestoneData } from "../../utils/apis/user.js";
 import { AuthContext } from "../../global/authContext.jsx";
 import TeacherNavOption from "./components/teacherNavOption.jsx";
 import StudentNavOption from "./components/studentNavOption.jsx";
@@ -100,10 +101,17 @@ const ClassManage = () => {
                     // members
                     setMembers(classData.classMembers);
 
-                    // milestones
-                    setMilestones(classData.milestones);
+                    // // milestones
+                    // setMilestones(classData.milestones);
                 })
                 .catch(err => console.error(err))
+            
+                getUserMilestoneData(user.userId, classId)
+                    .then(response => {
+                        const milestoneData = response.milestones;
+                        setMilestones(milestoneData);
+                    })
+                    .catch(err => {console.error(err)})
         }
     }, [authContext.isLoading, location, user.userId])
 

@@ -226,7 +226,7 @@ async function getAllPullRequests(userId, classId) {
             },
             data: graphqlQuery
         })
-        console.log(data);
+        console.log('data', data);
         return data.data;
     } catch (err) {
         console.error(err);

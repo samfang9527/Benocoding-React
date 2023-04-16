@@ -12,17 +12,18 @@ const Block = styled.div`
     width: 95%;
     border: 1px solid black;
     margin: 10px 0 0 0;
-    cursor: pointer;
-    
-    :hover {
-        background-color: bisque;
-    }
 `;
 
 const TitleWrapper = styled.div`
     display: flex;
     align-items: center;
     height: 100%;
+    cursor: pointer;
+    background-color: ${props => props.passed ? 'MediumAquamarine' : ''}; 
+    
+    :hover {
+        background-color: ${props => props.passed ? 'MediumAquamarine' : 'Bisque'}; 
+    }
 `;
 
 const ContentWrapper = styled.div`
@@ -137,6 +138,7 @@ const MilestoneItem = ({milestone, idx, classId}) => {
 
     const { user } = authContext;
     const {
+        passed,
         autoTest,
         functionTest,
         functionName,
@@ -204,9 +206,9 @@ const MilestoneItem = ({milestone, idx, classId}) => {
     return (
         <>
             <Block onClick={showContent}>
-                <TitleWrapper>
+                <TitleWrapper passed={passed}>
                     <MenuOpenIcon sx={{fontSize: "30px", cursor: "pointer"}}></MenuOpenIcon>
-                    <BlockTitle>{milestone.milestone}</BlockTitle>
+                    <BlockTitle>{ passed ? milestone.milestone + ' | Passed' : milestone.milestone}</BlockTitle>
                 </TitleWrapper>
             </Block>
             <ContentWrapper isShowContent={isShowContent}>
