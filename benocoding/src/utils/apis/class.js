@@ -222,6 +222,7 @@ async function getClassData(classId) {
         query : `
             query ($classId: String!) {
                 class(classId: $classId) {
+                    teacherName,
                     teacherOptions,
                     studentOptions,
                     className,

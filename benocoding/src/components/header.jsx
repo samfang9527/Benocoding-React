@@ -114,7 +114,6 @@ const Header = () => {
     const [ isLogin, setIsLogin ] = useState(false);
 
     useEffect(() => {
-        console.log(authContext)
         if ( !authContext.isLoading ) {
             const { user } = authContext;
             if ( user ) {

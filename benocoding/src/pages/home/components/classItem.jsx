@@ -8,6 +8,11 @@ const ItemContainer = styled.div`
     margin: 50px 30px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
     background-color: snow;
+    cursor: pointer;
+
+    :hover {
+        background-color: Linen;
+    }
 `;
 
 const ItemImage = styled.img`
@@ -63,7 +68,7 @@ const ClassItem = ({class_}) => {
     } = class_;
 
     return (
-        <ItemContainer>
+        <ItemContainer onClick={() => {window.location.assign(`/class/${id}`)}}>
             <ItemImage src={`${CDN_DOMAIN + classImage}`}></ItemImage>
             <ContentWrapper>
                 <ClassTitle>{className}</ClassTitle>
