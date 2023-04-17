@@ -49,7 +49,58 @@ async function fetchOptionData(chooseClass, role, classId, setViewData) {
     setViewData(data.data.class);
 }
 
-async function getClassList(userId, pageNum, role) {
+async function getAllClassList(pageNum) {
+    const graphqlQuery = {
+        query: `
+            query($pageNum: Int!) {
+                getAllClassList(pageNum: $pageNum) {
+                    id,
+                    teacherName,
+                    className,
+                    classDesc,
+                    classImage,
+                    classTags,
+                    studentNumbers,
+                    status
+                }
+        }
+        `,
+        variables: {
+            pageNum: pageNum
+        }
+    }
+    try {
+        const { data } = await axios({
+            method: 'POST',
+            url: BACKEND_API_URL,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: graphqlQuery
+        })
+
+        const pageNums = await axios({
+            method: 'POST',
+            url: BACKEND_API_URL,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: {
+                query: `
+                    query {
+                        getAllPageNums
+                    }
+                `
+            }
+        })
+        data.data.allPageNums = pageNums.data.data.getAllPageNums;
+        return data.data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function getUserClassList(userId, pageNum, role) {
     const graphqlQuery = {
         query: `
             query($userId: String!, $pageNum: Int!) {
@@ -275,7 +326,8 @@ async function getPullRequestDetail(userId, classId, number) {
 
 export {
     fetchOptionData,
-    getClassList,
+    getAllClassList,
+    getUserClassList,
     getPageQuantity,
     getClassData,
     getAllPullRequests,

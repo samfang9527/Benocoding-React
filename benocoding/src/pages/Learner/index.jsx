@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import { getClassList, getPageQuantity } from "../../utils/apis/class.js";
+import { getUserClassList, getPageQuantity } from "../../utils/apis/class.js";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from "../../global/authContext.jsx";
@@ -83,7 +83,7 @@ const Learner = () => {
             if ( !pageNum || pageNum === '' ) {
                 pageNum = 0;
             }
-            getClassList(user.userId, Number(pageNum), 'Learner')
+            getUserClassList(user.userId, Number(pageNum), 'Learner')
                 .then(response => {
                     const responseData = response.getLearnerClassList;
                     const cleanData = responseData.reduce((acc, cur) => {

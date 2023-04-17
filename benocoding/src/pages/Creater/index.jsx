@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from "../../global/authContext.jsx";
 import CreaterClassItem from "./components/createrClassItem.jsx";
-import { getClassList, getPageQuantity } from "../../utils/apis/class.js";
+import { getUserClassList, getPageQuantity } from "../../utils/apis/class.js";
 import { MoonLoader } from "react-spinners";
 import { Fragment } from "react";
 import Pagination from "@mui/material/Pagination";
@@ -81,7 +81,7 @@ const Creater = () => {
             if ( !pageNum || pageNum === '' ) {
                 pageNum = 0;
             }
-            getClassList(user.userId, Number(pageNum), 'Creater')
+            getUserClassList(user.userId, Number(pageNum), 'Creater')
                 .then(response => {
                     setClassList(response.getCreaterClassList);
                 })
