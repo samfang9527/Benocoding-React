@@ -4,7 +4,6 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import { BsGithub } from "react-icons/bs";
 
 const IconWrapper = styled.div`
     display: flex;
@@ -67,10 +66,6 @@ const StudentNavOption = ({isExpanded, setChosenOption}) => {
                     height: 30
                 }}></ChatOutlinedIcon>
                 <Title isExpanded={isExpanded}>Chatroom</Title>
-            </EachIcon>
-            <EachIcon onClick={() => setChosenOption('pull-request')}>
-                <BsGithub size={30} style={{minWidth: 30}}></BsGithub>
-                <Title isExpanded={isExpanded}>Pull request</Title>
             </EachIcon>
             <EachIcon onClick={() => setChosenOption('milestones')}>
                 <AssignmentIcon sx={{

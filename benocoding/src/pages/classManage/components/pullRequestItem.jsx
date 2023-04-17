@@ -35,7 +35,7 @@ const BlockTitle = styled.p`
 const ContentWrapper = styled.div`
     width: 100%;
     border: 4px solid Gray;
-    height: ${props => props.isShowContent ? '500px' : '0'};
+    height: ${props => props.isShowContent ? '600px' : '0'};
     transition: height 0.3s ease-in-out;
     overflow: scroll;
     background-color: WhiteSmoke;
@@ -77,7 +77,7 @@ const ChatGPTContainer = styled.div`
     background-color: #E0E2DB;
     opacity: ${props => props.isGeneratingCodeReview ? '0.4' : '0.8'};
     border-radius: 4px;
-    cursor: pointer;
+    cursor: ${props => props.isGeneratingCodeReview ? 'wait' : 'pointer'};
 
     :hover {
         opacity: ${props => props.isGeneratingCodeReview ? '0.4' : '1'};

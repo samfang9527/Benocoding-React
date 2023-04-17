@@ -125,16 +125,18 @@ const CustomLoader = styled(MoonLoader)`
     margin: 0 20px;
 `;
 
+const APITestInput = styled.input`
+    height: 30px;
+    font-size: 22px;
+    margin: 0 20px;
+`;
+
 
 const MilestoneItem = ({milestone, idx, classId}) => {
 
     const authContext = useContext(AuthContext);
     const apiInput = useRef(null);
     const testfile = useRef(null);
-
-    const [ isShowContent, setIsShowContent ] = useState(false);
-    const [ isTesting, setIsTesting ] = useState(false);
-    const [ testResults, setTestResults ] = useState([]);
 
     const { user } = authContext;
     const {
@@ -144,6 +146,11 @@ const MilestoneItem = ({milestone, idx, classId}) => {
         functionName,
         testCases
     } = milestone;
+
+    const [ isShowContent, setIsShowContent ] = useState(false);
+    const [ isTesting, setIsTesting ] = useState(false);
+    const [ testResults, setTestResults ] = useState([]);
+    const [ testPassed, setTestPassed ] = useState(passed);
 
     function showContent(e) {
         e.preventDefault();
@@ -162,18 +169,31 @@ const MilestoneItem = ({milestone, idx, classId}) => {
 
         // post function test api
         setIsTesting(true);
-        const { data } = await axios.post(
-            BACKEND_DOMAIN + '/api/1.0/autotest/functiontest',
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data"
+        try {
+            const { data } = await axios.post(
+                BACKEND_DOMAIN + '/api/1.0/autotest/functiontest',
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
                 }
-            }
-        )
-        console.log(data.testResults);
-        setTestResults(data.testResults);
-        setIsTesting(false);
+            )
+            const { testResults } = data;
+            setTestResults(testResults);
+    
+            let allPassed = true;
+            testResults.forEach(element => {
+                if ( !element.passed ) {
+                    allPassed = false;
+                }
+            });
+            setTestPassed(allPassed);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsTesting(false);
+        }
     }
 
     async function handleAPITest(e) {
@@ -182,33 +202,36 @@ const MilestoneItem = ({milestone, idx, classId}) => {
 
         // post api test api
         setIsTesting(true);
-        const { data } = await axios.post(
-            BACKEND_DOMAIN + '/api/1.0/autotest/apitest',
-            {
-                classId,
-                userId: user.userId,
-                milestoneIdx: idx,
-                targetUrl,
-                testCases: JSON.stringify(testCases)
-            },
-            {
-                headers: {
-                    "Content-Type": "application/json"
+        try {
+            const { data } = await axios.post(
+                BACKEND_DOMAIN + '/api/1.0/autotest/apitest',
+                {
+                    classId,
+                    userId: user.userId,
+                    milestoneIdx: idx,
+                    targetUrl,
+                    testCases: JSON.stringify(testCases)
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
                 }
-            }
-        )
-        console.log(data);
-        setTestResults(data);
-        setIsTesting(false);
-
+            )
+            setTestResults(data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsTesting(false);
+        }
     }
 
     return (
         <>
             <Block onClick={showContent}>
-                <TitleWrapper passed={passed}>
+                <TitleWrapper passed={testPassed}>
                     <MenuOpenIcon sx={{fontSize: "30px", cursor: "pointer"}}></MenuOpenIcon>
-                    <BlockTitle>{ passed ? milestone.milestone + ' | Passed' : milestone.milestone}</BlockTitle>
+                    <BlockTitle>{ testPassed ? milestone.milestone + ' | Passed' : milestone.milestone}</BlockTitle>
                 </TitleWrapper>
             </Block>
             <ContentWrapper isShowContent={isShowContent}>
@@ -253,7 +276,7 @@ const MilestoneItem = ({milestone, idx, classId}) => {
                                                 isTesting ? <CustomLoader color="Crimson" size={40}></CustomLoader> : 
                                                 <ListItem>
                                                     Your url: 
-                                                    <input ref={apiInput}></input>
+                                                    <APITestInput ref={apiInput} defaultValue="https://benocoding.com"></APITestInput>
                                                 </ListItem>
                                             }
                                         </List><br></br>

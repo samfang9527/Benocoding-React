@@ -75,6 +75,7 @@ const CampaignImage = styled.img`
     width: 100%;
     height: 600px;
     object-fit: contain;
+    cursor: pointer;
 `;
 
 function getPaging(queryString) {
@@ -141,6 +142,7 @@ const Home = () => {
             .then(response => {
                 const { getRandomClasses } = response;
                 setCampaignList(getRandomClasses);
+                console.log(campaignList);
             })
             .catch(err => {console.error(err)})
     }, [])
@@ -166,13 +168,25 @@ const Home = () => {
                     { campaignList.length === 3 ? 
                         <Slider {...settings}>
                             <div>
-                                <CampaignImage src={`${CDN_DOMAIN + campaignList[0].classImage}`} alt={campaignList[0].className}></CampaignImage>
+                                <CampaignImage
+                                    src={`${CDN_DOMAIN + campaignList[0].classImage}`}
+                                    alt={campaignList[0].className}
+                                    onClick={() => {window.location.assign(`/class/${campaignList[0].id}`)}}
+                                ></CampaignImage>
                             </div>
                             <div>
-                                <CampaignImage src={`${CDN_DOMAIN + campaignList[1].classImage}`} alt={campaignList[1].className}></CampaignImage>
+                                <CampaignImage
+                                    src={`${CDN_DOMAIN + campaignList[1].classImage}`}
+                                    alt={campaignList[1].className}
+                                    onClick={() => {window.location.assign(`/class/${campaignList[1].id}`)}}
+                                ></CampaignImage>
                             </div>
                             <div>
-                                <CampaignImage src={`${CDN_DOMAIN + campaignList[2].classImage}`} alt={campaignList[2].className}></CampaignImage>
+                                <CampaignImage
+                                    src={`${CDN_DOMAIN + campaignList[2].classImage}`}
+                                    alt={campaignList[2].className}
+                                    onClick={() => {window.location.assign(`/class/${campaignList[2].id}`)}}
+                                ></CampaignImage>
                             </div>
                         </Slider> : ''
                     }

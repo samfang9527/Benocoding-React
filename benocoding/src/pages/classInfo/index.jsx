@@ -13,10 +13,14 @@ const MainContainer = styled.div`
     justify-content: center;
     align-items: center;
     border: 4px solid DarkSeaGreen;
-    margin: 50px;
+    margin: 100px;
     background-color: white;
-    padding: 30px;
+    padding: 60px;
     border-radius: 20px;
+    width: 80%;
+    position: relative;
+    left: 50%;
+    margin-left: -40%;
 `;
 
 const ImageSection = styled.section`
@@ -148,7 +152,7 @@ const ClassDetail = () => {
                 <InfoBlock>
                     <ClassTitle>{className}</ClassTitle>
                     <ClassDescription style={{color: "MenuText", fontWeight: "normal"}}>{classDesc}</ClassDescription>
-                    { classVideo ? <ClassVideo controls={true} url={`${CDN_DOMAIN + classVideo}`}></ClassVideo> : '' }
+                    { classVideo ? <ClassVideo width={"80%"} height={"auto"} controls={true} url={`${CDN_DOMAIN + classVideo}`}></ClassVideo> : '' }
                     <ClassDescriptionBlock>Teacher | 
                         <ClassDescription>{teacherName}</ClassDescription>
                     </ClassDescriptionBlock>
