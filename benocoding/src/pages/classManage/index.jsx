@@ -86,13 +86,20 @@ const ClassManage = () => {
 
     useEffect(() => {
         if ( !authContext.isLoading ) {
+
+            // check user signin
+            const { user } = authContext;
+            if ( Object.keys(user).length === 0 ) {
+                alert('Please sign in to continue');
+                window.location.assign('/login');
+            }
+
             const path = location.pathname;
             const classId = path.slice(path.lastIndexOf('/') + 1);
 
             getClassData(classId)
                 .then(response => {
                     const classData = response.class;
-                    console.log(classData);
                     setClassData(classData);
 
                     // options
@@ -100,9 +107,6 @@ const ClassManage = () => {
                     
                     // members
                     setMembers(classData.classMembers);
-
-                    // // milestones
-                    // setMilestones(classData.milestones);
                 })
                 .catch(err => console.error(err))
             
@@ -113,7 +117,7 @@ const ClassManage = () => {
                     })
                     .catch(err => {console.error(err)})
         }
-    }, [authContext.isLoading, location, user.userId])
+    }, [authContext, location, user.userId])
 
     return (
         <MainContainer>
