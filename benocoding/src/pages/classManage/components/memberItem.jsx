@@ -1,8 +1,8 @@
 
 import styled from "styled-components";
-import axios from "axios";
 import EmailIcon from '@mui/icons-material/Email';
 import { useState, useEffect } from "react";
+import { getUserMilestoneData } from "../../../utils/apis/user.js";
 
 const ItemList = styled.ul`
     list-style: none;
@@ -41,36 +41,6 @@ const Info = styled.p`
     padding: 0 40px 0 0;
 `;
 
-
-async function fetchUserMilestones(classId, userId) {
-
-    const graphqlQuery = {
-        query: `
-            query($userClassId: String!, $userId: String!) {
-                milestones(userClassId: $userClassId, userId: $userId) {
-                    milestone,
-                    milestoneDesc,
-                    passed
-                }
-            }
-        `,
-        variables: {
-            userClassId: classId,
-            userId: userId
-        }
-    }
-
-    const { data } = await axios({
-        method: "POST",
-        url: "http://localhost:8080/graphql",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        data: graphqlQuery
-    })
-    return data;
-}
-
 function calculateProgress(milestones) {
     for ( let i = 0; i < milestones.length; i++ ) {
         const milestone = milestones[i];
@@ -99,9 +69,9 @@ const MemberItem = ({userInfo, classData}) => {
 
     useEffect(() => {
         if ( id && userId ) {
-            fetchUserMilestones(id, userId)
+            getUserMilestoneData(userId, id)
                 .then(response => {
-                    const { milestones } = response.data;
+                    const { milestones } = response;
                     setMilestones(milestones);
 
                     // cur milestone
