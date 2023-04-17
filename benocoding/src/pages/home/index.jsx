@@ -2,8 +2,10 @@
 import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
-import { getAllClassList } from "../../utils/apis/class.js";
+import { getClassList } from "../../utils/apis/class.js";
 import ClassItem from "./components/classItem.jsx";
+import Pagination from "@mui/material/Pagination";
+import { DOMAIN } from "../../global/constant.js";
 
 const MainContainer = styled.div`
     display: flex;
@@ -54,7 +56,7 @@ const ClassSection = styled.section`
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin: 50px;
+    margin: 0px 50px 50px 50px;
     border-radius: 20px;
     background-color: White;
 `;
@@ -65,17 +67,14 @@ const CampaignBlock = styled.div`
     border: 1px solid black;
 `;
 
-function getPaging(location) {
-    const queryString = location.search;
+function getPaging(queryString) {
     const params = new URLSearchParams(queryString);
     return params.get('paging');
 }
 
-function setQueryString(location, value) {
-    const queryString = location.search;
+function getKeyword(queryString) {
     const params = new URLSearchParams(queryString);
-    params.set('paging', value);
-    window.location.search = params;
+    return params.get('keyword');
 }
 
 const Home = () => {
@@ -86,19 +85,36 @@ const Home = () => {
     const [ classList, setClassList ] = useState([]);
     const [ campaignList, setCampaignList ] = useState([]);
     const [ maxPageNum, setMaxPageNum ] = useState(0);
+    const [ pageNum, setPageNum ] = useState(getPaging(location.search));
+    const [ keyword, setKeyword ] = useState(getKeyword(location.search));
+
+    function handlePageChange(e, value) {
+        const params = new URLSearchParams(window.location.search);
+        params.set("paging", value-1);
+        const newSearch = params.toString();
+        const newUrl = `${DOMAIN}?${newSearch}`
+        window.history.pushState(null, '', newUrl);
+        setPageNum(value-1);
+    }
+
+    function handleSearch(e) {
+        if ( e.keyCode === 13 ) {
+            const params = new URLSearchParams(window.location.search);
+            params.set("keyword", searchInput.current.value);
+            const newSearch = params.toString();
+            const newUrl = `${DOMAIN}?${newSearch}`
+            window.history.pushState(null, '', newUrl);
+            setKeyword(searchInput.current.value);
+        }
+    }
 
     useEffect(() => {
-        // class list
-        let pageNum = getPaging(location);
-        if ( !pageNum || pageNum === '' ) {
-            pageNum = 0;
-        }
-        getAllClassList(pageNum)
+        getClassList(Number(pageNum), keyword)
             .then(response => {
-                const { getAllClassList } = response;
+                const { getClassList } = response;
                 const { allPageNums } = response;
-                if ( getAllClassList ) {
-                    setClassList(getAllClassList);
+                if ( getClassList ) {
+                    setClassList(getClassList);
                 }
 
                 if ( allPageNums ) {
@@ -107,7 +123,7 @@ const Home = () => {
             })
             .catch(err => {console.error(err)})
 
-    }, [location])
+    }, [pageNum, keyword])
 
     useEffect(() => {
         // campaign list
@@ -119,10 +135,16 @@ const Home = () => {
             <CampaignSection>
                 <InputBlock>
                     <SearchDescription>Find a class</SearchDescription>
-                    <SearchInput type="text" placeholder="Javascript" ref={searchInput}></SearchInput>
+                    <SearchInput type="text" placeholder="Javascript" ref={searchInput} onKeyUp={handleSearch}></SearchInput>
                 </InputBlock>
                 <CampaignBlock></CampaignBlock>
             </CampaignSection>
+            <Pagination
+                count={maxPageNum}
+                size="large"
+                style={{marginTop: "40px"}}
+                onChange={handlePageChange}>
+            </Pagination>
             <ClassSection>
                 {
                     classList.map((class_, idx) => {

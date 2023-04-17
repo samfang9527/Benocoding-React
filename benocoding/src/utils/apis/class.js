@@ -49,11 +49,11 @@ async function fetchOptionData(chooseClass, role, classId, setViewData) {
     setViewData(data.data.class);
 }
 
-async function getAllClassList(pageNum) {
+async function getClassList(pageNum, keyword) {
     const graphqlQuery = {
         query: `
-            query($pageNum: Int!) {
-                getAllClassList(pageNum: $pageNum) {
+            query($pageNum: Int!, $keyword: String) {
+                getClassList(pageNum: $pageNum, keyword: $keyword) {
                     id,
                     teacherName,
                     className,
@@ -66,7 +66,8 @@ async function getAllClassList(pageNum) {
         }
         `,
         variables: {
-            pageNum: pageNum
+            pageNum: pageNum,
+            keyword: keyword
         }
     }
     try {
@@ -78,6 +79,7 @@ async function getAllClassList(pageNum) {
             },
             data: graphqlQuery
         })
+        console.log(data);
 
         const pageNums = await axios({
             method: 'POST',
@@ -326,7 +328,7 @@ async function getPullRequestDetail(userId, classId, number) {
 
 export {
     fetchOptionData,
-    getAllClassList,
+    getClassList,
     getUserClassList,
     getPageQuantity,
     getClassData,
