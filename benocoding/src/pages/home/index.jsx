@@ -2,10 +2,14 @@
 import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
-import { getClassList } from "../../utils/apis/class.js";
+import { getClassList, getRandomClasses } from "../../utils/apis/class.js";
 import ClassItem from "./components/classItem.jsx";
 import Pagination from "@mui/material/Pagination";
-import { DOMAIN } from "../../global/constant.js";
+import { DOMAIN, CDN_DOMAIN } from "../../global/constant.js";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 
 const MainContainer = styled.div`
     display: flex;
@@ -16,7 +20,7 @@ const MainContainer = styled.div`
 
 const CampaignSection = styled.section`
     width: 100%;
-    height: 400px;
+    height: 600px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -30,7 +34,8 @@ const InputBlock = styled.div`
     justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
-    margin: 0px -50px 0px 10px;
+    position: relative;
+    left: 5%;
 `;
 
 const SearchDescription = styled.p`
@@ -64,7 +69,12 @@ const ClassSection = styled.section`
 const CampaignBlock = styled.div`
     width: 50%;
     height: 100%;
-    border: 1px solid black;
+`;
+
+const CampaignImage = styled.img`
+    width: 100%;
+    height: 600px;
+    object-fit: contain;
 `;
 
 function getPaging(queryString) {
@@ -127,8 +137,23 @@ const Home = () => {
 
     useEffect(() => {
         // campaign list
-
+        getRandomClasses()
+            .then(response => {
+                const { getRandomClasses } = response;
+                setCampaignList(getRandomClasses);
+            })
+            .catch(err => {console.error(err)})
     }, [])
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3000,
+    };
 
     return (
         <MainContainer>
@@ -137,7 +162,21 @@ const Home = () => {
                     <SearchDescription>Find a class</SearchDescription>
                     <SearchInput type="text" placeholder="Javascript" ref={searchInput} onKeyUp={handleSearch}></SearchInput>
                 </InputBlock>
-                <CampaignBlock></CampaignBlock>
+                <CampaignBlock>
+                    { campaignList.length === 3 ? 
+                        <Slider {...settings}>
+                            <div>
+                                <CampaignImage src={`${CDN_DOMAIN + campaignList[0].classImage}`} alt={campaignList[0].className}></CampaignImage>
+                            </div>
+                            <div>
+                                <CampaignImage src={`${CDN_DOMAIN + campaignList[1].classImage}`} alt={campaignList[1].className}></CampaignImage>
+                            </div>
+                            <div>
+                                <CampaignImage src={`${CDN_DOMAIN + campaignList[2].classImage}`} alt={campaignList[2].className}></CampaignImage>
+                            </div>
+                        </Slider> : ''
+                    }
+                </CampaignBlock>
             </CampaignSection>
             <Pagination
                 count={maxPageNum}

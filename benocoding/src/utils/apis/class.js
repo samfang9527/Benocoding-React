@@ -49,6 +49,39 @@ async function fetchOptionData(chooseClass, role, classId, setViewData) {
     setViewData(data.data.class);
 }
 
+async function getRandomClasses() {
+    const graphqlQuery = {
+        query: `
+            query {
+                getRandomClasses {
+                    id,
+                    teacherName,
+                    className,
+                    classDesc,
+                    classImage,
+                    classTags,
+                    studentNumbers,
+                    status
+                }
+        }
+        `
+    }
+    try {
+        const { data } = await axios({
+            method: 'POST',
+            url: BACKEND_API_URL,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: graphqlQuery
+        })
+        console.log(data);
+        return data.data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 async function getClassList(pageNum, keyword) {
     const graphqlQuery = {
         query: `
@@ -329,6 +362,7 @@ async function getPullRequestDetail(userId, classId, number) {
 export {
     fetchOptionData,
     getClassList,
+    getRandomClasses,
     getUserClassList,
     getPageQuantity,
     getClassData,
