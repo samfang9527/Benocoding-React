@@ -1,13 +1,17 @@
 
 import styled from "styled-components";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../global/authContext.jsx";
 
 const HeaderWrapper = styled.header`
-    height: 10%;
+    height: 5%;
     border-bottom: 1px solid white;
     background-color: #38686A;
     position: sticky;
     top: 0;
     z-index: 100;
+    display: flex;
+    justify-content: space-between;
 `;
 
 const LogoStyle = styled.h1`
@@ -16,38 +20,122 @@ const LogoStyle = styled.h1`
     margin-left: 50px;
     display: inline-block;
     color: white;
+    cursor: pointer;
 `;
 
-const Btn = styled.button`
+const NavWrapper = styled.div`
+    display: flex;
+    justify-content: space-around;
+    margin: 0px 40px 0px 0px;
+`;
+
+const LoginBtn = styled.button`
     height: 50px;
-    width: 180px;
+    width: fit-content;
     margin: auto 10px;
     background-color: orange;
     border-radius: 6px;
-    position: absolute;
     right: 5%;
     top: 50px;
     font-size: 18px;
     color: white;
     cursor: pointer;
     border: none;
+    padding: 5px 20px;
 
     :hover {
         background-color: darkorange;
     }
 `;
 
+const LearnerBtn = styled.button`
+    height: 50px;
+    width: fit-content;
+    margin: auto 10px;
+    background-color: SandyBrown;
+    border-radius: 6px;
+    right: 5%;
+    top: 50px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    padding: 5px 20px;
+
+    :hover {
+        background-color: Tan;
+    }
+`;
+
+const CreaterBtn = styled.button`
+    height: 50px;
+    width: fit-content;
+    margin: auto 10px;
+    background-color: SandyBrown;
+    border-radius: 6px;
+    right: 5%;
+    top: 50px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    padding: 5px 20px;
+
+    :hover {
+        background-color: Tan;
+    }
+`;
+
+const CreateClassBtn = styled.button`
+    height: 50px;
+    width: fit-content;
+    margin: auto 10px;
+    background-color: CornflowerBlue;
+    border-radius: 6px;
+    right: 5%;
+    top: 50px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    padding: 5px 20px;
+
+    :hover {
+        background-color: DeepSkyBlue;
+    }
+`;
+
 
 const Header = () => {
 
-    function toLoginPage() {
-        window.location.assign('/login');
-    }
+    const authContext = useContext(AuthContext);
+    const { user } = authContext;
+
+    const [ isLogin, setIsLogin ] = useState(false);
+
+    useEffect(() => {
+        console.log(authContext)
+        if ( !authContext.isLoading ) {
+            const { user } = authContext;
+            if ( user ) {
+                setIsLogin(true);
+            }
+        }
+    }, [authContext])
 
     return (
         <HeaderWrapper>
-            <LogoStyle>Benocoding</LogoStyle>
-            <Btn onClick={toLoginPage}>Sign-in / Sign-up</Btn>
+            <LogoStyle  onClick={() => {window.location.assign('/')}}>Benocoding</LogoStyle>
+            <NavWrapper>
+                <CreateClassBtn onClick={() => {window.location.assign('/create')}}>建立新課程</CreateClassBtn>
+                <LearnerBtn onClick={() => {window.location.assign('/learner')}}>我的學習</LearnerBtn>
+                <CreaterBtn onClick={() => {window.location.assign('/creater')}}>我建立的課程</CreaterBtn>
+                <LoginBtn onClick={() => {window.location.assign('/login')}}>
+                    {
+                        isLogin ? `Hi ${user.username}` : 'Sign-in / Sign-up'
+                    }
+                </LoginBtn>
+            </NavWrapper>
         </HeaderWrapper>
     )
 }
