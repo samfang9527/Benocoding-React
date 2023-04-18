@@ -1,53 +1,6 @@
 
-import { BACKEND_API_URL } from "../../global/constant.js";
+import { PRODUCTION_BACKEND_API_URL } from "../../global/constant.js";
 import axios from "axios";
-
-async function fetchOptionData(chooseClass, role, classId, setViewData) {
-    chooseClass([]);
-    const res = await fetch(BACKEND_API_URL, {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            query: `
-                query getClassOptions($classId: String!) {
-                    class(classId: $classId) {
-                        teacherOptions,
-                        studentOptions,
-                        className,
-                        classDesc,
-                        classStartDate,
-                        classEndDate,
-                        id,
-                        milestones {
-                            milestone,
-                            milestoneDesc,
-                            autoTest,
-                            passed
-                        },
-                        chatroomId,
-                        classImage,
-                        classVideo,
-                        classMembers {
-                            userId,
-                            username,
-                            email
-                        }
-                    }
-                }
-            `,
-            variables: {
-                classId: classId,
-            }
-        })
-    })
-    const data = await res.json();
-    const { teacherOptions } = data.data.class;
-    const { studentOptions } = data.data.class;
-    chooseClass(role === 'teacher' ? teacherOptions : studentOptions);
-    setViewData(data.data.class);
-}
 
 async function getRandomClasses() {
     const graphqlQuery = {
@@ -69,7 +22,7 @@ async function getRandomClasses() {
     try {
         const { data } = await axios({
             method: 'POST',
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -106,7 +59,7 @@ async function getClassList(pageNum, keyword) {
     try {
         const { data } = await axios({
             method: 'POST',
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -116,7 +69,7 @@ async function getClassList(pageNum, keyword) {
 
         const pageNums = await axios({
             method: 'POST',
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -174,7 +127,7 @@ async function getUserClassList(userId, pageNum, role) {
     try {
         const { data } = await axios({
             method: 'POST',
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -203,7 +156,7 @@ async function getPageQuantity(userId, role) {
     try {
         const { data } = await axios({
             method: 'POST',
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -270,7 +223,7 @@ async function getClassData(classId) {
     try {
         const { data } = await axios({
             method: 'POST',
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -307,7 +260,7 @@ async function getAllPullRequests(userId, classId) {
     try {
         const { data } = await axios({
             method: 'POST',
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -347,7 +300,7 @@ async function getPullRequestDetail(userId, classId, number) {
     try {
         const { data } = await axios({
             method: 'POST',
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -361,7 +314,6 @@ async function getPullRequestDetail(userId, classId, number) {
 }
 
 export {
-    fetchOptionData,
     getClassList,
     getRandomClasses,
     getUserClassList,

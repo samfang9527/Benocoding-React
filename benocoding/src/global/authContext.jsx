@@ -4,7 +4,7 @@ import {
     useEffect,
 } from 'react';
 import axios from "axios";
-import { BACKEND_API_URL } from './constant.js';
+import { PRODUCTION_BACKEND_API_URL } from './constant.js';
 
   
 export const AuthContext = createContext({
@@ -24,7 +24,7 @@ export const AuthContextProvider = ({children}) => {
     async function jwtValidation(jwt) { 
         try {
           const data = await axios({
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
               "Content-Type": "application/json",
               "token": jwt

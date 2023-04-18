@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { getClassList, getRandomClasses } from "../../utils/apis/class.js";
 import ClassItem from "./components/classItem.jsx";
 import Pagination from "@mui/material/Pagination";
-import { DOMAIN, CDN_DOMAIN } from "../../global/constant.js";
+import { PRODUCTION_DOMAIN, CDN_DOMAIN } from "../../global/constant.js";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -103,7 +103,7 @@ const Home = () => {
         const params = new URLSearchParams(window.location.search);
         params.set("paging", value-1);
         const newSearch = params.toString();
-        const newUrl = `${DOMAIN}?${newSearch}`
+        const newUrl = `${PRODUCTION_DOMAIN}?${newSearch}`
         window.history.pushState(null, '', newUrl);
         setPageNum(value-1);
     }
@@ -113,7 +113,7 @@ const Home = () => {
             const params = new URLSearchParams(window.location.search);
             params.set("keyword", searchInput.current.value);
             const newSearch = params.toString();
-            const newUrl = `${DOMAIN}?${newSearch}`
+            const newUrl = `${PRODUCTION_DOMAIN}?${newSearch}`
             window.history.pushState(null, '', newUrl);
             setKeyword(searchInput.current.value);
         }
@@ -145,7 +145,7 @@ const Home = () => {
                 console.log(campaignList);
             })
             .catch(err => {console.error(err)})
-    }, [])
+    }, [campaignList])
 
     const settings = {
         dots: true,
@@ -200,7 +200,7 @@ const Home = () => {
             </Pagination>
             <ClassSection>
                 {
-                    classList.map((class_, idx) => {
+                    classList.map((class_) => {
                         return (
                             <ClassItem key={class_.id} class_={class_}></ClassItem>
                         )

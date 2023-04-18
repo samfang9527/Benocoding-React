@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import ChatroomMessageItem from "./chatroomMessageItem";
 import ChatroomInput from "./chatroomInput";
 import { socket } from "../../../utils/socket/socket.js";
-import { BACKEND_API_URL } from "../../../global/constant.js";
+import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
 import { AuthContext } from "../../../global/authContext";
 
 
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
 async function fetchChatroomMsgs(chatroomId) {
 
     const { data } = await axios({
-        url: BACKEND_API_URL,
+        url: PRODUCTION_BACKEND_API_URL,
         method: 'POST',
         headers: {
             "Content-Type": "application/json"

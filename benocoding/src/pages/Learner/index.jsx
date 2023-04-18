@@ -123,7 +123,7 @@ const Learner = () => {
                 <Fragment>
                     <ClassList>
                         {
-                            classList.map((class_, idx) => {
+                            classList.map((class_) => {
                                 return (
                                     <UserClassItem key={class_.id} classData={class_}></UserClassItem>
                                 )

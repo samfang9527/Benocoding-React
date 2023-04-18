@@ -1,10 +1,10 @@
 
-import { BACKEND_API_URL } from "../../global/constant.js";
+import { PRODUCTION_BACKEND_API_URL } from "../../global/constant.js";
 import axios from "axios";
 
 async function fetchUserData(userId) {
     try {
-        const res = await fetch(BACKEND_API_URL, {
+        const res = await fetch(PRODUCTION_BACKEND_API_URL, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -67,7 +67,7 @@ async function getUserMilestoneData(userId, classId) {
     try {
         const { data } = await axios({
             method: 'POST',
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             headers: {
                 "Content-Type": "application/json"
             },

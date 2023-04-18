@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
 import { useState, useRef, useContext } from "react";
-import { BACKEND_DOMAIN } from "../../../global/constant.js";
+import { PRODUCTION_BACKEND_DOMAIN } from "../../../global/constant.js";
 import axios from "axios";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { MoonLoader } from "react-spinners";
@@ -171,7 +171,7 @@ const MilestoneItem = ({milestone, idx, classId}) => {
         setIsTesting(true);
         try {
             const { data } = await axios.post(
-                BACKEND_DOMAIN + '/api/1.0/autotest/functiontest',
+                PRODUCTION_BACKEND_DOMAIN + '/api/1.0/autotest/functiontest',
                 formData,
                 {
                     headers: {
@@ -204,7 +204,7 @@ const MilestoneItem = ({milestone, idx, classId}) => {
         setIsTesting(true);
         try {
             const { data } = await axios.post(
-                BACKEND_DOMAIN + '/api/1.0/autotest/apitest',
+                PRODUCTION_BACKEND_DOMAIN + '/api/1.0/autotest/apitest',
                 {
                     classId,
                     userId: user.userId,

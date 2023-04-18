@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
 import axios from "axios";
-import { BACKEND_API_URL } from "../../../global/constant.js";
+import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
 import { useState, useContext } from "react";
 import Alert from '@mui/material/Alert';
 import { AuthContext } from "../../../global/authContext.jsx";
@@ -73,7 +73,7 @@ async function signIn(email, password) {
 
     try {
         const { data } = await axios({
-            url: BACKEND_API_URL,
+            url: PRODUCTION_BACKEND_API_URL,
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

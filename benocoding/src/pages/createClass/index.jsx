@@ -6,7 +6,7 @@ import { LinearProgress, Box} from "@mui/material";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 import Milestone from "./components/milestone";
 import Tags from "./components/tags";
-import { BACKEND_API_URL } from "../../global/constant.js";
+import { PRODUCTION_BACKEND_API_URL, PRODUCTION_BACKEND_DOMAIN } from "../../global/constant.js";
 
 
 const Wrapper = styled.div`
@@ -231,7 +231,7 @@ const CreateClass = () => {
                 const type = file.type;
 
                 // get presigned URL
-                const url = await axios.post('http://localhost:8080/fileUpload', {fileExtension});
+                const url = await axios.post(`${PRODUCTION_BACKEND_DOMAIN}/fileUpload`, {fileExtension});
 
                 // cancel token
                 const source = axios.CancelToken.source();
@@ -280,7 +280,7 @@ const CreateClass = () => {
                 const type = file.type;
 
                 // get presigned URL
-                const url = await axios.post('http://localhost:8080/fileUpload', {fileExtension});
+                const url = await axios.post(`${PRODUCTION_BACKEND_DOMAIN}/fileUpload`, {fileExtension});
 
                 // cancel token
                 const source = axios.CancelToken.source();
@@ -431,7 +431,7 @@ const CreateClass = () => {
             setIsSubmitting(true);
             const { data } = await axios({
                 method: "POST",
-                url: "http://localhost:8080/graphql",
+                url: PRODUCTION_BACKEND_API_URL,
                 headers: {
                     "Content-Type": "application/json",
                     "token": window.localStorage.getItem("jwt")
@@ -469,7 +469,7 @@ const CreateClass = () => {
     async function jwtValidation(jwt) { 
       try {
         const data = await axios({
-          url: BACKEND_API_URL,
+          url: PRODUCTION_BACKEND_API_URL,
           headers: {
             "Content-Type": "application/json",
             "token": jwt
