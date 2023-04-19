@@ -53,16 +53,17 @@ const InfoBlock = styled.div`
 const CheckoutBlock = styled.div`
     width: 100%;
     height: ${props => props.showCheckout ? "400px" : "100px"};
-    background-color: Tan;
     border-radius: 20px;
     transition: 0.3s ease-in-out;
+    background-color: AntiqueWhite;
+    border: 3px dashed black;
 `;
 
 const CheckoutTitle = styled.p`
     text-align: center;
     font-size: 30px;
     letter-spacing: 2px;
-    color: white;
+    color: black;
     cursor: pointer;
 `;
 
@@ -138,13 +139,13 @@ const ClassDetail = () => {
                 { classImage ? <MainImage alt={className} src={`${CDN_DOMAIN + classImage}`}></MainImage> : '' }
             </ImageSection>
             <InfoSection>
-                <CheckoutBlock showCheckout={showCheckout} onClick={() => {setShowCheckout(!showCheckout)}}>
-                    <CheckoutTitle>點擊購課</CheckoutTitle>
+                <CheckoutBlock showCheckout={showCheckout}>
+                    <CheckoutTitle onClick={() => {setShowCheckout(!showCheckout)}}>點擊購課</CheckoutTitle>
                     {
                         showCheckout ? 
                             <>
-                                <hr style={{border: "1px solid black", width: "97%"}}></hr>
-                                {/* <Tappay></Tappay> */}
+                                <hr style={{width: "50%", border: "1px solid black"}}></hr>
+                                <Tappay></Tappay>
                             </>
                             : ''
                     }

@@ -1,8 +1,26 @@
 
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const Wrapper = styled.div`
+    width: 90%;
+    height: 250px;
+    position: relative;
+    left: 50%;
+    margin-left: -45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+`;
+
+const Title = styled.p`
+    font-size: 18px;
+    text-align: left;
+    margin: 10px 0 0 0;
+`;
+
+const TPFieldContainer = styled.div`
 
 `;
 
@@ -14,63 +32,127 @@ const TPField = styled.div`
     padding: 5px;
 `;
 
-const PaymentButton = styled.button`
-    background: linear-gradient(to right, #00c9ff, #92fe9d);
-    border-radius: 5px;
+const SubmitBtn = styled.button`
+    width: 100px;
+    height: 40px;
     border: none;
-    color: white;
+    border-radius: 20px;
+    background-color: orange;
     cursor: pointer;
-    font-size: 16px;
-    padding: 10px 20px;
-    
-    &:hover {
-        opacity: 0.9;
+    color: white;
+    font-size: 20px;
+
+    :hover {
+        background-color: darkorange;
     }
 `;
 
 const Tappay = () => {
 
-    useEffect(() => {
-        const script = document.querySelector('script[src="https://js.tappaysdk.com/tpdirect/v5.6.0"]');
-        if (!script) {
-            const newScript = document.createElement('script');
-            newScript.src = 'https://js.tappaysdk.com/tpdirect/v5.6.0';
-            newScript.async = true;
-            document.body.appendChild(newScript);
+    const submitButton = useRef(null);
 
-            newScript.onload = () => {
-                window.TPDirect.setupSDK(12345, 'YOUR_TAPPAY_KEY', 'sandbox');
-                window.TPDirect.card.setup({
-                    fields: {
-                        number: {
-                            element: '#card-number',
-                            placeholder: '**** **** **** ****'
-                        },
-                        expirationDate: {
-                            element: '#card-expiration-date',
-                            placeholder: 'MM / YY'
-                        },
-                        ccv: {
-                            element: '#card-ccv',
-                            placeholder: 'CCV'
-                        }
-                    }
-                });
-            };
-    
-            return () => {
-                document.body.removeChild(script);
-            };
+    function checkout(e) {
+        e.preventDefault();
+        window.TPDirect.card.getPrime(function(result) {
+            if (result.status !== 0) {
+                console.error('getPrime error');
+                return;
+            }
+            window.localStorage.setItem('prime', result.card.prime);
+        })
+
+        // start buying class
+        
+    }
+
+    useEffect(() => {
+        // Display ccv field
+        let fields = {
+            number: {
+                // css selector
+                element: '#card-number',
+                placeholder: '**** **** **** ****'
+            },
+            expirationDate: {
+                // DOM object
+                element: document.getElementById('card-expiration-date'),
+                placeholder: 'MM / YY'
+            },
+            ccv: {
+                element: '#card-ccv',
+                placeholder: 'ccv'
+            }
         }
-    }, []);
+
+        window.TPDirect.card.setup({
+            fields: fields,
+            styles: {
+                // Style all elements
+                'input': {
+                    'color': 'gray'
+                },
+                // Styling ccv field
+                'input.ccv': {
+                    'font-size': '16px'
+                },
+                // Styling expiration-date field
+                'input.expiration-date': {
+                    'font-size': '16px'
+                },
+                // Styling card-number field
+                'input.card-number': {
+                    'font-size': '16px'
+                },
+                // style focus state
+                ':focus': {
+                    'color': 'black'
+                },
+                // style valid state
+                '.valid': {
+                    'color': 'green'
+                },
+                // style invalid state
+                '.invalid': {
+                    'color': 'red'
+                },
+                // Media queries
+                // Note that these apply to the iframe, not the root window.
+                '@media screen and (max-width: 400px)': {
+                    'input': {
+                        'color': 'orange'
+                    }
+                }
+            }
+        })
+
+        window.TPDirect.card.onUpdate(function (update) {
+            // update.canGetPrime === true
+            // --> you can call TPDirect.card.getPrime()
+            if (update.canGetPrime) {
+                console.log(update.canGetPrime);
+                // Enable submit Button to get prime.
+                submitButton.current.removeAttribute('disabled');
+            } else {
+                // Disable submit Button to get prime.
+                submitButton.current.setAttribute('disabled', true);
+            }
+        })
+    }, [])
+
+    
 
     return (
         <Wrapper>
-            <TPField class="tpfield" id="card-number"></TPField>
-            <TPField class="tpfield" id="card-expiration-date"></TPField>
-            <TPField class="tpfield" id="card-ccv"></TPField>
+            <TPFieldContainer>
+                <Title>信用卡付款</Title>
+                <TPField className="tpfield" id="card-number"></TPField>
+                <TPField className="tpfield" id="card-expiration-date"></TPField>
+                <TPField className="tpfield" id="card-ccv"></TPField>
+            </TPFieldContainer>
+            <SubmitBtn ref={submitButton} onClick={checkout}>Pay</SubmitBtn>
         </Wrapper>
     )
+
 }
 
 export default Tappay;
