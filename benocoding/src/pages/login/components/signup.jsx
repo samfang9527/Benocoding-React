@@ -57,6 +57,8 @@ async function signUp(username, email, password) {
         query: `
             mutation($data: UserData!) {
                 signup(data: $data) {
+                    statusCode,
+                    responseMessage,
                     jwt
                 }
             }
@@ -79,48 +81,50 @@ async function signUp(username, email, password) {
             },
             data: graphqlMutation        
         })
-
         return data;
 
     } catch(err) {
-        console.error(err);
+        throw new Error(err);
     }
 }
 
 
 const SignUp = () => {
 
-    const [signUpFail, setSignUpFail] = useState(false);
-    const [signUpSuccess, setSignUpSucess] = useState(false);
+    const [ signUpFail, setSignUpFail ] = useState(false);
+    const [ signUpSuccess, setSignUpSucess ] = useState(false);
+    const [ message, setMessage ] = useState('');
 
-    async function handleSignUp(e) {
+    function handleSignUp(e) {
         e.preventDefault();
 
         const username = document.getElementById('name-input').value;
         const email = document.getElementById('email-input').value;
         const password = document.getElementById('pwd-input').value;
 
-        if ( !username || !email || !password ) {
-            setSignUpFail(true);
-            return;
-        }
+        signUp(username, email, password)
+            .then(response => {
+                const { signup } = response.data;
+                if ( signup.statusCode !== 200 ) {
+                    setSignUpFail(true);
+                    setSignUpSucess(false);
+                    setMessage(signup.responseMessage);
+                    return;
+                }
 
-        const result = await signUp(username, email, password);
-        const { signup } = result.data;
-
-        if ( !signup ) {
-            setSignUpFail(true);
-            return;
-        }
-
-        // put jwt at localstorage
-        window.localStorage.setItem("jwt", signup.jwt);
-        setSignUpFail(false);
-        setSignUpSucess(true);
-        setTimeout(() => {
-            window.location.assign('/');
-        }, 1000)
-
+                // put jwt at localstorage
+                window.localStorage.setItem("jwt", signup.jwt);
+                setSignUpFail(false);
+                setSignUpSucess(true);
+                setTimeout(() => {
+                    window.location.assign('/');
+                }, 1000)
+            })
+            .catch(err => {
+                setSignUpFail(true);
+                setSignUpSucess(false);
+                setMessage('System error, please try again later');
+            })
     }
 
     return (
@@ -139,7 +143,7 @@ const SignUp = () => {
             </InputBlock>
             {signUpFail ? <Alert severity="error" sx={{
                 width: "95%"
-            }}>Signup failed, please check your input format</Alert> : ''}
+            }}>{message}</Alert> : ''}
             {signUpSuccess ? <Alert severity="success" sx={{
                 width: "95%"
             }}>Successfully sign up 🍀</Alert> : ''}

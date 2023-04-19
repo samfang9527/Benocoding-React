@@ -59,6 +59,8 @@ async function signIn(email, password) {
         query: `
             mutation($data: UserData!) {
                 signin(data: $data) {
+                    statusCode,
+                    responseMessage,
                     jwt
                 }
             }
@@ -84,7 +86,7 @@ async function signIn(email, password) {
         return data;
 
     } catch(err) {
-        console.error(err);
+        throw new Error(err);
     }
 }
 
@@ -93,30 +95,41 @@ const SignIn = () => {
 
     const [signinFail, setSignInFail] = useState(false);
     const [signinSuccess, setSignInSucess] = useState(false);
+    const [ message, setMessage ] = useState('');
     const authContext = useContext(AuthContext);
 
-    async function handleSignIn(e) {
+    function handleSignIn(e) {
         e.preventDefault();
 
         const email = document.getElementById('email-input').value;
         const password = document.getElementById('pwd-input').value;
 
-        const result = await signIn(email, password);
-        const { signin } = result.data;
+        signIn(email, password)
+            .then(response => {
+                const { signin } = response.data;
 
-        if ( !signin ) {
-            setSignInFail(true);
-            return;
-        }
+                if ( signin.statusCode !== 200 ) {
+                    setSignInFail(true);
+                    setSignInSucess(false);
+                    setMessage(signin.responseMessage);
+                    return;
+                }
 
-        // put jwt at localstorage
-        window.localStorage.setItem("jwt", signin.jwt);
-        authContext.login(signin.jwt);
-        setSignInFail(false);
-        setSignInSucess(true);
-        setTimeout(() => {
-            window.location.assign('/');
-        }, 1000)
+                // put jwt at localstorage
+                window.localStorage.setItem("jwt", signin.jwt);
+                authContext.login(signin.jwt);
+                setSignInFail(false);
+                setSignInSucess(true);
+                setTimeout(() => {
+                    window.location.assign('/');
+                }, 1000)
+            })
+            .catch(err => {
+                console.error(err);
+                setSignInFail(true);
+                setSignInSucess(false);
+                setMessage('System error, please try again later');
+            }) 
     }
 
     return (
@@ -131,7 +144,7 @@ const SignIn = () => {
             </InputBlock>
             {signinFail ? <Alert severity="error" sx={{
                 width: "95%"
-            }}>Wrong email or password</Alert> : ''}
+            }}>{message}</Alert> : ''}
             {signinSuccess ? <Alert severity="success" sx={{
                 width: "95%"
             }}>Successfully sign in 🍀</Alert> : ''}

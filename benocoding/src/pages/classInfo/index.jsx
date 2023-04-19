@@ -51,12 +51,17 @@ const InfoBlock = styled.div`
 `;
 
 const CheckoutBlock = styled.div`
-    width: 100%;
-    height: ${props => props.showCheckout ? "400px" : "100px"};
+    width: 50%;
+    height: ${props => props.showCheckout ? "450px" : "100px"};
     border-radius: 20px;
     transition: 0.3s ease-in-out;
     background-color: AntiqueWhite;
     border: 3px dashed black;
+    position: relative;
+    left: 50%;
+    margin-left: -25%;
+    opacity: ${props => props.showCheckout ? "1" : "0.4"};
+    transition: 0.25s all ease-in-out;
 `;
 
 const CheckoutTitle = styled.p`
@@ -145,7 +150,7 @@ const ClassDetail = () => {
                         showCheckout ? 
                             <>
                                 <hr style={{width: "50%", border: "1px solid black"}}></hr>
-                                <Tappay></Tappay>
+                                <Tappay />
                             </>
                             : ''
                     }

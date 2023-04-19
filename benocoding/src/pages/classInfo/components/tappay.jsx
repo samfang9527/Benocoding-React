@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 const Wrapper = styled.div`
     width: 90%;
-    height: 250px;
+    height: 320px;
     position: relative;
     left: 50%;
     margin-left: -45%;
@@ -25,11 +25,12 @@ const TPFieldContainer = styled.div`
 `;
 
 const TPField = styled.div`
-    height: 40px;
-    width: 300px;
-    border: 1px solid gray;
-    margin: 5px 0;
-    padding: 5px;
+    height: 50px;
+    width: 400px;
+    border: 2px solid gray;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 30px;
 `;
 
 const SubmitBtn = styled.button`
@@ -62,7 +63,7 @@ const Tappay = () => {
         })
 
         // start buying class
-        
+
     }
 
     useEffect(() => {
