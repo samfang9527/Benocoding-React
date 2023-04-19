@@ -73,7 +73,6 @@ async function getUserMilestoneData(userId, classId) {
             },
             data: graphqlQuery
         })
-        console.log(data);
         return data.data;
     } catch (err) {
         console.error(err);

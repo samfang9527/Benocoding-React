@@ -142,10 +142,9 @@ const Home = () => {
             .then(response => {
                 const { getRandomClasses } = response;
                 setCampaignList(getRandomClasses);
-                console.log(campaignList);
             })
             .catch(err => {console.error(err)})
-    }, [campaignList])
+    }, [])
 
     const settings = {
         dots: true,

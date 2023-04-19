@@ -28,7 +28,6 @@ async function getRandomClasses() {
             },
             data: graphqlQuery
         })
-        console.log(data);
         return data.data;
     } catch (err) {
         console.error(err);
@@ -65,7 +64,6 @@ async function getClassList(pageNum, keyword) {
             },
             data: graphqlQuery
         })
-        console.log(data);
 
         const pageNums = await axios({
             method: 'POST',
@@ -266,7 +264,6 @@ async function getAllPullRequests(userId, classId) {
             },
             data: graphqlQuery
         })
-        console.log('data', data);
         return data.data;
     } catch (err) {
         console.error(err);
@@ -306,7 +303,6 @@ async function getPullRequestDetail(userId, classId, number) {
             },
             data: graphqlQuery
         })
-        console.log(data);
         return data.data;
     } catch (err) {
         console.error(err);

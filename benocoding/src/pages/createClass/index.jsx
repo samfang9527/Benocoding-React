@@ -429,7 +429,7 @@ const CreateClass = () => {
 
         try {
             setIsSubmitting(true);
-            const { data } = await axios({
+            await axios({
                 method: "POST",
                 url: PRODUCTION_BACKEND_API_URL,
                 headers: {
@@ -439,11 +439,9 @@ const CreateClass = () => {
                 data: graphqlMutation
             })
 
-            console.log(data);
-
             setTimeout(() => {
                 setIsSubmitting(false);
-                // window.location.assign('/')
+                window.location.assign('/creater')
             }, 1000);
             
         } catch (err) {
