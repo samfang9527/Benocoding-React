@@ -130,8 +130,9 @@ const ClassDetail = () => {
         
         getClassData(classId)
             .then(response => {
-                if ( response.class ) {
-                    setClassData(response.class);
+                console.log(response);
+                if ( response && response.response.statusCode === 200 ) {
+                    setClassData(response)
                 }
             })
             .catch(err => {console.error(err)})

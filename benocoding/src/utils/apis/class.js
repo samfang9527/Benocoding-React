@@ -36,7 +36,7 @@ async function getRandomClasses() {
         })
         const { getRandomClasses } = data.data;
         return getRandomClasses;
-        
+
     } catch (err) {
         console.error(err);
     }
@@ -206,6 +206,10 @@ async function getClassData(classId) {
         query : `
             query ($classId: String!) {
                 class(classId: $classId) {
+                    response {
+                        statusCode,
+                        responseMessage
+                    },
                     teacherName,
                     teacherOptions,
                     studentOptions,
@@ -260,7 +264,9 @@ async function getClassData(classId) {
             },
             data: graphqlQuery
         })
-        return data.data;
+        const classData = data.data.class;
+        return classData;
+        
     } catch (err) {
         console.error(err);
     }
