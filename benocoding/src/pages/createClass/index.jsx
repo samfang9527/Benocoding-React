@@ -183,6 +183,12 @@ const LoadingPage = styled.div`
     margin-top: -25%;
 `;
 
+const GtiHubInfoLabel = styled.label`
+    text-align: left;
+    margin: 10px;
+    width: 80%;
+`;
+
 export const MilestoneContext = createContext({
     milestones: [],
     setMilestones: ()=>{},
@@ -197,6 +203,10 @@ const CreateClass = () => {
     const classEndDate = useRef(null);
     const classImage = useRef(null);
     const classVideo = useRef(null);
+    const githubRepo = useRef(null);
+    const githubAccount = useRef(null);
+    const githubAccessToken = useRef(null);
+    const price = useRef(null);
 
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [isUploadingVideo, setIsUploadingVideo] = useState(false);
@@ -387,7 +397,6 @@ const CreateClass = () => {
         e.preventDefault();
 
         const ownerId = userInfo.userId;
-        const teacherName = "tester001";
         const classTags = [];
         const tagsElements = document.getElementsByClassName('class-tags');
         for ( const tag of tagsElements ) {
@@ -401,13 +410,18 @@ const CreateClass = () => {
             ownerId,
             className: className.current.value,
             classDesc: classDesc.current.value,
-            teacherName,
             classStartDate: classStartDate.current.value,
             classEndDate: classEndDate.current.value,
             classImage: classImage.current.value,
             classVideo: classVideo.current.value,
             classTags,
-            milestones
+            milestones,
+            price: Number(price.current.value),
+            gitHub: {
+                repo: githubRepo.current.value,
+                owner: githubAccount.current.value,
+                accessToken: githubAccessToken.current.value
+            }
         }
 
         const graphqlMutation = {
@@ -415,6 +429,10 @@ const CreateClass = () => {
             query: `
                 mutation createClass($data: InputData!) {
                     createClass(data: $data) {
+                        response {
+                            statusCode,
+                            responseMessage
+                        },
                         className,
                         teacherName,
                         classImage,
@@ -429,7 +447,7 @@ const CreateClass = () => {
 
         try {
             setIsSubmitting(true);
-            await axios({
+            const { data } = await axios({
                 method: "POST",
                 url: PRODUCTION_BACKEND_API_URL,
                 headers: {
@@ -438,10 +456,10 @@ const CreateClass = () => {
                 },
                 data: graphqlMutation
             })
-
+            console.log(data);
             setTimeout(() => {
                 setIsSubmitting(false);
-                window.location.assign('/creater')
+                // window.location.assign('/creater')
             }, 1000);
             
         } catch (err) {
@@ -567,6 +585,19 @@ const CreateClass = () => {
                     <Block>
                         <Title>課程標籤</Title>
                         <Tags />
+                    </Block>
+                    <Block>
+                        <Title>課程價格</Title>
+                        <SingleLineQuestion id="price" ref={price}></SingleLineQuestion>
+                    </Block>
+                    <Block>
+                        <Title>GitHub Info</Title>
+                        <GtiHubInfoLabel htmlFor="repo">Repo name</GtiHubInfoLabel>
+                        <SingleLineQuestion id="repo" ref={githubRepo}></SingleLineQuestion>
+                        <GtiHubInfoLabel htmlFor="account">GitHub account</GtiHubInfoLabel>
+                        <SingleLineQuestion id="account" ref={githubAccount}></SingleLineQuestion>
+                        <GtiHubInfoLabel htmlFor="token">GitHub access token</GtiHubInfoLabel>
+                        <SingleLineQuestion id="token" ref={githubAccessToken}></SingleLineQuestion>
                     </Block>
                     <Block>
                         <Title>課程安排</Title>

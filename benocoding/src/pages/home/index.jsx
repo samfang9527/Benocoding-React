@@ -122,14 +122,16 @@ const Home = () => {
     useEffect(() => {
         getClassList(Number(pageNum), keyword)
             .then(response => {
-                const { getClassList } = response;
-                const { allPageNums } = response;
-                if ( getClassList ) {
-                    setClassList(getClassList);
-                }
+                if ( response && !response.response ) {
+                    const { classList } = response;
+                    const { allPageNums } = response;
+                    if ( classList ) {
+                        setClassList(classList);
+                    }
 
-                if ( allPageNums ) {
-                    setMaxPageNum(allPageNums);
+                    if ( allPageNums ) {
+                        setMaxPageNum(allPageNums);
+                    }
                 }
             })
             .catch(err => {console.error(err)})
@@ -140,8 +142,8 @@ const Home = () => {
         // campaign list
         getRandomClasses()
             .then(response => {
-                const { getRandomClasses } = response;
-                setCampaignList(getRandomClasses);
+                const { classList } = response;
+                setCampaignList(classList);
             })
             .catch(err => {console.error(err)})
     }, [])
@@ -164,31 +166,22 @@ const Home = () => {
                     <SearchInput type="text" placeholder="Javascript" ref={searchInput} onKeyUp={handleSearch}></SearchInput>
                 </InputBlock>
                 <CampaignBlock>
-                    { campaignList.length === 3 ? 
-                        <Slider {...settings}>
-                            <div>
-                                <CampaignImage
-                                    src={`${CDN_DOMAIN + campaignList[0].classImage}`}
-                                    alt={campaignList[0].className}
-                                    onClick={() => {window.location.assign(`/class/${campaignList[0].id}`)}}
-                                ></CampaignImage>
-                            </div>
-                            <div>
-                                <CampaignImage
-                                    src={`${CDN_DOMAIN + campaignList[1].classImage}`}
-                                    alt={campaignList[1].className}
-                                    onClick={() => {window.location.assign(`/class/${campaignList[1].id}`)}}
-                                ></CampaignImage>
-                            </div>
-                            <div>
-                                <CampaignImage
-                                    src={`${CDN_DOMAIN + campaignList[2].classImage}`}
-                                    alt={campaignList[2].className}
-                                    onClick={() => {window.location.assign(`/class/${campaignList[2].id}`)}}
-                                ></CampaignImage>
-                            </div>
-                        </Slider> : ''
-                    }
+                    <Slider {...settings}>
+                        {
+                            campaignList.map((campaign, idx) => {
+                                return (
+                                    <div>
+                                        <CampaignImage
+                                            key={campaign.id}
+                                            src={`${CDN_DOMAIN + campaignList[idx].classImage}`}
+                                            alt={campaignList[idx].className}
+                                            onClick={() => {window.location.assign(`/class/${campaignList[idx].id}`)}}
+                                        ></CampaignImage>
+                                    </div>
+                                )
+                            })
+                        }
+                    </Slider>
                 </CampaignBlock>
             </CampaignSection>
             <Pagination

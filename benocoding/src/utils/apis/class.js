@@ -7,14 +7,20 @@ async function getRandomClasses() {
         query: `
             query {
                 getRandomClasses {
-                    id,
-                    teacherName,
-                    className,
-                    classDesc,
-                    classImage,
-                    classTags,
-                    studentNumbers,
-                    status
+                    response {
+                        statusCode,
+                        responseMessage
+                    },
+                    classList {
+                        id,
+                        teacherName,
+                        className,
+                        classDesc,
+                        classImage,
+                        classTags,
+                        studentNumbers,
+                        status
+                    }
                 }
         }
         `
@@ -28,7 +34,9 @@ async function getRandomClasses() {
             },
             data: graphqlQuery
         })
-        return data.data;
+        const { getRandomClasses } = data.data;
+        return getRandomClasses;
+        
     } catch (err) {
         console.error(err);
     }
@@ -39,14 +47,20 @@ async function getClassList(pageNum, keyword) {
         query: `
             query($pageNum: Int!, $keyword: String) {
                 getClassList(pageNum: $pageNum, keyword: $keyword) {
-                    id,
-                    teacherName,
-                    className,
-                    classDesc,
-                    classImage,
-                    classTags,
-                    studentNumbers,
-                    status
+                    response {
+                        statusCode,
+                        responseMessage
+                    },
+                    classList {
+                        id,
+                        teacherName,
+                        className,
+                        classDesc,
+                        classImage,
+                        classTags,
+                        studentNumbers,
+                        status
+                    }
                 }
         }
         `,
@@ -64,6 +78,10 @@ async function getClassList(pageNum, keyword) {
             },
             data: graphqlQuery
         })
+        const { getClassList } = data.data;
+        if ( getClassList.response.statusCode !== 200 ) {
+            return getClassList;
+        }
 
         const pageNums = await axios({
             method: 'POST',
@@ -74,13 +92,28 @@ async function getClassList(pageNum, keyword) {
             data: {
                 query: `
                     query {
-                        getAllPageNums
+                        getAllPageNums {
+                            response {
+                                statusCode,
+                                responseMessage
+                            },
+                            number
+                        }
                     }
                 `
             }
         })
-        data.data.allPageNums = pageNums.data.data.getAllPageNums;
-        return data.data;
+        const { getAllPageNums } = pageNums.data.data;
+
+        if ( getAllPageNums.response.statusCode !== 200 ) {
+            return getAllPageNums;
+        }
+
+        return {
+            classList: getClassList.classList,
+            allPageNums: getAllPageNums.number
+        };
+
     } catch (err) {
         console.error(err);
     }
