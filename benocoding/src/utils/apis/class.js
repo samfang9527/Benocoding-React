@@ -124,29 +124,35 @@ async function getUserClassList(userId, pageNum, role) {
         query: `
             query($userId: String!, $pageNum: Int!) {
                 get${role}ClassList(userId: $userId, pageNum: $pageNum) {
-                    id,
-                    teacherName,
-                    className,
-                    classDesc,
-                    classStartDate,
-                    classEndDate,
-                    classImage,
-                    classTags,
-                    studentNumbers,
-                    status,
-                    milestones {
-                        milestone,
-                        milestoneDesc,
-                        autoTest,
-                        passed
+                    response {
+                        statusCode,
+                        responseMessage
                     },
-                    studentOptions,
-                    chatroomId,
-                    classMembers {
-                        username,
-                        userId,
-                        email
-                    }
+                    classList {
+                        id,
+                        teacherName,
+                        className,
+                        classDesc,
+                        classStartDate,
+                        classEndDate,
+                        classImage,
+                        classTags,
+                        studentNumbers,
+                        status,
+                        milestones {
+                            milestone,
+                            milestoneDesc,
+                            autoTest,
+                            passed
+                        },
+                        studentOptions,
+                        chatroomId,
+                        classMembers {
+                            username,
+                            userId,
+                            email
+                        }
+                    }   
                 }
         }
         `,
@@ -176,7 +182,13 @@ async function getPageQuantity(userId, role) {
     const graphqlQuery = {
         query: `
             query($userId: String!) {
-                get${role}ClassNums(userId: $userId)
+                get${role}ClassNums(userId: $userId) {
+                    response {
+                        statusCode,
+                        responseMessage
+                    },
+                    number
+                }
             }
         `,
         variables: {
@@ -193,7 +205,6 @@ async function getPageQuantity(userId, role) {
             },
             data: graphqlQuery
         })
-
         return data.data;
     } catch (err) {
         console.error(err);
@@ -266,7 +277,7 @@ async function getClassData(classId) {
         })
         const classData = data.data.class;
         return classData;
-        
+
     } catch (err) {
         console.error(err);
     }

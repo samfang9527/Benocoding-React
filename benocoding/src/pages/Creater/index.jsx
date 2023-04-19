@@ -82,8 +82,13 @@ const Creater = () => {
                 pageNum = 0;
             }
             getUserClassList(user.userId, Number(pageNum), 'Creater')
-                .then(response => {
-                    setClassList(response.getCreaterClassList);
+                .then(res => {
+                    console.log(res);
+                    const { response } = res.getCreaterClassList;
+                    if ( response && response.statusCode === 200 ) {
+                        const { classList } = res.getCreaterClassList;
+                        setClassList(classList);
+                    }
                 })
                 .catch(err => {
                     console.error(err)
@@ -97,8 +102,12 @@ const Creater = () => {
             const { user } = authContext;
 
             getPageQuantity(user.userId, 'Creater')
-                .then(response => {
-                    setPageQuantity(response.getCreaterClassNums);
+                .then(res => {
+                    const { response } = res.getCreaterClassNums;
+                    if ( response && response.statusCode === 200 ) {
+                        const { number } = res.getCreaterClassNums;
+                        setPageQuantity(number);
+                    }
                 })
                 .catch(err => console.error(err))
         }
