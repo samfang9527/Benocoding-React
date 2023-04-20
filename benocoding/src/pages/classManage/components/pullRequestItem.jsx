@@ -124,7 +124,9 @@ const PullRequestItem = ({data, classId}) => {
             getPullRequestDetail(user.userId, classId, data.number)
                 .then(response => {
                     const { getPRDetail } = response;
-                    setDetailData(getPRDetail);
+                    if ( getPRDetail.response && getPRDetail.response.statusCode === 200 ) {
+                        setDetailData(getPRDetail);
+                    }
                 })
                 .catch(err => {console.error(err)})
             const codeReview = window.localStorage.getItem(`${classId}/${data.number}`);

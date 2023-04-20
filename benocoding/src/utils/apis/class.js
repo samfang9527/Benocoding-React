@@ -288,14 +288,20 @@ async function getAllPullRequests(userId, classId) {
         query : `
             query($userId: String!, $classId: String!) {
                 getAllPullRequests(userId: $userId, classId: $classId) {
-                    url,
-                    number,
-                    title,
-                    body,
-                    head,
-                    base,
-                    created_at,
-                    updated_at
+                    response {
+                        statusCode,
+                        responseMessage
+                    },
+                    data {
+                        url,
+                        number,
+                        title,
+                        body,
+                        head,
+                        base,
+                        created_at,
+                        updated_at
+                    }
                 }
             }
         `,
@@ -325,6 +331,10 @@ async function getPullRequestDetail(userId, classId, number) {
         query : `
             query($userId: String!, $classId: String!, $number: Int!) {
                 getPRDetail(userId: $userId, classId: $classId, number: $number) {
+                    response {
+                        statusCode,
+                        responseMessage
+                    },
                     mergeable,
                     diffData,
                     html_url,

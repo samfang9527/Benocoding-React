@@ -42,18 +42,24 @@ async function getUserMilestoneData(userId, classId) {
         query : `
             query($classId: String!, $userId: String!) {
                 milestones(classId: $classId, userId: $userId) {
-                    functionName,
-                    milestone,
-                    milestoneDesc,
-                    passed,
-                    autoTest,
-                    functionTest,
-                    testCases {
-                        case,
+                    response {
                         statusCode,
-                        inputs,
-                        method,
-                        result
+                        responseMessage
+                    },
+                    milestones {
+                        functionName,
+                        milestone,
+                        milestoneDesc,
+                        passed,
+                        autoTest,
+                        functionTest,
+                        testCases {
+                            case,
+                            statusCode,
+                            inputs,
+                            method,
+                            result
+                        }
                     }
                 }
             }
@@ -73,7 +79,8 @@ async function getUserMilestoneData(userId, classId) {
             },
             data: graphqlQuery
         })
-        return data.data;
+        const { milestones } = data.data;
+        return milestones;
     } catch (err) {
         console.error(err);
     }

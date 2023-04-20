@@ -31,9 +31,13 @@ const PullRequest = ({classData}) => {
             const { user } = authContext;
             setIsLoading(true);
             getAllPullRequests(user.userId, classData.id)
-                .then((response) => {
-                    console.log(response.getAllPullRequests);
-                    setPullRequestData(response.getAllPullRequests);
+                .then((res) => {
+                    const { response } = res.getAllPullRequests;
+                    if ( response && response.statusCode === 200 ) {
+                        const { data } = res.getAllPullRequests;
+                        setPullRequestData(data);
+                    }
+                    
                 })
                 .catch(err => {console.error(err)})
                 .finally(() => {setIsLoading(false);})

@@ -99,21 +99,28 @@ const ClassManage = () => {
 
             getClassData(classId)
                 .then(response => {
-                    const classData = response.class;
-                    setClassData(classData);
+                    if ( response && response.response.statusCode === 200 ) {
+                        const classData = response;
+                        setClassData(classData);
 
-                    // options
-                    classData.ownerId === user.userId ? setIsCreater(true) : setIsCreater(false);
+                        // options
+                        response.ownerId === user.userId ? setIsCreater(true) : setIsCreater(false);
+                        
+                        // members
+                        setMembers(response.classMembers);
+                    }
                     
-                    // members
-                    setMembers(classData.classMembers);
                 })
                 .catch(err => console.error(err))
             
                 getUserMilestoneData(user.userId, classId)
-                    .then(response => {
-                        const milestoneData = response.milestones;
-                        setMilestones(milestoneData);
+                    .then(res => {
+                        const { response } = res;
+                        if ( response && response.statusCode === 200 ) {
+                            const milestoneData = res.milestones;
+                            setMilestones(milestoneData);
+                        }
+                        
                     })
                     .catch(err => {console.error(err)})
         }
