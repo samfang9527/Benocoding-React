@@ -36,16 +36,16 @@ const ClassTitle = styled.p`
 
 const ClassDesc = styled.p`
     font-size: 18px;
-    padding: 10px 20px;
+    padding: 0px 20px;
     margin: 0;
-    height: 150px;
-    overflow: hidden;
+    height: 250px;
+    overflow: scroll;
 `;
 
 const TagsContainer = styled.div`
     padding: 0 20px;
     position: relative;
-    top: 150px;
+    top: 50px;
 `;
 
 const ClassTag = styled.div`

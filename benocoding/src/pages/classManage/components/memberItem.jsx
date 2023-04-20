@@ -77,8 +77,6 @@ const MemberItem = ({userInfo, classData}) => {
                     // cur milestone
                     const curMilestone = calculateProgress(milestones);
                     setCurMilestone(curMilestone);
-
-                    console.log(curMilestone, milestones);
                 })
                 .catch(err => console.error(err))
         }

@@ -23,7 +23,6 @@ const PullRequest = ({classData}) => {
 
     const [ pullRequestData, setPullRequestData ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(false);
-    console.log(classData);
 
     useEffect(() => {
         

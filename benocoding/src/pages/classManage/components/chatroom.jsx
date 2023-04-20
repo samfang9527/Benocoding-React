@@ -34,9 +34,15 @@ async function fetchChatroomMsgs(chatroomId) {
             query: `
                 query($chatroomId: String!) {
                     getMessages(chatroomId: $chatroomId) {
-                        time,
-                        from,
-                        message
+                        response {
+                            statusCode,
+                            responseMessage
+                        },
+                        messages {
+                            time,
+                            from,
+                            message
+                        }
                     }
                 }
             `,
@@ -45,7 +51,7 @@ async function fetchChatroomMsgs(chatroomId) {
             }
         }
     })
-    return data;
+    return data.data;
 }
 
 
@@ -62,9 +68,12 @@ const Chatroom = ({classData}) => {
         
         // update messages from DB
         fetchChatroomMsgs(chatroomId)
-            .then(response => {
-                const messages = response.data.getMessages;
-                setMessages(messages);
+            .then(res => {
+                const { response } = res.getMessages;
+                if ( response && response.statusCode === 200 ) {
+                    const { messages } = res.getMessages;
+                    setMessages(messages);
+                }
             })
             .catch(err => {console.error(err)})
 
