@@ -110,6 +110,7 @@ const ClassDetail = () => {
 
     const [ classData, setClassData ] = useState({});
     const [ showCheckout, setShowCheckout ] = useState(false);
+    const [ classId, setClassId ] = useState('');
 
     const {
         className,
@@ -122,7 +123,6 @@ const ClassDetail = () => {
         classMembers,
         milestones
     } = classData;
-    
 
     useEffect(() => {
         const path = location.pathname
@@ -130,9 +130,9 @@ const ClassDetail = () => {
         
         getClassData(classId)
             .then(response => {
-                console.log(response);
                 if ( response && response.response.statusCode === 200 ) {
                     setClassData(response)
+                    setClassId(classId)
                 }
             })
             .catch(err => {console.error(err)})
@@ -151,7 +151,7 @@ const ClassDetail = () => {
                         showCheckout ? 
                             <>
                                 <hr style={{width: "50%", border: "1px solid black"}}></hr>
-                                <Tappay />
+                                <Tappay classId={classId}/>
                             </>
                             : ''
                     }

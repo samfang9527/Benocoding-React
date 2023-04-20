@@ -1,6 +1,9 @@
 
 import styled from "styled-components";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useContext } from "react";
+import { AuthContext } from "../../../global/authContext";
+import axios from "axios";
+import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
 
 const Wrapper = styled.div`
     width: 90%;
@@ -48,9 +51,43 @@ const SubmitBtn = styled.button`
     }
 `;
 
-const Tappay = () => {
+async function buyClass(prime, classId, userId) {
+    const query = {
+        query: `
+            mutation($prime: String!, $classId: String!) {
+                buyClass(prime: $prime, classId: $classId) {
+                    response {
+                        statusCode,
+                        responseMessage
+                    }
+                }
+            }
+        `,
+        variables: {
+            prime,
+            classId,
+            userId
+        }
+    }
+
+    const { data } = await axios({
+        method: "POST",
+        url: PRODUCTION_BACKEND_API_URL,
+        headers: {
+            "Content-Type": "application/json",
+            "token": window.localStorage.getItem('jwt')
+        },
+        data: query
+    })
+    console.log(data.data);
+    return data.data;
+}
+
+const Tappay = ({classId}) => {
 
     const submitButton = useRef(null);
+
+    const authContext = useContext(AuthContext);
 
     function checkout(e) {
         e.preventDefault();
@@ -59,11 +96,16 @@ const Tappay = () => {
                 console.error('getPrime error');
                 return;
             }
-            window.localStorage.setItem('prime', result.card.prime);
+            const prime = result.card.prime;
+            const { userId } = authContext.user;
+            buyClass(prime, classId, userId)
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(err => {
+                    console.error(err);
+                })
         })
-
-        // start buying class
-
     }
 
     useEffect(() => {
