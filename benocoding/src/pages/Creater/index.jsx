@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from "../../global/authContext.jsx";
 import CreaterClassItem from "./components/createrClassItem.jsx";
-import { getUserClassList, getPageQuantity } from "../../utils/apis/class.js";
+import { getUserClassList } from "../../utils/apis/class.js";
 import { MoonLoader } from "react-spinners";
 import { Fragment } from "react";
 import Pagination from "@mui/material/Pagination";
@@ -83,11 +83,11 @@ const Creater = () => {
             }
             getUserClassList(user.userId, Number(pageNum), 'Creater')
                 .then(res => {
-                    console.log(res);
                     const { response } = res.getCreaterClassList;
                     if ( response && response.statusCode === 200 ) {
-                        const { classList } = res.getCreaterClassList;
+                        const { classList, maxPageNum } = res.getCreaterClassList;
                         setClassList(classList);
+                        setPageQuantity(maxPageNum);
                     }
                 })
                 .catch(err => {
@@ -96,22 +96,6 @@ const Creater = () => {
                 .finally(() => setIsLoading(false))
         }
     }, [authContext, location]);
-
-    useEffect(() => {
-        if ( !authContext.isLoading ) {
-            const { user } = authContext;
-
-            getPageQuantity(user.userId, 'Creater')
-                .then(res => {
-                    const { response } = res.getCreaterClassNums;
-                    if ( response && response.statusCode === 200 ) {
-                        const { number } = res.getCreaterClassNums;
-                        setPageQuantity(number);
-                    }
-                })
-                .catch(err => console.error(err))
-        }
-    }, [authContext])
 
     return (
         <Section>
@@ -125,7 +109,7 @@ const Creater = () => {
                         {
                             classList.map((class_, idx) => {
                                 return (
-                                    <CreaterClassItem key={class_.id} classData={class_}></CreaterClassItem>
+                                    <CreaterClassItem key={class_.classId} classData={class_}></CreaterClassItem>
                                 )
                             })
                         }

@@ -42,7 +42,7 @@ const UserClassItem = ({classData}) => {
     const startDate = classData.classStartDate.slice(0, classData.classStartDate.lastIndexOf('T'));
 
     function toClassManagePage() {
-        window.location.assign(`/userclass/${classData.id}`);
+        window.location.assign(`/userclass/${classData.classId}`);
     }
 
     return (

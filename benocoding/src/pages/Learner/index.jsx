@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import { getUserClassList, getPageQuantity } from "../../utils/apis/class.js";
+import { getUserClassList } from "../../utils/apis/class.js";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from "../../global/authContext.jsx";
@@ -84,15 +84,13 @@ const Learner = () => {
                 pageNum = 0;
             }
             getUserClassList(user.userId, Number(pageNum), 'Learner')
-                .then(response => {
-                    const responseData = response.getLearnerClassList;
-                    const cleanData = responseData.reduce((acc, cur) => {
-                        if ( cur ) {
-                            return [...acc, cur];
-                        }
-                        return acc;
-                    }, [])
-                    setClassList(cleanData);
+                .then(res => {
+                    const { response } = res.getLearnerClassList;
+                    if ( response && response.statusCode === 200 ) {
+                        const { classList, maxPageNum } = res.getLearnerClassList;
+                        setClassList(classList);
+                        setPageQuantity(maxPageNum);
+                    }
                 })
                 .catch(err => {
                     console.error(err)
@@ -100,18 +98,6 @@ const Learner = () => {
                 .finally(() => setIsLoading(false))
         }
     }, [authContext, location]);
-
-    useEffect(() => {
-        if ( !authContext.isLoading ) {
-            const { user } = authContext;
-
-            getPageQuantity(user.userId, 'Learner')
-                .then(response => {
-                    setPageQuantity(response.getLearnerClassNums);
-                })
-                .catch(err => console.error(err))
-        }
-    }, [authContext])
 
     return (
         <Section>
@@ -125,7 +111,7 @@ const Learner = () => {
                         {
                             classList.map((class_) => {
                                 return (
-                                    <UserClassItem key={class_.id} classData={class_}></UserClassItem>
+                                    <UserClassItem key={class_.classId} classData={class_}></UserClassItem>
                                 )
                             })
                         }

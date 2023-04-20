@@ -170,9 +170,8 @@ const Home = () => {
                         {
                             campaignList.map((campaign, idx) => {
                                 return (
-                                    <div>
+                                    <div key={campaign.id + idx}>
                                         <CampaignImage
-                                            key={campaign.id}
                                             src={`${CDN_DOMAIN + campaignList[idx].classImage}`}
                                             alt={campaignList[idx].className}
                                             onClick={() => {window.location.assign(`/class/${campaignList[idx].id}`)}}

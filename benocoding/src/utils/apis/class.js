@@ -129,29 +129,12 @@ async function getUserClassList(userId, pageNum, role) {
                         responseMessage
                     },
                     classList {
-                        id,
                         teacherName,
                         className,
                         classDesc,
                         classStartDate,
-                        classEndDate,
                         classImage,
-                        classTags,
-                        studentNumbers,
-                        status,
-                        milestones {
-                            milestone,
-                            milestoneDesc,
-                            autoTest,
-                            passed
-                        },
-                        studentOptions,
-                        chatroomId,
-                        classMembers {
-                            username,
-                            userId,
-                            email
-                        }
+                        classId
                     }   
                 }
         }
@@ -170,41 +153,7 @@ async function getUserClassList(userId, pageNum, role) {
             },
             data: graphqlQuery
         })
-    
-        return data.data;
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-async function getPageQuantity(userId, role) {
-
-    const graphqlQuery = {
-        query: `
-            query($userId: String!) {
-                get${role}ClassNums(userId: $userId) {
-                    response {
-                        statusCode,
-                        responseMessage
-                    },
-                    number
-                }
-            }
-        `,
-        variables: {
-            userId: userId
-        }
-    }
-
-    try {
-        const { data } = await axios({
-            method: 'POST',
-            url: PRODUCTION_BACKEND_API_URL,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            data: graphqlQuery
-        })
+        console.log(data.data)
         return data.data;
     } catch (err) {
         console.error(err);
@@ -373,7 +322,6 @@ export {
     getClassList,
     getRandomClasses,
     getUserClassList,
-    getPageQuantity,
     getClassData,
     getAllPullRequests,
     getPullRequestDetail

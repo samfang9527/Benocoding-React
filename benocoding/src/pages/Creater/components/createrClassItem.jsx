@@ -42,14 +42,13 @@ const CreaterClassItem = ({classData}) => {
     const startDate = classData.classStartDate.slice(0, classData.classStartDate.lastIndexOf('T'));
 
     function toClassManagePage() {
-        window.location.assign(`/userclass/${classData.id}`);
+        window.location.assign(`/userclass/${classData.classId}`);
     }
 
     return (
         <Block onClick={toClassManagePage}>
             <ClassImage src={`${CDN_DOMAIN + classData.classImage}`}/>
             <ClassTitle>{classData.className}</ClassTitle>
-            <ClassDescription>Creater: {classData.teacherName}</ClassDescription>
             <ClassDescription>Start date: {startDate}</ClassDescription>
         </Block>
     )
