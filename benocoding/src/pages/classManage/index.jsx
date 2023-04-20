@@ -12,6 +12,7 @@ import Members from "./components/members.jsx";
 import ClassInfo from "./components/classInfo.jsx";
 import Milestone from "./components/milestone.jsx";
 import PullRequest from "./components/pullRequest.jsx";
+import Settings from "./components/settings.jsx";
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 
@@ -43,7 +44,7 @@ const CustomIconBtn = styled(IconButton)`
 const ViewWrapper = styled.div`
     height: 'fit-content';
     width: 95%;
-`
+`;
 
 const ClassManage = () => {
 
@@ -80,7 +81,21 @@ const ClassManage = () => {
         }
 
         if ( chosenOption === "pull-request" ) {
-            return <PullRequest classData={classData}/>
+            return <PullRequest classData={classData} />;
+        }
+
+        if ( chosenOption === "class-settings" ) {
+            const mutableData = {
+                className: classData.className,
+                classDesc: classData.classDesc,
+                classStartDate: classData.classStartDate.slice(0, 10),
+                classEndDate: classData.classEndDate.slice(0, 10),
+                // milestones: classData.milestones,
+                classImage: classData.classImage,
+                classVideo: classData.classVideo,
+                // gitHub: classData.gitHub
+            }
+            return <Settings mutableData={mutableData} />;
         }
     }
 

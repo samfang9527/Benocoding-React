@@ -3,6 +3,7 @@ import styled from "styled-components";
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { BsGithub } from "react-icons/bs";
 
 const IconWrapper = styled.div`
@@ -69,6 +70,13 @@ const TeacherNavOption = ({isExpanded, setChosenOption}) => {
             <EachIcon onClick={() => setChosenOption('pull-request')}>
                 <BsGithub size={30} style={{minWidth: 30}}></BsGithub>
                 <Title isExpanded={isExpanded}>Pull request</Title>
+            </EachIcon>
+            <EachIcon onClick={() => setChosenOption('class-settings')}>
+                <SettingsIcon sx={{
+                        width: 30,
+                        height: 30
+                    }}></SettingsIcon>
+                <Title isExpanded={isExpanded}>Settings</Title>
             </EachIcon>
         </IconWrapper>
     )
