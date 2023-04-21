@@ -34,13 +34,13 @@ function App() {
   return (
     <PageContainer>
       <GlobalStyle />
-      <AuthContextProvider>
-        <Header />
-        <MainContent>
-          <Outlet />
-        </MainContent>
-        <Footer />
-      </AuthContextProvider>
+        <AuthContextProvider>
+          <Header />
+          <MainContent>
+            <Outlet />
+          </MainContent>
+          <Footer />
+        </AuthContextProvider>
     </PageContainer>
   );
 }

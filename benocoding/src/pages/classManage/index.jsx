@@ -95,7 +95,7 @@ const ClassManage = () => {
                 classVideo: classData.classVideo,
                 // gitHub: classData.gitHub
             }
-            return <Settings mutableData={mutableData} />;
+            return <Settings mutableData={mutableData} classId={classData.id}/>;
         }
     }
 

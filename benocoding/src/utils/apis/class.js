@@ -318,11 +318,43 @@ async function getPullRequestDetail(userId, classId, number) {
     }
 }
 
+async function updateClassSettings(updateData, classId) {
+
+    const mutation = {
+        query: `
+            mutation($data: UpdateData!, $classId: String!) {
+                updateClass(data: $data, classId: $classId) {
+                    response {
+                        statusCode,
+                        responseMessage
+                    }
+                }
+            }
+        `,
+        variables: {
+            data: updateData,
+            classId
+        }
+    }
+
+    const { data } = await axios({
+        method: "POST",
+        url: PRODUCTION_BACKEND_API_URL,
+        headers: {
+            "Content-Type": "application/json",
+            "token": window.localStorage.getItem("jwt")
+        },
+        data: mutation
+    })
+    return data.data;
+}
+
 export {
     getClassList,
     getRandomClasses,
     getUserClassList,
     getClassData,
     getAllPullRequests,
-    getPullRequestDetail
+    getPullRequestDetail,
+    updateClassSettings
 };

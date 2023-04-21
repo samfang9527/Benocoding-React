@@ -4,6 +4,8 @@ import { useState } from "react";
 import { CDN_DOMAIN, PRODUCTION_BACKEND_DOMAIN } from "../../../global/constant.js";
 import axios from "axios";
 import ReactPlayer from "react-player";
+import { updateClassSettings } from "../../../utils/apis/class.js";
+import { RiseLoader } from "react-spinners";
 
 const MainContainer = styled.div`
     border: 5px solid black;
@@ -104,22 +106,22 @@ const UpdateBtn = styled.button`
     background-color: orange;
     border-radius: 0 0 16px 16px;
     margin-top: 100px;
-    cursor: ${props => props.isUploadingImage || props.isUploadingVideo ? "wait" : "pointer"};
-    opacity: ${props => props.isUploadingImage || props.isUploadingVideo ? "0.2" : "1"};
+    cursor: ${props => props.isUploadingImage || props.isUploadingVideo || props.isUpdating ? "wait" : "pointer"};
+    opacity: ${props => props.isUploadingImage || props.isUploadingVideo || props.isUpdating ? "0.2" : "1"};
 
     :hover {
         background-color: darkorange;
     }
 `;
 
-const Settings = ({mutableData}) => {
-
+const Settings = ({mutableData, classId}) => {
 
     const [ infoArray, setInfoArray ] = useState(Object.entries(mutableData));
     const [ elementList, setElementList ] = useState(infoArray.map(()=>{return true}));
     const [ changeContent, setChangeContent ] = useState({});
     const [ isUploadingImage, setIsUploadingImage ] = useState(false);
     const [ isUploadingVideo, setIsUploadingVideo ] = useState(false);
+    const [ isUpdating, setIsUpdating ] = useState(false);
 
     async function handleImageUpload(e) {
         e.preventDefault();
@@ -360,8 +362,26 @@ const Settings = ({mutableData}) => {
             delete changeContent[infoArray[idx][0]];
             setChangeContent({...changeContent});
         }
-        console.log(changeContent);
+    }
 
+    function handleUpdate(e) {
+        if ( Object.keys(changeContent).length === 0 ) {
+            return;
+        }
+        setIsUpdating(true);
+        updateClassSettings(changeContent, classId)
+            .then(res => {
+                console.log(res);
+                const { response } = res.updateClass;
+                alert(response.responseMessage);
+            })
+            .catch(err => {
+                console.error(err);
+            })
+            .finally(() => {
+                setIsUpdating(false);
+                setChangeContent({});
+            })
     }
 
     function handleView(key, value, idx) {
@@ -394,7 +414,12 @@ const Settings = ({mutableData}) => {
                     )
                 })
             }
-            <UpdateBtn isUploadingImage={isUploadingImage} isUploadingVideo={isUploadingVideo}>Update</UpdateBtn>
+            <UpdateBtn
+                isUploadingImage={isUploadingImage}
+                isUploadingVideo={isUploadingVideo}
+                isUpdating={isUpdating}
+                onClick={handleUpdate}
+            >{ isUpdating ? <RiseLoader /> : 'Update' }</UpdateBtn>
         </MainContainer>
     )
 }
