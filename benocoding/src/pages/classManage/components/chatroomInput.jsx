@@ -1,6 +1,7 @@
 
 import styled from "styled-components";
 import { sendMessage } from "../../../utils/socket/socket.js";
+import { useState } from "react";
 
 const InputForm = styled.form`
     width: 100%;
@@ -28,36 +29,34 @@ function calculateHeight(value) {
 
 const ChatroomInput = ({username, chatroomId}) => {
 
-    function sendmessage(e) {
-        if ( e.keyCode === 13 ) {
-            if ( e.shiftKey === false ) {
-                const msgData = {
-                    time: new Date().toLocaleString(),
-                    from: username,
-                    message: e.target.value
-                }
-                sendMessage( chatroomId, JSON.stringify(msgData) );
-            }
-        }
-    }
+    const [ inputText, setInputText ] = useState('');
 
-    function resize(e) {
-        if ( e.keyCode === 13 && e.shiftKey === false ) {
+    function sendmessage(e) {
+        if ( e.keyCode === 13 && e.shiftKey === false && inputText.trim() !== '' ) {
+            const msgData = {
+                time: new Date().toLocaleString(),
+                from: username,
+                message: inputText.trim()
+            }
+            sendMessage( chatroomId, JSON.stringify(msgData) );
             e.target.value = '';
             e.target.style.height = '40px';
             return;
         }
-        const value = e.target.value;
-        const newHeight = calculateHeight(value);
+        const newHeight = calculateHeight(inputText);
         e.target.style.height = newHeight + 'px';
+    }
+
+    function handleInputChange(event) {
+        setInputText(event.target.value);
     }
 
     return (
         <InputForm>
             <Textarea
                 placeholder="Type something"
-                onKeyDown={sendmessage}
-                onKeyUp={resize}
+                onKeyUp={sendmessage}
+                onChange={handleInputChange}
             ></Textarea>
         </InputForm>
     )
