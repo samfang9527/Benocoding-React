@@ -107,7 +107,7 @@ const Creater = () => {
                 <Fragment>
                     <ClassList>
                         {
-                            classList.map((class_, idx) => {
+                            classList.map((class_) => {
                                 return (
                                     <CreaterClassItem key={class_.classId} classData={class_}></CreaterClassItem>
                                 )
