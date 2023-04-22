@@ -4,9 +4,13 @@ import styled from "styled-components";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import ChatroomMessageItem from "./chatroomMessageItem";
 import ChatroomInput from "./chatroomInput";
-import { socket } from "../../../utils/socket/socket.js";
 import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
 import { AuthContext } from "../../../global/authContext";
+import {
+    subscribeChatroom,
+    unSubscribeChatroom,
+    listenNewMessage,
+} from "../../../utils/socket/socket.js";
 
 
 const Container = styled.div`
@@ -77,18 +81,20 @@ const Chatroom = ({classData}) => {
             })
             .catch(err => {console.error(err)})
 
-        socket.emit('joinChatroom', chatroomId);
+    }, [ chatroomId ])
+
+    useEffect(() => {
+        subscribeChatroom(chatroomId);    
 
         function onUpdateEvent(msgData) {
             setMessages(prev => [...prev, msgData]);
         }
 
-        socket.on('update', onUpdateEvent);
+        listenNewMessage(onUpdateEvent, true);
 
         return () => {
-            socket.off('update', onUpdateEvent);
-            socket.disconnect();
-            socket.connect();
+            unSubscribeChatroom(chatroomId);
+            listenNewMessage(onUpdateEvent, false);
         };
 
     }, [ chatroomId ])
@@ -108,7 +114,7 @@ const Chatroom = ({classData}) => {
               }
               <div ref={bottomRef} />
           </Wrapper>
-          <ChatroomInput username={user.username}/>
+          <ChatroomInput username={user.username} chatroomId={chatroomId}/>
       </Container>
   )
 }

@@ -4,8 +4,8 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../../global/authContext.jsx";
 import { getPullRequestDetail } from "../../../utils/apis/class.js";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { socket } from "../../../utils/socket/socket.js";
 import { PulseLoader } from "react-spinners";
+import { generateGPTCodeReview, listenGPTCodeReviewResult } from "../../../utils/socket/socket.js";
 
 const Block = styled.div`
     height: 50px;
@@ -113,7 +113,7 @@ const PullRequestItem = ({data, classId}) => {
         // Generate GPT code review
         if ( !isGeneratingCodeReview && codeReview === '' ) {
             setIsGeneratingCodeReview(true);
-            socket.emit('codeReview', detailData.diffData);
+            generateGPTCodeReview(detailData.diffData);
         }
         
     }
@@ -143,9 +143,10 @@ const PullRequestItem = ({data, classId}) => {
             setIsGeneratingCodeReview(false);
         }
 
-        socket.on('codeReviewResult', onCodeReviewEvent);
+        listenGPTCodeReviewResult( onCodeReviewEvent, true );
+
         return () => {
-            socket.off('codeReviewResult', onCodeReviewEvent);
+            listenGPTCodeReviewResult( onCodeReviewEvent, false );
         };
 
     }, [data.number, classId])

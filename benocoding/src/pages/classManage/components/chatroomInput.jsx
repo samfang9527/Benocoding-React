@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import { socket } from "../../../utils/socket/socket.js";
+import { sendMessage } from "../../../utils/socket/socket.js";
 
 const InputForm = styled.form`
     width: 100%;
@@ -26,16 +26,17 @@ function calculateHeight(value) {
     return 40 + numberOfLineBreaks * 20;
 }
 
-const ChatroomInput = ({username}) => {
+const ChatroomInput = ({username, chatroomId}) => {
 
     function sendmessage(e) {
         if ( e.keyCode === 13 ) {
             if ( e.shiftKey === false ) {
-                // submit message
-                socket.emit('newMessage', {
-                    username: username,
+                const msgData = {
+                    time: new Date().toLocaleString(),
+                    from: username,
                     message: e.target.value
-                })
+                }
+                sendMessage( chatroomId, JSON.stringify(msgData) );
             }
         }
     }
