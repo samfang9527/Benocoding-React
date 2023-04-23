@@ -5,6 +5,7 @@ import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
 import { useState } from "react";
 import Alert from '@mui/material/Alert';
 import { Divider } from "@mui/material";
+import { BsGithub } from "react-icons/bs";
 
 const slideInFromRight = keyframes`
   from {
@@ -61,7 +62,7 @@ const SignUpBtn = styled.button`
     color: white;
     border: none;
     cursor: pointer;
-    margin: 10px 0 20px 0;
+    margin: 10px 0;
     font-size: 18px;
     border-radius: 10px;
 
@@ -89,6 +90,9 @@ const SignInBtn = styled.button`
 const CustomDivider = styled(Divider)`
     width: 95%;
     margin: 30px 0px;
+    font-size: 16px;
+    font-family: robot;
+    color: gray;
 `;
 
 async function signUp(username, email, password) {
@@ -167,6 +171,10 @@ const SignUp = ({isSignIn, setIsSignIn}) => {
             })
     }
 
+    async function handleGitHubSignUp(e) {
+        e.preventDefault();
+    }
+
     return (
         <SignUpContainer isSignIn={isSignIn}>
             <InputBlock>
@@ -185,6 +193,8 @@ const SignUp = ({isSignIn, setIsSignIn}) => {
                 width: "95%"
             }}>Successfully sign up 🍀</Alert> : ''}
             <SignUpBtn onClick={handleSignUp}>Signup</SignUpBtn>
+            <CustomDivider>or</CustomDivider>
+            <SignUpBtn onClick={handleGitHubSignUp} style={{marginBottom: "20px"}}><BsGithub size={22} style={{margin: "0 5px 0 0"}}/>Signup with github</SignUpBtn>
             <CustomDivider></CustomDivider>
             <SignInBtn onClick={() => setIsSignIn(true)}>← back to login</SignInBtn>
         </SignUpContainer>

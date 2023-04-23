@@ -6,6 +6,7 @@ import { useState, useContext } from "react";
 import Alert from '@mui/material/Alert';
 import { AuthContext } from "../../../global/authContext.jsx";
 import Divider from '@mui/material/Divider';
+import { BsGithub } from "react-icons/bs";
 
 const slideInFromRight = keyframes`
   from {
@@ -76,7 +77,7 @@ const SignInBtn = styled.button`
     color: white;
     border: none;
     cursor: pointer;
-    margin: 10px 0 20px 0;
+    margin: 10px 0;
     font-size: 18px;
     border-radius: 10px;
 
@@ -86,13 +87,12 @@ const SignInBtn = styled.button`
 `;
 
 const SignUpBtn = styled.button`
-    width: 95%;
+    width: 100%;
     height: 50px;
     background-color: DarkSalmon;
     color: white;
     border: none;
     cursor: pointer;
-    margin: 20px 0 10px 0;
     font-size: 18px;
     border-radius: 10px;
 
@@ -107,6 +107,16 @@ const CustomDivider = styled(Divider)`
     font-size: 16px;
     font-family: robot;
     color: gray;
+`;
+
+const SignUpContainer = styled.div`
+    width: 95%;
+`;
+
+const SignUpQuestion = styled.p`
+    margin: 10px 5px;
+    text-align: left;
+    color: blue;
 `;
 
 
@@ -189,6 +199,14 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
             }) 
     }
 
+    async function handleGitHubSignIn(e) {
+        e.preventDefault();
+        const { response } = await axios.get(
+            `https://github.com/login/oauth/authorize?client_id=${"86fde66865e1a1f46213"};scope=user:email`
+        )
+        console.log(response);
+    }
+
     return (
         <SignInContainer isSignIn={isSignIn}>
             <InputBlock>
@@ -204,8 +222,13 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                 width: "95%"
             }}>Successfully sign in 🍀</Alert> : ''}
             <SignInBtn onClick={handleSignIn}>Login</SignInBtn>
-            <CustomDivider>Don't have an account yet?</CustomDivider>
-            <SignUpBtn onClick={() => setIsSignIn(false)}>Register one</SignUpBtn>
+            <CustomDivider>or</CustomDivider>
+            <SignInBtn onClick={handleGitHubSignIn} style={{marginBottom: "20px"}}><BsGithub size={22} style={{margin: "0 5px 0 0"}}/>Login with github</SignInBtn>
+            <CustomDivider />
+            <SignUpContainer>
+                <SignUpQuestion>Don't have an account yet?</SignUpQuestion>
+                <SignUpBtn onClick={() => setIsSignIn(false)}>Register one</SignUpBtn>
+            </SignUpContainer>
         </SignInContainer>
     )
 }
