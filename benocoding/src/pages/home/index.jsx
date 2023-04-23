@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom';
 import { getClassList, getRandomClasses } from "../../utils/apis/class.js";
 import ClassItem from "./components/classItem.jsx";
@@ -9,6 +9,7 @@ import { PRODUCTION_DOMAIN, CDN_DOMAIN } from "../../global/constant.js";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { AuthContext } from "../../global/authContext.jsx";
 
 
 const MainContainer = styled.div`
@@ -90,6 +91,7 @@ function getKeyword(queryString) {
 
 const Home = () => {
 
+    const authContext = useContext(AuthContext);
     const searchInput = useRef(null);
     const location = useLocation();
 
@@ -147,6 +149,22 @@ const Home = () => {
             })
             .catch(err => {console.error(err)})
     }, [])
+
+    useEffect(() => {
+        // check if github login with jwt cookie
+        const cookies = document.cookie.split(';');
+        
+        for ( let i = 0; i < cookies.length; i++ ) {
+            const cookie = cookies[i].split('=');
+            if ( cookie[0].trim() === 'jwt' ) {
+                authContext.login(cookie[1]);
+                window.localStorage.setItem('jwt', cookie[1]);
+                document.cookie = `jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                return;
+            }
+        }
+        
+    }, [authContext])
 
     const settings = {
         dots: true,
