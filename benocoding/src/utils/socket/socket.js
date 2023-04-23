@@ -2,7 +2,9 @@
 import { io } from "socket.io-client";
 import { PRODUCTION_BACKEND_DOMAIN } from "../../global/constant.js";
 
-const socket = io(PRODUCTION_BACKEND_DOMAIN);
+const socket = io(PRODUCTION_BACKEND_DOMAIN, {
+    withCredentials: true
+});
 
 export function subscribeChatroom( chatroomId ) {
     socket.emit('subscribe', chatroomId);
