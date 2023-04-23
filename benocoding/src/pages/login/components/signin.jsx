@@ -1,7 +1,7 @@
 
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
-import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
+import { PRODUCTION_BACKEND_API_URL, GITHUB_CLIENT_ID } from "../../../global/constant.js";
 import { useState, useContext } from "react";
 import Alert from '@mui/material/Alert';
 import { AuthContext } from "../../../global/authContext.jsx";
@@ -201,10 +201,7 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
 
     async function handleGitHubSignIn(e) {
         e.preventDefault();
-        const { data } = await axios.get(
-            `https://github.com/login/oauth/authorize?client_id=${"86fde66865e1a1f46213"}&scope=user:email`
-        )
-        console.log(data);
+        window.open(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`, "_blank");
     }
 
     return (
