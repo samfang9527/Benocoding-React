@@ -201,10 +201,10 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
 
     async function handleGitHubSignIn(e) {
         e.preventDefault();
-        const { response } = await axios.get(
-            `https://github.com/login/oauth/authorize?client_id=${"86fde66865e1a1f46213"};scope=user:email`
+        const { data } = await axios.get(
+            `https://github.com/login/oauth/authorize?client_id=${"86fde66865e1a1f46213"}&scope=user:email`
         )
-        console.log(response);
+        console.log(data);
     }
 
     return (
