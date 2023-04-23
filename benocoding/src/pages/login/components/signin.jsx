@@ -1,10 +1,35 @@
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
 import { useState, useContext } from "react";
 import Alert from '@mui/material/Alert';
 import { AuthContext } from "../../../global/authContext.jsx";
+import Divider from '@mui/material/Divider';
+
+const slideInFromRight = keyframes`
+  from {
+    transform: translateX(10%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
+
+const slideOutToRight = keyframes`
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(10%);
+    opacity: 0;
+  }
+`;
 
 const SignInContainer = styled.div`
     width: 50%;
@@ -14,42 +39,74 @@ const SignInContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #81B29A;
-    border-top: 5px solid Honeydew;
-    color: white;
+    animation: ${props => props.isSignIn ? slideInFromRight : slideOutToRight} 0.5s ease-in-out;
 `;
 
 const InputBlock = styled.div`
     width: 95%;
-    margin: 40px 0 20px 0;
-`;
-
-const Label = styled.label`
-    font-size: 24px;
-    align-self: flex-start;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
 const TextInput = styled.input`
     width: 100%;
     height: 50px;
     margin-top: 10px;
-    font-size: 20px;
+    font-size: 18px;
     padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: Gainsboro;
+
+    :focus {
+        width: 110%;
+        height: 60px;
+        transition: ease-in-out, width .2s ease-in-out;
+    }
+
+
 `;
 
 const SignInBtn = styled.button`
-    width: 150px;
+    width: 95%;
     height: 50px;
-    background-color: green;
+    background-color: DarkSlateGray;
     color: white;
     border: none;
     cursor: pointer;
-    margin: 30px 0 50px 0;
-    font-size: 24px;
+    margin: 10px 0 20px 0;
+    font-size: 18px;
+    border-radius: 10px;
 
     :hover {
-        background-color: darkgreen;
+        background-color: black;
     }
+`;
+
+const SignUpBtn = styled.button`
+    width: 95%;
+    height: 50px;
+    background-color: DarkSalmon;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 20px 0 10px 0;
+    font-size: 18px;
+    border-radius: 10px;
+
+    :hover {
+        background-color: Salmon;
+    }
+`;
+
+const CustomDivider = styled(Divider)`
+    width: 95%;
+    margin: 30px 0px;
+    font-size: 16px;
+    font-family: robot;
+    color: gray;
 `;
 
 
@@ -91,10 +148,10 @@ async function signIn(email, password) {
 }
 
 
-const SignIn = () => {
+const SignIn = ({isSignIn, setIsSignIn}) => {
 
-    const [signinFail, setSignInFail] = useState(false);
-    const [signinSuccess, setSignInSucess] = useState(false);
+    const [ signinFail, setSignInFail ] = useState(false);
+    const [ signinSuccess, setSignInSucess ] = useState(false);
     const [ message, setMessage ] = useState('');
     const authContext = useContext(AuthContext);
 
@@ -133,14 +190,12 @@ const SignIn = () => {
     }
 
     return (
-        <SignInContainer>
+        <SignInContainer isSignIn={isSignIn}>
             <InputBlock>
-                <Label htmlFor="email-input">Email</Label>
-                <TextInput type="text" id="email-input" name="email"></TextInput>    
+                <TextInput type="text" id="email-input" name="email" placeholder="Email"></TextInput>    
             </InputBlock>
             <InputBlock>
-                <Label htmlFor="pwd-input">Password</Label>
-                <TextInput type="password" id="pwd-input" name="password"></TextInput>    
+                <TextInput type="password" id="pwd-input" name="password" placeholder="Password"></TextInput>    
             </InputBlock>
             {signinFail ? <Alert severity="error" sx={{
                 width: "95%"
@@ -148,7 +203,9 @@ const SignIn = () => {
             {signinSuccess ? <Alert severity="success" sx={{
                 width: "95%"
             }}>Successfully sign in 🍀</Alert> : ''}
-            <SignInBtn onClick={handleSignIn}>Submit</SignInBtn>
+            <SignInBtn onClick={handleSignIn}>Login</SignInBtn>
+            <CustomDivider>Don't have an account yet?</CustomDivider>
+            <SignUpBtn onClick={() => setIsSignIn(false)}>Register one</SignUpBtn>
         </SignInContainer>
     )
 }
