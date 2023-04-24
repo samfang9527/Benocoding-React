@@ -181,6 +181,7 @@ async function getClassData(classId) {
                     ownerId,
                     milestones {
                         functionName,
+                        functionTemplate,
                         autoTest,
                         functionTest,
                         milestone,

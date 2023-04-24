@@ -43,10 +43,17 @@ const BlockTitle = styled.p`
     padding: 0 20px;
 `;
 
-const ContentTitle = styled.p`
-    font-size: 30px;
+const ContentDetail = styled.div`
+    font-size: 20px;
     padding: 0 20px;
     margin: 0;
+    white-space: pre-wrap;
+`;
+
+const BlockWrapper = styled.div`
+    border: 5px solid rgba(0, 0, 0, 0.2);
+    margin: 15px 5px;
+    border-radius: 5px;
 `;
 
 const Notification = styled.p`
@@ -91,34 +98,38 @@ const CustomFIleUpload = styled.input`
 `;
 
 const StartTestBtn = styled.button`
-    width: 100px;
+    width: 400px;
     height: 40px;
-    margin: 0px 20px;
-    background-color: orange;
+    margin: 0px 20px 50px 20px;
+    background-color: rgba(200, 140, 100, 0.8);
     border: none;
     font-size: 18px;
     cursor: pointer;
     color: white;
+    border-radius: 10px;
 
     :hover {
-        background-color: darkorange;
+        background-color: rgba(200, 140, 100, 0.7);
     }
 `;
 
 const TestResultContainer = styled.div`
     display: flex;
     margin: 20px;
+    flex-wrap: wrap;
 `;
 
 const TestResultItem = styled.div`
     height: fit-content;
     padding: 10px;
     border: ${props => props.passed ? '4px solid #43C59E' : '4px solid #E07A5F'};
+    margin: 10px;
 `;
 
 const TestResultDescription = styled.p`
     font-size: 18px;
     margin: 5px 0;
+    white-space: pre;
 `;
 
 const CustomLoader = styled(MoonLoader)`
@@ -144,6 +155,7 @@ const MilestoneItem = ({milestone, idx, classId}) => {
         autoTest,
         functionTest,
         functionName,
+        functionTemplate,
         testCases
     } = milestone;
 
@@ -237,14 +249,19 @@ const MilestoneItem = ({milestone, idx, classId}) => {
             <ContentWrapper isShowContent={isShowContent}>
                 {
                     isShowContent ? <ContentContainer>
-                        <ContentTitle># {milestone.milestoneDesc}</ContentTitle>
+                        <br></br>
+                        <ContentDetail>{milestone.milestoneDesc ? milestone.milestoneDesc : ''}</ContentDetail>
                         {
                             autoTest ? <>
                                 {
-                                    functionTest ? <>
+                                    functionTest ? <BlockWrapper>
                                         <Notification>Function auto-test</Notification>
                                         <List>
                                             <ListItem>Your function name should be: {functionName}</ListItem>
+                                            <ListItem>
+                                                Your function should looks like: <br />
+                                                <ContentDetail>{functionTemplate}</ContentDetail>
+                                            </ListItem>
                                         </List>
                                         {
                                             testResults.length > 0 ? <TestResultContainer>
@@ -252,7 +269,8 @@ const MilestoneItem = ({milestone, idx, classId}) => {
                                                     testResults.map((res, idx) => {
                                                         return <TestResultItem passed={res.passed} key={idx + res.case}>
                                                             <TestResultDescription>Case: {res.case}</TestResultDescription>
-                                                            <TestResultDescription>Inputs: {res.inputs}</TestResultDescription>
+                                                            <TestResultDescription>Input1: {res.inputs[0]}</TestResultDescription>
+                                                            <TestResultDescription>Input2: {res.inputs[1]}</TestResultDescription>
                                                             <TestResultDescription>Expect {res.expectedResult} | Got {res.execResult}</TestResultDescription>
                                                         </TestResultItem>
                                                     })
@@ -263,13 +281,13 @@ const MilestoneItem = ({milestone, idx, classId}) => {
                                             isTesting ? <CustomLoader color="Crimson" size={40}></CustomLoader>
                                             : <form encType="multipart/form-data" onSubmit={handleFunctionTest}>
                                                 <Notification>File Upload</Notification>
-                                                <CustomFIleUpload type="file" name="testfile" ref={testfile}></CustomFIleUpload><br></br>
-                                                <StartTestBtn type="submit">Submit</StartTestBtn>
+                                                <CustomFIleUpload type="file" name="testfile" ref={testfile} required={true}></CustomFIleUpload><br></br>
+                                                <StartTestBtn type="submit">Test!</StartTestBtn>
                                             </form>
                                         }
                                         
                                         
-                                    </> : <>
+                                    </BlockWrapper> : <>
                                         <Notification>API auto-test</Notification>
                                         <List>
                                             {
@@ -293,10 +311,10 @@ const MilestoneItem = ({milestone, idx, classId}) => {
                                                 }
                                             </TestResultContainer> : ''
                                         }
-                                        <StartTestBtn onClick={handleAPITest}>Submit</StartTestBtn>
+                                        <StartTestBtn onClick={handleAPITest}>Test!</StartTestBtn>
                                     </>
                                 }
-                            </> : <Notification>No auto-test at this milestone</Notification>
+                            </> : ''
                         }
                     </ContentContainer> : ''
                 }

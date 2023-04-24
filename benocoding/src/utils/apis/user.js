@@ -48,6 +48,7 @@ async function getUserMilestoneData(userId, classId) {
                     },
                     milestones {
                         functionName,
+                        functionTemplate,
                         milestone,
                         milestoneDesc,
                         passed,
@@ -80,6 +81,7 @@ async function getUserMilestoneData(userId, classId) {
             data: graphqlQuery
         })
         const { milestones } = data.data;
+        console.log(milestones);
         return milestones;
     } catch (err) {
         console.error(err);

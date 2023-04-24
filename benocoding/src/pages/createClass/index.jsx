@@ -8,7 +8,6 @@ import Milestone from "./components/milestone";
 import Tags from "./components/tags";
 import { PRODUCTION_BACKEND_API_URL, PRODUCTION_BACKEND_DOMAIN } from "../../global/constant.js";
 
-
 const Wrapper = styled.div`
     width: 100vw;
     display: flex;
@@ -225,6 +224,7 @@ const CreateClass = () => {
             autoTest: false,
             functionTest: false,
             functionName: '',
+            functionTemplate: '',
             testCases: [],
             passed: false
         }
@@ -382,6 +382,7 @@ const CreateClass = () => {
             autoTest: false,
             functionTest: false,
             functionName: '',
+            functionTemplate: '',
             testCases: [],
             passed: false
         }

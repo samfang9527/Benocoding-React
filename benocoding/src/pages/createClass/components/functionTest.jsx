@@ -51,8 +51,24 @@ const TableRow = styled.div`
     margin: 10px 0;
 `;
 
-const EachInput = styled.input`
-    width: 200px;
+const CaseInput = styled.input`
+    width: 100px;
+    height: 40px;
+    font-size: 18px;
+    text-align: center;
+    margin: 0 10px;
+`;
+
+const ArgsInput = styled.input`
+    width: 150px;
+    height: 40px;
+    font-size: 18px;
+    text-align: center;
+    margin: 0 10px;
+`;
+
+const ResultInput = styled.input`
+    width: 50px;
     height: 40px;
     font-size: 18px;
     text-align: center;
@@ -61,11 +77,6 @@ const EachInput = styled.input`
 
 const ColumnName = styled.p`
     font-size: 16px;
-`;
-
-const RowNumber = styled.p`
-    align-self: flex-end;
-    margin: 0;
 `;
 
 const FunctionTest = ({milestoneIdx}) => {
@@ -82,7 +93,7 @@ const FunctionTest = ({milestoneIdx}) => {
 
     function handleAddCase(e) {
         e.preventDefault();
-        const newRow = { id: rows.length, case: "", inputs: "", result: "" };
+        const newRow = { id: rows.length, case: "", inputs: ["", ""], result: "" };
         setRows([...rows, newRow]);
         testCases.push(newRow);
         setMilestones(milestones.slice());
@@ -113,13 +124,14 @@ const FunctionTest = ({milestoneIdx}) => {
 
     function handleInputsChange(e) {
         e.preventDefault();
+        const inputNum = e.target.name;
         const classNames = e.target.className.split(' ');
         const value = JSON.stringify(e.target.value);
         const targetIdx = classNames[classNames.length - 1];
-        rows[targetIdx].inputs = value;
+        rows[targetIdx].inputs[inputNum] = value;
         setRows([...rows]);
 
-        testCases[targetIdx].inputs = value;
+        testCases[targetIdx].inputs[inputNum] = value;
         setMilestones(milestones.slice());
     }
 
@@ -138,6 +150,22 @@ const FunctionTest = ({milestoneIdx}) => {
     function handleFuncitonName(e) {
         e.preventDefault();
         milestones[milestoneIdx].functionName = e.target.value;
+
+        // generate function template
+        const newFunctionTemplate = `
+        function ${e.target.value}(arg1, arg2) {
+            // write your code here
+        }
+        
+        const args = process.argv.slice(2);
+        
+        if (args[0] === '${e.target.value}') {
+            const arg1 = JSON.parse(process.env.INPUT1);
+            const arg2 = JSON.parse(process.env.INPUT2);
+            console.log(${e.target.value}(arg1, arg2));
+        }
+        `
+        milestones[milestoneIdx].functionTemplate = newFunctionTemplate;
         setMilestones(milestones.slice());
     }
 
@@ -149,27 +177,35 @@ const FunctionTest = ({milestoneIdx}) => {
                 rows.map((row, idx) => {
                     return (
                         <TableRow key={idx}>
-                            <RowNumber>{idx}</RowNumber>
                             <div>
                                 <ColumnName>Case</ColumnName>
-                                <EachInput
+                                <CaseInput
                                     className={`${idx}`}
                                     onChange={handleCaseChange}
-                                ></EachInput>
+                                ></CaseInput>
                             </div>
                             <div>
-                                <ColumnName>Inputs</ColumnName>
-                                <EachInput
+                                <ColumnName>Input 1</ColumnName>
+                                <ArgsInput
+                                    name="0"
                                     className={`${idx}`}
                                     onChange={handleInputsChange}
-                                ></EachInput>
+                                ></ArgsInput>
+                            </div>
+                            <div>
+                                <ColumnName>Input 2</ColumnName>
+                                <ArgsInput
+                                    name="1"
+                                    className={`${idx}`}
+                                    onChange={handleInputsChange}
+                                ></ArgsInput>
                             </div>
                             <div>
                                 <ColumnName>Result</ColumnName>
-                                <EachInput
+                                <ResultInput
                                     className={`${idx}`}
                                     onChange={handleResultChange}
-                                ></EachInput>
+                                ></ResultInput>
                             </div>
                         </TableRow>
                     )
