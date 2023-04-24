@@ -6,6 +6,11 @@ import axios from "axios";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { MoonLoader } from "react-spinners";
 import { AuthContext } from "../../../global/authContext.jsx";
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { sublimeInit } from '@uiw/codemirror-theme-sublime';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { a11yLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 const Block = styled.div`
     height: 50px;
@@ -41,13 +46,6 @@ const ContentContainer = styled.div`
 const BlockTitle = styled.p`
     font-size: 20px;
     padding: 0 20px;
-`;
-
-const ContentDetail = styled.div`
-    font-size: 20px;
-    padding: 0 20px;
-    margin: 0;
-    white-space: pre-wrap;
 `;
 
 const BlockWrapper = styled.div`
@@ -249,8 +247,9 @@ const MilestoneItem = ({milestone, idx, classId}) => {
             <ContentWrapper isShowContent={isShowContent}>
                 {
                     isShowContent ? <ContentContainer>
-                        <br></br>
-                        <ContentDetail>{milestone.milestoneDesc ? milestone.milestoneDesc : ''}</ContentDetail>
+                        <SyntaxHighlighter language="javascript" style={a11yLight}>
+                            {milestone.milestoneDesc}
+                        </SyntaxHighlighter>
                         {
                             autoTest ? <>
                                 {
@@ -260,7 +259,17 @@ const MilestoneItem = ({milestone, idx, classId}) => {
                                             <ListItem>Your function name should be: {functionName}</ListItem>
                                             <ListItem>
                                                 Your function should looks like: <br />
-                                                <ContentDetail>{functionTemplate}</ContentDetail>
+                                                <CodeMirror
+                                                    value={functionTemplate}
+                                                    extensions={[javascript({ jsx: true })]}
+                                                    theme={sublimeInit({
+                                                        settings: {
+                                                            caret: '#c6c6c6',
+                                                            fontFamily: 'monospace'
+                                                        }
+                                                    })}
+                                                    style={{margin: "20px -10px", width: "90%"}}
+                                                />
                                             </ListItem>
                                         </List>
                                         {
