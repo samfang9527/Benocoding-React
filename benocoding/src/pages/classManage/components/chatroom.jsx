@@ -14,10 +14,11 @@ import {
 
 
 const Container = styled.div`
-    height: 100%;
+    height: 85vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow: scroll;
 `;
 
 const Wrapper = styled.div`

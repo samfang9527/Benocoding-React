@@ -20,8 +20,8 @@ const SectionTitle = styled.p`
 `;
 
 const ImageBackground = styled.img`
-    width: 100%;
-    height: 40vh;
+    width: 40%;
+    height: auto;
     z-index: -20;
     object-fit: contain;
 `;
@@ -49,6 +49,12 @@ const CustomHighlighter = styled(SyntaxHighlighter)`
     font-size: 20px;
 `;
 
+const MediaContainer = styled.div`
+    display: flex;
+    justify-content: space-around;
+    margin: 40px;
+`;
+
 
 function formatDate(dateString) {
     if ( dateString ) {
@@ -70,10 +76,12 @@ const ClassInfo = ({classData}) => {
 
     return (
         <MainContainer>
-            <ImageBackground src={`${CDN_DOMAIN + classImage}`}></ImageBackground>
-            <SplitLine></SplitLine>
-            {/* <SectionTitle style={{alignSelf: "center"}}>Class Video</SectionTitle> */}
-            <ClassVideo controls={true} url={`${CDN_DOMAIN + classVideo}`} width={"100%"} height={"40vh"}></ClassVideo>
+            <MediaContainer>
+                <ImageBackground src={`${CDN_DOMAIN + classImage}`}></ImageBackground>
+                <ClassVideo controls={true} url={`${CDN_DOMAIN + classVideo}`} width={"40%"} height={"auto"}></ClassVideo>
+            </MediaContainer>
+            {/* <SplitLine></SplitLine>
+            <ClassVideo controls={true} url={`${CDN_DOMAIN + classVideo}`} width={"80%"} height={"auto"}></ClassVideo> */}
             <SplitLine></SplitLine>
             <SectionContainer>
                 <SectionTitle>Class Info</SectionTitle>

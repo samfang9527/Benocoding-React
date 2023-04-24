@@ -7,8 +7,7 @@ const InputForm = styled.form`
     width: 100%;
     position: sticky;
     bottom: 0;
-    padding: 10px 0;
-    margin: 10px;
+    padding: 10px;
     background-color: snow;
 `;
 

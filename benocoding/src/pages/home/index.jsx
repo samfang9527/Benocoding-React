@@ -159,7 +159,7 @@ const Home = () => {
             if ( cookie[0].trim() === 'jwt' ) {
                 authContext.login(cookie[1]);
                 window.localStorage.setItem('jwt', cookie[1]);
-                document.cookie = `jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=benocoding.com;";
                 return;
             }
         }

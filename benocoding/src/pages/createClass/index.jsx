@@ -7,6 +7,7 @@ import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 import Milestone from "./components/milestone";
 import Tags from "./components/tags";
 import { PRODUCTION_BACKEND_API_URL, PRODUCTION_BACKEND_DOMAIN } from "../../global/constant.js";
+import { useNavigate } from "react-router"; 
 
 const Wrapper = styled.div`
     width: 100vw;
@@ -194,6 +195,8 @@ export const MilestoneContext = createContext({
 })
 
 const CreateClass = () => {
+
+    const navigate = useNavigate();
 
     // Ref
     const className = useRef(null);
@@ -448,7 +451,7 @@ const CreateClass = () => {
 
         try {
             setIsSubmitting(true);
-            const { data } = await axios({
+            await axios({
                 method: "POST",
                 url: PRODUCTION_BACKEND_API_URL,
                 headers: {
@@ -457,10 +460,9 @@ const CreateClass = () => {
                 },
                 data: graphqlMutation
             })
-            console.log(data);
             setTimeout(() => {
                 setIsSubmitting(false);
-                // window.location.assign('/creater')
+                navigate('/creater');
             }, 1000);
             
         } catch (err) {

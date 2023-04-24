@@ -102,7 +102,7 @@ const fadeOut = keyframes`
 `;
 
 const OptionContainer = styled.div`
-    display: flex;
+    display: ${props => props.show ? 'flex' : 'none'};
     align-items: center;
 `;
 
@@ -185,7 +185,7 @@ const Header = () => {
             <LogoStyle  onClick={() => {navigate('/')}}>Benocoding</LogoStyle>
             <NavWrapper>
                 {
-                    isLogin ? <OptionContainer show={isShowingOptions} className={isShowingOptions ? '' : 'hide'}>
+                    isLogin && isShowingOptions ? <OptionContainer show={isShowingOptions} className={isShowingOptions ? '' : 'hide'}>
                         <OptionBtn show={isShowingOptions} onClick={() => navigate('/learner')}>我的學習</OptionBtn>
                         <OptionBtn show={isShowingOptions} onClick={() => navigate('/creater')}>我的課程</OptionBtn>
                         <OptionBtn show={isShowingOptions} onClick={() => navigate('/create')}>建立新課程</OptionBtn>

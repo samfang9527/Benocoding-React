@@ -4,13 +4,13 @@ import styled from "styled-components";
 const FooterContainer = styled.footer`
     position: block;
     bottom: 0;
-    height: 10%;
+    height: 3%;
     width: 100%;
-    font-size: 40px;
+    font-size: 30px;
     font-family: 'pacifico';
     text-align: center;
     letter-spacing: 5px;
-    padding: 2% 0;
+    padding: 10px 0;
     background-color: #38686A;
     color: white;
 `;

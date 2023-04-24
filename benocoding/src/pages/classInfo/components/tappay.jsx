@@ -1,9 +1,11 @@
 
 import styled from "styled-components";
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext, useState } from "react";
+import { useNavigate } from "react-router";
 import { AuthContext } from "../../../global/authContext";
 import axios from "axios";
 import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
+import { SyncLoader } from "react-spinners";
 
 const Wrapper = styled.div`
     width: 90%;
@@ -29,7 +31,7 @@ const TPFieldContainer = styled.div`
 
 const TPField = styled.div`
     height: 50px;
-    width: 400px;
+    max-width: 400px;
     border: 2px solid gray;
     margin: 10px 0;
     padding: 10px;
@@ -86,26 +88,37 @@ async function buyClass(prime, classId, userId) {
 const Tappay = ({classId}) => {
 
     const submitButton = useRef(null);
-
     const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const [ isBuying, setIsBuying ] = useState(false);
 
     function checkout(e) {
         e.preventDefault();
+        setIsBuying(true);
         window.TPDirect.card.getPrime(function(result) {
             if (result.status !== 0) {
                 console.error('getPrime error');
+                setIsBuying(false);
                 return;
             }
             const prime = result.card.prime;
             const { userId } = authContext.user;
             buyClass(prime, classId, userId)
                 .then(res => {
-                    console.log(res);
+                    const { response } = res;
+                    if ( response && response.statusCode !== 200 ) {
+                        alert('oops! something went wrong', response.responseMessage);
+                        return;
+                    }
+                    alert('Payment successful, enjoy learning!');
+                    navigate('/learner');
                 })
                 .catch(err => {
                     console.error(err);
                 })
         })
+        setIsBuying(false);
     }
 
     useEffect(() => {
@@ -167,7 +180,6 @@ const Tappay = ({classId}) => {
                 }
             }
         })
-        console.log('run');
 
         window.TPDirect.card.onUpdate(function (update) {
             // update.canGetPrime === true
@@ -187,13 +199,18 @@ const Tappay = ({classId}) => {
 
     return (
         <Wrapper>
-            <TPFieldContainer>
-                <Title>信用卡付款</Title>
-                <TPField className="tpfield" id="card-number"></TPField>
-                <TPField className="tpfield" id="card-expiration-date"></TPField>
-                <TPField className="tpfield" id="card-ccv"></TPField>
-            </TPFieldContainer>
-            <SubmitBtn ref={submitButton} onClick={checkout}>Pay</SubmitBtn>
+            {
+                isBuying ? <SyncLoader></SyncLoader> :
+                <>
+                    <TPFieldContainer>
+                        <Title>信用卡付款</Title>
+                        <TPField className="tpfield" id="card-number"></TPField>
+                        <TPField className="tpfield" id="card-expiration-date"></TPField>
+                        <TPField className="tpfield" id="card-ccv"></TPField>
+                    </TPFieldContainer>
+                    <SubmitBtn ref={submitButton} onClick={checkout}>Pay</SubmitBtn>
+                </>
+            }
         </Wrapper>
     )
 

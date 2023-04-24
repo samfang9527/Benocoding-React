@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { CDN_DOMAIN } from "../../../global/constant.js";
 
 const ItemContainer = styled.div`
-    width: 400px;
+    max-width: 500px;
     height: 600px;
     margin: 50px 30px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
