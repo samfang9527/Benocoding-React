@@ -182,13 +182,13 @@ const Header = () => {
 
     return (
         <HeaderWrapper>
-            <LogoStyle  onClick={() => {window.location.assign('/')}}>Benocoding</LogoStyle>
+            <LogoStyle  onClick={() => {navigate('/')}}>Benocoding</LogoStyle>
             <NavWrapper>
                 {
                     isLogin ? <OptionContainer show={isShowingOptions} className={isShowingOptions ? '' : 'hide'}>
-                        <OptionBtn show={isShowingOptions}>我的學習</OptionBtn>
-                        <OptionBtn show={isShowingOptions}>我的課程</OptionBtn>
-                        <OptionBtn show={isShowingOptions}>建立新課程</OptionBtn>
+                        <OptionBtn show={isShowingOptions} onClick={() => navigate('/learner')}>我的學習</OptionBtn>
+                        <OptionBtn show={isShowingOptions} onClick={() => navigate('/creater')}>我的課程</OptionBtn>
+                        <OptionBtn show={isShowingOptions} onClick={() => navigate('/create')}>建立新課程</OptionBtn>
                     </OptionContainer> : ''
                 }
                 { !isShowingOptions && isLogin ? 
