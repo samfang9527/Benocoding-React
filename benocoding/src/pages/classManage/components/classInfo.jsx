@@ -78,19 +78,19 @@ const ClassInfo = ({classData}) => {
             <SectionContainer>
                 <SectionTitle>Class Info</SectionTitle>
                 <Content>Class Name:</Content>
-                <CustomHighlighter language="javascript" style={a11yLight}>
+                <CustomHighlighter language="javascript" style={a11yLight} wrapLongLines={true}>
                     {className}
                 </CustomHighlighter>
                 <Content>Class Description:</Content>
-                <CustomHighlighter language="javascript" style={a11yLight}>
+                <CustomHighlighter language="javascript" style={a11yLight} wrapLongLines={true}>
                     {classDesc}
                 </CustomHighlighter>
                 <Content>Start date:</Content>
-                <CustomHighlighter language="javascript" style={a11yLight}>
+                <CustomHighlighter language="javascript" style={a11yLight} wrapLongLines={true}>
                     {formatDate(classStartDate)}
                 </CustomHighlighter>
                 <Content>End date:</Content>
-                <CustomHighlighter language="javascript" style={a11yLight}>
+                <CustomHighlighter language="javascript" style={a11yLight} wrapLongLines={true}>
                     {formatDate(classEndDate)}
                 </CustomHighlighter>
             </SectionContainer>

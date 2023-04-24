@@ -85,13 +85,15 @@ const ClassDescriptionBlock = styled.div`
     margin: 20px;
 `;
 
-const ClassDescription = styled.p`
+const ClassDescription = styled.pre`
     display: inline;
     font-size: 26px;
     font-weight: bolder;
     color: FireBrick;
     padding: 0 20px;
     letter-spacing: 2px;
+    width: 100%;
+    white-space: pre-wrap;
 `;
 
 const ClassVideo = styled(ReactPlayer)`
@@ -159,9 +161,10 @@ const ClassDetail = () => {
                 <InfoBlock>
                     <ClassTitle>{className}</ClassTitle>
                     <ClassDescription style={{color: "MenuText", fontWeight: "normal"}}>{classDesc}</ClassDescription>
-                    { classVideo ? <ClassVideo width={"80%"} height={"auto"} controls={true} url={`${CDN_DOMAIN + classVideo}`}></ClassVideo> : '' }
+                    { classVideo ? <ClassVideo width={"90%"} height={"auto"} controls={true} url={`${CDN_DOMAIN + classVideo}`}></ClassVideo> : '' }
                     <ClassDescriptionBlock>Teacher | 
                         <ClassDescription>{teacherName}</ClassDescription>
+                        
                     </ClassDescriptionBlock>
                     <ClassDescriptionBlock>Totally 
                         <ClassDescription>{ milestones ? milestones.length : ''}</ClassDescription> milestones

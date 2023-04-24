@@ -247,7 +247,7 @@ const MilestoneItem = ({milestone, idx, classId}) => {
             <ContentWrapper isShowContent={isShowContent}>
                 {
                     isShowContent ? <ContentContainer>
-                        <SyntaxHighlighter language="javascript" style={a11yLight}>
+                        <SyntaxHighlighter language="javascript" style={a11yLight} wrapLongLines={true}>
                             {milestone.milestoneDesc}
                         </SyntaxHighlighter>
                         {

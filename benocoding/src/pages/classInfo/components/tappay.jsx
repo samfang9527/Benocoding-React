@@ -167,6 +167,7 @@ const Tappay = ({classId}) => {
                 }
             }
         })
+        console.log('run');
 
         window.TPDirect.card.onUpdate(function (update) {
             // update.canGetPrime === true

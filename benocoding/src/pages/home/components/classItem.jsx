@@ -9,6 +9,7 @@ const ItemContainer = styled.div`
     box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
     background-color: snow;
     cursor: pointer;
+    flex-grow: 1;
 
     :hover {
         background-color: Linen;
@@ -34,12 +35,13 @@ const ClassTitle = styled.p`
     overflow: scroll;
 `;
 
-const ClassDesc = styled.p`
+const ClassDesc = styled.pre`
     font-size: 18px;
     padding: 0px 20px;
     margin: 0;
     height: 250px;
     overflow: scroll;
+    white-space: pre-wrap;
 `;
 
 const TagsContainer = styled.div`
