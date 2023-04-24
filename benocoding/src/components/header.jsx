@@ -107,51 +107,55 @@ const OptionContainer = styled.div`
 `;
 
 const OptionBtn = styled.button`
-    align-self: center;
-    background-color: #fff;
-    background-image: none;
-    background-position: 0 90%;
-    background-repeat: repeat no-repeat;
-    background-size: 4px 3px;
-    border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
-    border-style: solid;
-    border-width: 2px;
-    box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+    background-color: Moccasin;
+    border: 0 solid #E5E7EB;
     box-sizing: border-box;
-    color: #41403e;
+    color: #000000;
+    display: flex;
+    font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 14px;
+    font-weight: 700;
+    justify-content: center;
+    line-height: 1rem;
+    padding: .75rem 1.65rem;
+    position: relative;
+    text-align: center;
+    text-decoration: none #000000 solid;
+    text-decoration-thickness: auto;
+    width: 100%;
+    max-width: 200px;
+    height: 40px;
+    position: relative;
     cursor: pointer;
-    display: inline-block;
-    font-family: Neucha, sans-serif;
-    font-size: 1rem;
-    line-height: 23px;
-    outline: none;
-    padding: .75rem;
-    text-decoration: none;
-    transition: all 235ms ease-in-out;
-    border-bottom-left-radius: 15px 255px;
-    border-bottom-right-radius: 225px 15px;
-    border-top-left-radius: 255px 15px;
-    border-top-right-radius: 15px 225px;
+    transform: rotate(-2deg);
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
     height: 50px;
     width: 130px;
-    margin-right: 5px;
-
-    :hover {
-        box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
-        transform: translate3d(0, 2px, 0);
-    }
-
-    :focus {
-        box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
-    }
-
+    margin: 10px;
     opacity: ${props => props.show ? '1' : '0'};
     animation: ${props => props.show ? fadeIn : fadeOut} 0.3s ease-in-out;
-`;
 
+    :focus {
+    outline: 0;
+    }
+
+    :after {
+    content: '';
+    position: absolute;
+    border: 1px solid #000000;
+    bottom: 4px;
+    left: 4px;
+    width: calc(100% - 1px);
+    height: calc(100% - 1px);
+    }
+
+    :hover:after {
+    bottom: 2px;
+    left: 2px;
+    }
+`;
 
 const Header = () => {
 
@@ -180,15 +184,36 @@ const Header = () => {
         setIsShowingOptions(!isShowingOptions)
     }
 
+    function handleLogOut(e) {
+        e.preventDefault();
+        window.localStorage.removeItem('jwt');
+        window.location.assign('/');
+        alert("Goodbye! Hope to see you soon");
+    }
+
     return (
         <HeaderWrapper>
             <LogoStyle  onClick={() => {navigate('/')}}>Benocoding</LogoStyle>
             <NavWrapper>
                 {
                     isLogin && isShowingOptions ? <OptionContainer show={isShowingOptions} className={isShowingOptions ? '' : 'hide'}>
-                        <OptionBtn show={isShowingOptions} onClick={() => navigate('/learner')}>我的學習</OptionBtn>
-                        <OptionBtn show={isShowingOptions} onClick={() => navigate('/creater')}>我的課程</OptionBtn>
-                        <OptionBtn show={isShowingOptions} onClick={() => navigate('/create')}>建立新課程</OptionBtn>
+                        <OptionBtn
+                            show={isShowingOptions}
+                            onClick={() => navigate('/learner')}
+                        >我的學習</OptionBtn>
+                        <OptionBtn
+                            show={isShowingOptions}
+                            onClick={() => navigate('/creater')}
+                        >我的課程</OptionBtn>
+                        <OptionBtn
+                            show={isShowingOptions}
+                            onClick={() => navigate('/create')}
+                        >建立新課程</OptionBtn>
+                        <OptionBtn
+                            show={isShowingOptions}
+                            onClick={handleLogOut}
+                            style={{backgroundColor: "LightCoral"}}
+                        >登出</OptionBtn>
                     </OptionContainer> : ''
                 }
                 { !isShowingOptions && isLogin ? 

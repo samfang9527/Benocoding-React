@@ -381,6 +381,7 @@ const Settings = ({mutableData, classId}) => {
             .finally(() => {
                 setIsUpdating(false);
                 setChangeContent({});
+                window.location.reload();
             })
     }
 
