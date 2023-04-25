@@ -74,7 +74,7 @@ const CampaignBlock = styled.div`
 
 const CampaignImage = styled.img`
     width: 100%;
-    height: 600px;
+    height: 100%;
     object-fit: contain;
     cursor: pointer;
 `;
@@ -175,6 +175,7 @@ const Home = () => {
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
+        height: "fit-content"
     };
 
     return (
@@ -185,7 +186,7 @@ const Home = () => {
                     <SearchInput type="text" placeholder="Javascript" ref={searchInput} onKeyUp={handleSearch}></SearchInput>
                 </InputBlock>
                 <CampaignBlock>
-                    <Slider {...settings}>
+                    <Slider {...settings} style={{height: "fit-content"}}>
                         {
                             campaignList.map((campaign, idx) => {
                                 return (
