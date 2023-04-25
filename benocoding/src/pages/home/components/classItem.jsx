@@ -1,6 +1,7 @@
 
 import styled from "styled-components";
 import { CDN_DOMAIN } from "../../../global/constant.js";
+import { useNavigate } from "react-router";
 
 const ItemContainer = styled.div`
     width: 450px;
@@ -60,6 +61,8 @@ const ClassTag = styled.div`
 
 const ClassItem = ({class_}) => {
 
+    const navigate = useNavigate();
+
     const {
         id,
         classImage,
@@ -69,7 +72,7 @@ const ClassItem = ({class_}) => {
     } = class_;
 
     return (
-        <ItemContainer onClick={() => {window.location.assign(`/class/${id}`)}}>
+        <ItemContainer onClick={() => {navigate(`/class/${id}`)}}>
             <ItemImage src={`${CDN_DOMAIN + classImage}`}></ItemImage>
             <ContentWrapper>
                 <ClassTitle>{className}</ClassTitle>
