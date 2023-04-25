@@ -8,6 +8,7 @@ import Milestone from "./components/milestone";
 import Tags from "./components/tags";
 import { PRODUCTION_BACKEND_API_URL, PRODUCTION_BACKEND_DOMAIN } from "../../global/constant.js";
 import { useNavigate } from "react-router"; 
+import { CustomErrorAlert, ServerErrorAlert } from "../../utils/alert.js";
 
 const Wrapper = styled.div`
     width: 100vw;
@@ -514,25 +515,37 @@ const CreateClass = () => {
     useEffect(() => {
         const jwt = window.localStorage.getItem('jwt');
         if ( !jwt ) {
-          alert('Please sign in to continue');
-          window.location.assign('/login');
+            CustomErrorAlert( 'Please sign in to continue' )
+            .then(result => {
+                if ( result.isConfirmed || result.isDismissed ) {
+                    navigate('/login');
+                }
+            })
         }
-  
-        (async () => {
-          try {
-            const result = await jwtValidation(jwt);
-            if ( !result ) {
-              alert('Authorization failed, please sign in again');
-              window.location.assign('/login');
-            } else {
-              setUserInfo(result.data.data.jwtValidate);
-            }
-          } catch (err) {
-            console.error(err);
-          }
-        })();
-  
-    }, []);
+        
+        jwtValidation(jwt)
+            .then(result => {
+                if ( !result ) {
+                    CustomErrorAlert( 'Authorization failed, please sign in again' )
+                    .then(result => {
+                        if ( result.isConfirmed || result.isDismissed ) {
+                            navigate('/login');
+                        }
+                    })
+                } else {
+                    setUserInfo(result.data.data.jwtValidate);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                ServerErrorAlert()
+                .then(result => {
+                    if ( result.isConfirmed || result.isDismissed ) {
+                        navigate('/');
+                    }
+                })
+            })
+    }, [ navigate ]);
 
     return (
         <MilestoneContext.Provider value={{

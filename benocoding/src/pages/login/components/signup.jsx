@@ -1,11 +1,14 @@
 
+import { useContext } from "react";
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import { PRODUCTION_BACKEND_API_URL, GITHUB_CLIENT_ID } from "../../../global/constant.js";
-import { useState } from "react";
-import Alert from '@mui/material/Alert';
 import { Divider } from "@mui/material";
 import { BsGithub } from "react-icons/bs";
+import { AuthContext } from "../../../global/authContext.jsx";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { CustomErrorAlert, ServerErrorAlert } from "../../../utils/alert.js";
 
 const slideInFromRight = keyframes`
   from {
@@ -135,9 +138,8 @@ async function signUp(username, email, password) {
 
 const SignUp = ({isSignIn, setIsSignIn}) => {
 
-    const [ signUpFail, setSignUpFail ] = useState(false);
-    const [ signUpSuccess, setSignUpSucess ] = useState(false);
-    const [ message, setMessage ] = useState('');
+    const MySwal = withReactContent(Swal);
+    const authContext = useContext(AuthContext);
 
     function handleSignUp(e) {
         e.preventDefault();
@@ -150,24 +152,24 @@ const SignUp = ({isSignIn, setIsSignIn}) => {
             .then(response => {
                 const { signup } = response.data;
                 if ( signup.statusCode !== 200 ) {
-                    setSignUpFail(true);
-                    setSignUpSucess(false);
-                    setMessage(signup.responseMessage);
-                    return;
+                    CustomErrorAlert( signup.responseMessage );
                 }
 
-                // put jwt at localstorage
-                window.localStorage.setItem("jwt", signup.jwt);
-                setSignUpFail(false);
-                setSignUpSucess(true);
-                setTimeout(() => {
-                    window.location.assign('/');
-                }, 1000)
+                MySwal.fire({
+                    icon: 'success',
+                    title: 'Welcome!'
+                }).then(result => {
+                    if ( result.isConfirmed || result.isDismissed ) {
+                        // put jwt at localstorage
+                        window.localStorage.setItem("jwt", signup.jwt);
+                        authContext.login(signup.jwt);
+                        window.location.assign('/');
+                    }
+                })
             })
             .catch(err => {
-                setSignUpFail(true);
-                setSignUpSucess(false);
-                setMessage('System error, please try again later');
+                console.error(err);
+                ServerErrorAlert();
             })
     }
 
@@ -187,12 +189,6 @@ const SignUp = ({isSignIn, setIsSignIn}) => {
             <InputBlock>
                 <TextInput type="password" id="pwd-input" name="password" minLength={8} maxLength={20} placeholder="Password"></TextInput>    
             </InputBlock>
-            {signUpFail ? <Alert severity="error" sx={{
-                width: "95%"
-            }}>{message}</Alert> : ''}
-            {signUpSuccess ? <Alert severity="success" sx={{
-                width: "95%"
-            }}>Successfully sign up 🍀</Alert> : ''}
             <SignUpBtn onClick={handleSignUp}>Signup</SignUpBtn>
             <CustomDivider>or</CustomDivider>
             <SignUpBtn onClick={handleGitHubSignUp} style={{marginBottom: "20px"}}><BsGithub size={22} style={{margin: "0 5px 0 0"}}/>Signup with github</SignUpBtn>

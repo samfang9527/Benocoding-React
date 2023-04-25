@@ -2,11 +2,13 @@
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import { PRODUCTION_BACKEND_API_URL, GITHUB_CLIENT_ID } from "../../../global/constant.js";
-import { useState, useContext } from "react";
-import Alert from '@mui/material/Alert';
+import { useContext } from "react";
 import { AuthContext } from "../../../global/authContext.jsx";
 import Divider from '@mui/material/Divider';
 import { BsGithub } from "react-icons/bs";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { CustomErrorAlert, ServerErrorAlert } from "../../../utils/alert.js";
 
 const slideInFromRight = keyframes`
   from {
@@ -160,10 +162,8 @@ async function signIn(email, password) {
 
 const SignIn = ({isSignIn, setIsSignIn}) => {
 
-    const [ signinFail, setSignInFail ] = useState(false);
-    const [ signinSuccess, setSignInSucess ] = useState(false);
-    const [ message, setMessage ] = useState('');
     const authContext = useContext(AuthContext);
+    const MySwal = withReactContent(Swal);
 
     function handleSignIn(e) {
         e.preventDefault();
@@ -176,26 +176,25 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                 const { signin } = response.data;
 
                 if ( signin.statusCode !== 200 ) {
-                    setSignInFail(true);
-                    setSignInSucess(false);
-                    setMessage(signin.responseMessage);
+                    CustomErrorAlert( signin.responseMessage );
                     return;
                 }
 
-                // put jwt at localstorage
-                window.localStorage.setItem("jwt", signin.jwt);
-                authContext.login(signin.jwt);
-                setSignInFail(false);
-                setSignInSucess(true);
-                setTimeout(() => {
-                    window.location.assign('/');
-                }, 1000)
+                MySwal.fire({
+                    icon: 'success',
+                    title: 'Welcome back!'
+                }).then(result => {
+                    if ( result.isConfirmed || result.isDismissed ) {
+                        // put jwt at localstorage
+                        window.localStorage.setItem("jwt", signin.jwt);
+                        authContext.login(signin.jwt);
+                        window.location.assign('/');
+                    }
+                })
             })
             .catch(err => {
                 console.error(err);
-                setSignInFail(true);
-                setSignInSucess(false);
-                setMessage('System error, please try again later');
+                ServerErrorAlert();
             }) 
     }
 
@@ -212,12 +211,6 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
             <InputBlock>
                 <TextInput type="password" id="pwd-input" name="password" placeholder="Password"></TextInput>    
             </InputBlock>
-            {signinFail ? <Alert severity="error" sx={{
-                width: "95%"
-            }}>{message}</Alert> : ''}
-            {signinSuccess ? <Alert severity="success" sx={{
-                width: "95%"
-            }}>Successfully sign in 🍀</Alert> : ''}
             <SignInBtn onClick={handleSignIn}>Login</SignInBtn>
             <CustomDivider>or</CustomDivider>
             <SignInBtn onClick={handleGitHubSignIn} style={{marginBottom: "20px"}}><BsGithub size={22} style={{margin: "0 5px 0 0"}}/>Login with github</SignInBtn>

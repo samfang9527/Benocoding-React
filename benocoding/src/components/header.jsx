@@ -5,6 +5,8 @@ import { AuthContext } from "../global/authContext.jsx";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const HeaderWrapper = styled.header`
     max-height: 5%;
@@ -166,6 +168,8 @@ const Header = () => {
     const [ isLogin, setIsLogin ] = useState(false);
     const [ isShowingOptions, setIsShowingOptions ] = useState(false);
 
+    const MySwal = withReactContent(Swal);
+
     useEffect(() => {
         if ( !authContext.isLoading ) {
             const { user } = authContext;
@@ -186,9 +190,27 @@ const Header = () => {
 
     function handleLogOut(e) {
         e.preventDefault();
-        window.localStorage.removeItem('jwt');
-        window.location.assign('/');
-        alert("Goodbye! Hope to see you soon");
+        MySwal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                'Goodbye!',
+                'hope to see you soon.',
+                'success'
+              ).then(result => {
+                if ( result.isConfirmed || result.isDismissed ) {
+                    window.localStorage.removeItem('jwt');
+                    window.location.assign('/');
+                }
+              })
+            }
+        })
     }
 
     return (

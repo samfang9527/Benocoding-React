@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
 import { useEffect, useState, useContext } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getClassData } from "../../utils/apis/class.js";
 import { getUserMilestoneData } from "../../utils/apis/user.js";
 import { AuthContext } from "../../global/authContext.jsx";
@@ -15,6 +15,7 @@ import PullRequest from "./components/pullRequest.jsx";
 import Settings from "./components/settings.jsx";
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
+import { CustomErrorAlert, ServerErrorAlert } from "../../utils/alert.js";
 
 const MainContainer = styled.main`
     display: flex;
@@ -48,6 +49,7 @@ const ViewWrapper = styled.div`
 
 const ClassManage = () => {
 
+    const navigate = useNavigate();
     const location = useLocation();
     const authContext = useContext(AuthContext);
     const { user } = authContext;
@@ -105,8 +107,12 @@ const ClassManage = () => {
             // check user signin
             const { user } = authContext;
             if ( Object.keys(user).length === 0 ) {
-                alert('Please sign in to continue');
-                window.location.assign('/login');
+                CustomErrorAlert( 'Please sign in to continue' )
+                .then(result => {
+                    if ( result.isConfirmed || result.isDismissed ) {
+                        navigate('/login');
+                    }
+                })
             }
 
             const path = location.pathname;
@@ -123,10 +129,25 @@ const ClassManage = () => {
                         
                         // members
                         setMembers(response.classMembers);
+                    } else {
+                        CustomErrorAlert( response.response.responseMessage )
+                        .then(result => {
+                            if ( result.isConfirmed || result.isDismissed ) {
+                                navigate('/learner');
+                            }
+                        })
                     }
                     
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    ServerErrorAlert()
+                    .then(result => {
+                        if ( result.isConfirmed || result.isDismissed ) {
+                            navigate('/learner');
+                        }
+                    })
+                })
             
                 getUserMilestoneData(user.userId, classId)
                     .then(res => {
@@ -134,12 +155,19 @@ const ClassManage = () => {
                         if ( response && response.statusCode === 200 ) {
                             const milestoneData = res.milestones;
                             setMilestones(milestoneData);
+                        } else {
+                            CustomErrorAlert( response.responseMessage )
+                            .then(result => {
+                                if ( result.isConfirmed || result.isDismissed ) {
+                                    navigate('/learner');
+                                }
+                            })
                         }
                         
                     })
                     .catch(err => {console.error(err)})
         }
-    }, [authContext, location, user.userId])
+    }, [authContext, navigate, location, user.userId])
 
     return (
         <MainContainer>

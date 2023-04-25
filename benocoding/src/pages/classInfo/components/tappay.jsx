@@ -6,6 +6,10 @@ import { AuthContext } from "../../../global/authContext";
 import axios from "axios";
 import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
 import { SyncLoader } from "react-spinners";
+import { CustomErrorAlert, ServerErrorAlert } from "../../../utils/alert";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
 
 const Wrapper = styled.div`
     width: 90%;
@@ -90,11 +94,24 @@ const Tappay = ({classId}) => {
     const submitButton = useRef(null);
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
+    const MySwal = withReactContent(Swal);
 
     const [ isBuying, setIsBuying ] = useState(false);
 
     function checkout(e) {
         e.preventDefault();
+
+        const { user } = authContext;
+        if ( !user.userId ) {
+            CustomErrorAlert('Please sign in to continue')
+            .then(result => {
+                if ( result.isConfirmed || result.isDismissed ) {
+                    navigate('/login');
+                }
+            })
+            return;
+        }
+
         setIsBuying(true);
         window.TPDirect.card.getPrime(function(result) {
             if (result.status !== 0) {
@@ -108,14 +125,24 @@ const Tappay = ({classId}) => {
                 .then(res => {
                     const { response } = res;
                     if ( response && response.statusCode !== 200 ) {
-                        alert('oops! something went wrong', response.responseMessage);
+                        CustomErrorAlert(response.responseMessage)
                         return;
                     }
-                    alert('Payment successful, enjoy learning!');
-                    navigate('/learner');
+
+                    MySwal.fire({
+                        icon: 'success',
+                        title: 'Payment successful',
+                        text: 'Enjoy learning!'
+                    })
+                    .then(result => {
+                        if ( result.isConfirmed || result.isDismissed ) {
+                            navigate('/learner');
+                        }
+                    })
                 })
                 .catch(err => {
                     console.error(err);
+                    ServerErrorAlert();
                 })
         })
         setIsBuying(false);
