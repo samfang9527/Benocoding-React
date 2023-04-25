@@ -3,13 +3,12 @@ import styled from "styled-components";
 import { CDN_DOMAIN } from "../../../global/constant.js";
 
 const ItemContainer = styled.div`
-    max-width: 500px;
+    width: 450px;
     height: 600px;
     margin: 50px 30px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
     background-color: snow;
     cursor: pointer;
-    flex-grow: 1;
 
     :hover {
         background-color: Linen;

@@ -10,6 +10,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { AuthContext } from "../../global/authContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 
 const MainContainer = styled.div`
@@ -61,7 +62,7 @@ const ClassSection = styled.section`
     height: fit-content;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-evenly;
     margin: 0px 50px 50px 50px;
     border-radius: 20px;
     background-color: White;
@@ -69,7 +70,6 @@ const ClassSection = styled.section`
 
 const CampaignBlock = styled.div`
     width: 50%;
-    height: 100%;
 `;
 
 const CampaignImage = styled.img`
@@ -91,6 +91,7 @@ function getKeyword(queryString) {
 
 const Home = () => {
 
+    const navigate = useNavigate();
     const authContext = useContext(AuthContext);
     const searchInput = useRef(null);
     const location = useLocation();
@@ -192,7 +193,8 @@ const Home = () => {
                                         <CampaignImage
                                             src={`${CDN_DOMAIN + campaignList[idx].classImage}`}
                                             alt={campaignList[idx].className}
-                                            onClick={() => {window.location.assign(`/class/${campaignList[idx].id}`)}}
+                                            onClick={() => {navigate(`/class/${campaignList[idx].id}`)}}
+                                            style={{height: "100%"}}
                                         ></CampaignImage>
                                     </div>
                                 )
