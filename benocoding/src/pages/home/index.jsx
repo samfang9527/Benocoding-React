@@ -41,7 +41,7 @@ const InputBlock = styled.div`
 `;
 
 const SearchDescription = styled.p`
-    font-size: 32px;
+    font-size: 40px;
     flex-grow: 1;
     margin: 0px 20px;
     letter-spacing: 2px;
@@ -70,6 +70,11 @@ const ClassSection = styled.section`
 
 const CampaignBlock = styled.div`
     width: 50%;
+`;
+
+const ImgBlock = styled.div`
+    padding: 10px 30px;
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 `;
 
 const CampaignImage = styled.img`
@@ -182,22 +187,23 @@ const Home = () => {
         <MainContainer>
             <CampaignSection>
                 <InputBlock>
-                    <SearchDescription>Find a class</SearchDescription>
-                    <SearchInput type="text" placeholder="Javascript" ref={searchInput} onKeyUp={handleSearch}></SearchInput>
+                    <SearchDescription>Learn to Code</SearchDescription>
+                    <SearchInput type="text" placeholder="Search a class, e.g. Javascript" ref={searchInput} onKeyUp={handleSearch}></SearchInput>
                 </InputBlock>
                 <CampaignBlock>
                     <Slider {...settings} style={{height: "fit-content"}}>
                         {
                             campaignList.map((campaign, idx) => {
                                 return (
-                                    <div key={campaign.id + idx}>
+                                    <ImgBlock key={campaign.id + idx}>
+                                        <h2>{campaign.className}</h2>
                                         <CampaignImage
                                             src={`${CDN_DOMAIN + campaignList[idx].classImage}`}
                                             alt={campaignList[idx].className}
                                             onClick={() => {navigate(`/class/${campaignList[idx].id}`)}}
                                             style={{height: "100%"}}
                                         ></CampaignImage>
-                                    </div>
+                                    </ImgBlock>
                                 )
                             })
                         }
