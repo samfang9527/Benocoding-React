@@ -234,7 +234,7 @@ const Header = () => {
                         <OptionBtn
                             show={isShowingOptions}
                             onClick={handleLogOut}
-                            style={{backgroundColor: "LightCoral"}}
+                            style={{backgroundColor: "Gold"}}
                         >登出</OptionBtn>
                     </OptionContainer> : ''
                 }

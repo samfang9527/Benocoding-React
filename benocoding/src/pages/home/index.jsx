@@ -78,10 +78,45 @@ const ImgBlock = styled.div`
 `;
 
 const CampaignImage = styled.img`
+    height: 30rem;
     width: 100%;
-    height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     cursor: pointer;
+    opacity: 0.8;
+`;
+
+const CampaignLabel = styled.div`
+    position: absolute;
+    bottom: 0%;
+    height: fit-content;
+    z-index: 10;
+    width: 10%;
+    padding: 20px;
+    margin: 0 0 30px 50px;
+    background-color: white;
+    border-radius: 1% 1% 2% 4% / 2% 6% 5% 4%;
+    border: 2px solid #353535;
+    box-shadow: 20px 20px rgba(0,0,0,.15);
+    transition: all .4s ease;
+    cursor: pointer;
+
+    :hover {
+        background-color: Honeydew;
+        border-radius: 0% 0% 50% 50% / 0% 0% 10% 10% ;
+        box-shadow: 10px 10px rgba(0,0,0,.25);
+    }
+`;
+
+const ClassName = styled.div`
+    font-size: 26px;
+    margin: 5px 0 20px 0;
+`;
+
+const CampaignPromotion = styled.div`
+    font-family: Microsoft JhengHei;
+    font-size: 26px;
+    width: 100%;
+    color: red;
 `;
 
 function getPaging(queryString) {
@@ -180,7 +215,6 @@ const Home = () => {
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
-        height: "fit-content"
     };
 
     return (
@@ -191,19 +225,23 @@ const Home = () => {
                     <SearchInput type="text" placeholder="Search a class, e.g. Javascript" ref={searchInput} onKeyUp={handleSearch}></SearchInput>
                 </InputBlock>
                 <CampaignBlock>
-                    <Slider {...settings} style={{height: "fit-content"}}>
+                    <Slider {...settings}>
                         {
                             campaignList.map((campaign, idx) => {
                                 return (
-                                    <ImgBlock key={campaign.id + idx}>
-                                        <h2>{campaign.className}</h2>
-                                        <CampaignImage
-                                            src={`${CDN_DOMAIN + campaignList[idx].classImage}`}
-                                            alt={campaignList[idx].className}
-                                            onClick={() => {navigate(`/class/${campaignList[idx].id}`)}}
-                                            style={{height: "100%"}}
-                                        ></CampaignImage>
-                                    </ImgBlock>
+                                    <>
+                                        <CampaignLabel onClick={() => {navigate(`/class/${campaignList[idx].id}`)}}>
+                                            <ClassName>{campaign.className}</ClassName>
+                                            <CampaignPromotion>課程熱賣中！現在買即享 <span style={{fontSize: "36px"}}>65</span> 折</CampaignPromotion>
+                                        </CampaignLabel>
+                                        <ImgBlock key={campaign.id + idx}>
+                                            <CampaignImage
+                                                src={`${CDN_DOMAIN + campaignList[idx].classImage}`}
+                                                alt={campaignList[idx].className}
+                                                onClick={() => {navigate(`/class/${campaignList[idx].id}`)}}
+                                            ></CampaignImage>
+                                        </ImgBlock>
+                                    </>
                                 )
                             })
                         }
