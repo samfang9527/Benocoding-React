@@ -215,7 +215,7 @@ const Header = () => {
 
     return (
         <HeaderWrapper>
-            <LogoStyle  onClick={() => {navigate('/')}}>Benocoding</LogoStyle>
+            <LogoStyle  onClick={() => {window.location.assign('/')}}>Benocoding</LogoStyle>
             <NavWrapper>
                 {
                     isLogin && isShowingOptions ? <OptionContainer show={isShowingOptions} className={isShowingOptions ? '' : 'hide'}>

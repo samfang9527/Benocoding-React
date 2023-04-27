@@ -1,7 +1,6 @@
 
 import styled from "styled-components";
 import { useState, useRef, useEffect, useContext } from "react";
-import { useLocation } from 'react-router-dom';
 import { getClassList, getRandomClasses } from "../../utils/apis/class.js";
 import ClassItem from "./components/classItem.jsx";
 import Pagination from "@mui/material/Pagination";
@@ -93,15 +92,14 @@ const CampaignLabel = styled.div`
     width: 10%;
     padding: 20px;
     margin: 0 0 30px 50px;
-    background-color: white;
+    background-color: rgb(200, 200, 200);
     border-radius: 1% 1% 2% 4% / 2% 6% 5% 4%;
-    border: 2px solid #353535;
     box-shadow: 20px 20px rgba(0,0,0,.15);
     transition: all .4s ease;
     cursor: pointer;
+    opacity: 0.9;
 
     :hover {
-        background-color: Honeydew;
         border-radius: 0% 0% 50% 50% / 0% 0% 10% 10% ;
         box-shadow: 10px 10px rgba(0,0,0,.25);
     }
@@ -110,44 +108,30 @@ const CampaignLabel = styled.div`
 const ClassName = styled.div`
     font-size: 26px;
     margin: 5px 0 20px 0;
+    color: Azure;
 `;
 
 const CampaignPromotion = styled.div`
     font-family: Microsoft JhengHei;
     font-size: 26px;
     width: 100%;
-    color: red;
+    color: Yellow;
+    letter-spacing: 2px;
 `;
-
-function getPaging(queryString) {
-    const params = new URLSearchParams(queryString);
-    return params.get('paging');
-}
-
-function getKeyword(queryString) {
-    const params = new URLSearchParams(queryString);
-    return params.get('keyword');
-}
 
 const Home = () => {
 
     const navigate = useNavigate();
     const authContext = useContext(AuthContext);
     const searchInput = useRef(null);
-    const location = useLocation();
 
     const [ classList, setClassList ] = useState([]);
     const [ campaignList, setCampaignList ] = useState([]);
     const [ maxPageNum, setMaxPageNum ] = useState(0);
-    const [ pageNum, setPageNum ] = useState(getPaging(location.search));
-    const [ keyword, setKeyword ] = useState(getKeyword(location.search));
+    const [ pageNum, setPageNum ] = useState(0);
+    const [ keyword, setKeyword ] = useState('');
 
     function handlePageChange(e, value) {
-        const params = new URLSearchParams(window.location.search);
-        params.set("paging", value-1);
-        const newSearch = params.toString();
-        const newUrl = `${PRODUCTION_DOMAIN}?${newSearch}`
-        window.history.pushState(null, '', newUrl);
         setPageNum(value-1);
     }
 
@@ -159,22 +143,26 @@ const Home = () => {
             const newUrl = `${PRODUCTION_DOMAIN}?${newSearch}`
             window.history.pushState(null, '', newUrl);
             setKeyword(searchInput.current.value);
+            setPageNum(0);
         }
     }
 
     useEffect(() => {
         getClassList(Number(pageNum), keyword)
             .then(response => {
-                if ( response && !response.response ) {
+                if ( response && response.response.statusCode === 200 ) {
                     const { classList } = response;
-                    const { allPageNums } = response;
+                    const allPageNum = response.maxPageNum;
                     if ( classList ) {
                         setClassList(classList);
                     }
 
-                    if ( allPageNums ) {
-                        setMaxPageNum(allPageNums);
+                    if ( allPageNum ) {
+                        setMaxPageNum(allPageNum);
+                    } else {
+                        setMaxPageNum(0);
                     }
+                    
                 }
             })
             .catch(err => {console.error(err)})
@@ -229,19 +217,19 @@ const Home = () => {
                         {
                             campaignList.map((campaign, idx) => {
                                 return (
-                                    <>
+                                    <div key={campaign.id + idx}>
                                         <CampaignLabel onClick={() => {navigate(`/class/${campaignList[idx].id}`)}}>
                                             <ClassName>{campaign.className}</ClassName>
-                                            <CampaignPromotion>課程熱賣中！現在買即享 <span style={{fontSize: "36px"}}>65</span> 折</CampaignPromotion>
+                                            <CampaignPromotion>課程熱賣中！現在買即享 <span style={{fontSize: "50px"}}>65</span> 折</CampaignPromotion>
                                         </CampaignLabel>
-                                        <ImgBlock key={campaign.id + idx}>
+                                        <ImgBlock>
                                             <CampaignImage
                                                 src={`${CDN_DOMAIN + campaignList[idx].classImage}`}
                                                 alt={campaignList[idx].className}
                                                 onClick={() => {navigate(`/class/${campaignList[idx].id}`)}}
                                             ></CampaignImage>
                                         </ImgBlock>
-                                    </>
+                                    </div>
                                 )
                             })
                         }
@@ -249,6 +237,7 @@ const Home = () => {
                 </CampaignBlock>
             </CampaignSection>
             <Pagination
+                page={pageNum+1}
                 count={maxPageNum}
                 size="large"
                 style={{marginTop: "40px"}}

@@ -4,9 +4,9 @@ import { CDN_DOMAIN } from "../../../global/constant.js";
 import { useNavigate } from "react-router";
 
 const ItemContainer = styled.div`
-    width: 450px;
-    height: 600px;
-    margin: 50px 30px;
+    width: 400px;
+    height: 400px;
+    margin: 40px 20px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
     background-color: snow;
     cursor: pointer;
@@ -18,36 +18,37 @@ const ItemContainer = styled.div`
 
 const ItemImage = styled.img`
     width: 100%;
-    height: 150px;
+    height: 30%;
     object-fit: cover;
 `;
 
 const ContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
+    overflow: scroll;
+    height: 65%;
 `;
 
 const ClassTitle = styled.p`
     font-size: 22px;
     padding: 10px 20px;
-    margin: 0;
-    height: 100px;
-    overflow: scroll;
+    margin: 5px;
+    overflow: hidden;
+    font-weight: 900;
+    color: olivedrab;
 `;
 
 const ClassDesc = styled.pre`
     font-size: 18px;
     padding: 0px 20px;
-    margin: 0;
-    height: 250px;
+    margin: 5px;
+    height: 70%;
     overflow: scroll;
     white-space: pre-wrap;
 `;
 
 const TagsContainer = styled.div`
     padding: 0 20px;
-    position: relative;
-    top: 50px;
 `;
 
 const ClassTag = styled.div`

@@ -60,7 +60,8 @@ async function getClassList(pageNum, keyword) {
                         classTags,
                         studentNumbers,
                         status
-                    }
+                    },
+                    maxPageNum
                 }
         }
         `,
@@ -83,36 +84,7 @@ async function getClassList(pageNum, keyword) {
             return getClassList;
         }
 
-        const pageNums = await axios({
-            method: 'POST',
-            url: PRODUCTION_BACKEND_API_URL,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            data: {
-                query: `
-                    query {
-                        getAllPageNums {
-                            response {
-                                statusCode,
-                                responseMessage
-                            },
-                            number
-                        }
-                    }
-                `
-            }
-        })
-        const { getAllPageNums } = pageNums.data.data;
-
-        if ( getAllPageNums.response.statusCode !== 200 ) {
-            return getAllPageNums;
-        }
-
-        return {
-            classList: getClassList.classList,
-            allPageNums: getAllPageNums.number
-        };
+        return getClassList;
 
     } catch (err) {
         console.error(err);
