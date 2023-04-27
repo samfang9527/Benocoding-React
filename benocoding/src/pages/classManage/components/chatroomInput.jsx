@@ -21,29 +21,40 @@ const Textarea = styled.textarea`
     padding: 5px 0 5px 15px;
 `;
 
-function calculateHeight(value) {
-    const numberOfLineBreaks = (value.match(/\n/g) || []).length;
-    return 40 + numberOfLineBreaks * 20;
-}
 
 const ChatroomInput = ({username, chatroomId}) => {
 
     const [ inputText, setInputText ] = useState('');
+    const [ isComposing, setIsComposing ] = useState(false);
 
     function sendmessage(e) {
-        if ( e.keyCode === 13 && e.shiftKey === false && inputText.trim() !== '' ) {
+        if ( e.key !== 'Enter' ) {
+            return;
+        }
+
+        if ( isComposing ) {
+            setIsComposing(false);
+            return;
+        }
+
+        if ( e.shiftKey === false && inputText.trim() !== '' ) {
+            console.log(inputText)
+            e.preventDefault();
             const msgData = {
                 time: new Date().toLocaleString(),
                 from: username,
                 message: inputText.trim()
             }
             sendMessage( chatroomId, JSON.stringify(msgData) );
-            e.target.value = '';
-            e.target.style.height = '40px';
+            setInputText('');
+            e.target.style.height = `40px`;
             return;
         }
-        const newHeight = calculateHeight(inputText);
-        e.target.style.height = newHeight + 'px';
+    }
+
+    function handleInputHeight(e) {
+        e.target.style.height = "";
+        e.target.style.height = `${e.target.scrollHeight}px`;
     }
 
     function handleInputChange(event) {
@@ -54,8 +65,13 @@ const ChatroomInput = ({username, chatroomId}) => {
         <InputForm>
             <Textarea
                 placeholder="Type something"
-                onKeyUp={sendmessage}
+                onInput={handleInputHeight}
+                onKeyDown={sendmessage}
                 onChange={handleInputChange}
+                onCompositionStart={() => setIsComposing(true)}
+                onCompositionEnd={() => setIsComposing(false)}
+                onCompositionUpdate={() => setIsComposing(true)}
+                value={inputText}
             ></Textarea>
         </InputForm>
     )
