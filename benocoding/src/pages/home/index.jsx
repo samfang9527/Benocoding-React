@@ -92,7 +92,7 @@ const CampaignLabel = styled.div`
     width: 10%;
     padding: 20px;
     margin: 0 0 30px 50px;
-    background-color: rgb(200, 200, 200);
+    background-color: rgb(180, 180, 180);
     border-radius: 1% 1% 2% 4% / 2% 6% 5% 4%;
     box-shadow: 20px 20px rgba(0,0,0,.15);
     transition: all .4s ease;
@@ -100,6 +100,7 @@ const CampaignLabel = styled.div`
     opacity: 0.9;
 
     :hover {
+        background-color: rgb(200, 200, 200);
         border-radius: 0% 0% 50% 50% / 0% 0% 10% 10% ;
         box-shadow: 10px 10px rgba(0,0,0,.25);
     }
