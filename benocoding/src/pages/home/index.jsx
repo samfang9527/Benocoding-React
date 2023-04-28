@@ -108,7 +108,7 @@ const CampaignLabel = styled.div`
 const ClassName = styled.div`
     font-size: 26px;
     margin: 5px 0 20px 0;
-    color: Azure;
+    color: black;
 `;
 
 const CampaignPromotion = styled.div`
