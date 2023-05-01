@@ -6,6 +6,8 @@ import axios from "axios";
 import ReactPlayer from "react-player";
 import { updateClassSettings } from "../../../utils/apis/class.js";
 import { RiseLoader } from "react-spinners";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const MainContainer = styled.div`
     border: 5px solid black;
@@ -115,6 +117,8 @@ const UpdateBtn = styled.button`
 `;
 
 const Settings = ({mutableData, classId}) => {
+
+    const MySwal = withReactContent(Swal);
 
     const [ infoArray, setInfoArray ] = useState(Object.entries(mutableData));
     const [ elementList, setElementList ] = useState(infoArray.map(()=>{return true}));
@@ -371,17 +375,26 @@ const Settings = ({mutableData, classId}) => {
         setIsUpdating(true);
         updateClassSettings(changeContent, classId)
             .then(res => {
-                console.log(res);
                 const { response } = res.updateClass;
-                alert(response.responseMessage);
+                if ( response.statusCode === 200 ) {
+                    MySwal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Updated!',
+                        showConfirmButton: false,
+                        timer: 1000
+                    })
+                    .then(result => {
+                        if ( result.isConfirmed || result.isDismissed ) {
+                            setIsUpdating(false);
+                            setChangeContent({});
+                            window.location.reload();
+                        }
+                    })
+                }
             })
             .catch(err => {
                 console.error(err);
-            })
-            .finally(() => {
-                setIsUpdating(false);
-                setChangeContent({});
-                window.location.reload();
             })
     }
 
