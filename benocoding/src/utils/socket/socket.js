@@ -27,8 +27,9 @@ export function listenNewMessage( onUpdateEvent, on ) {
     }
 }
 
-export function generateGPTCodeReview( diffData ) {
-    socket.emit('codeReview', diffData);
+export function generateGPTCodeReview( diffData, number ) {
+    console.log(number);
+    socket.emit('codeReview', diffData, number);
 }
 
 export function listenGPTCodeReviewResult( onCodeReviewEvent, on ) {

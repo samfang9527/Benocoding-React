@@ -3,12 +3,13 @@ import styled from "styled-components";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../../global/authContext.jsx";
 import { getPullRequestDetail } from "../../../utils/apis/class.js";
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { PulseLoader } from "react-spinners";
 import { generateGPTCodeReview, listenGPTCodeReviewResult } from "../../../utils/socket/socket.js";
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { a11yLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 const Block = styled.div`
-    height: 50px;
+    height: fit-content;
     width: 95%;
     border: 4px solid Gray;
     margin: 10px 0 0 0;
@@ -29,12 +30,14 @@ const TitleWrapper = styled.div`
 
 const BlockTitle = styled.p`
     font-size: 20px;
-    padding: 0 20px;
+    padding: 0px 20px;
+    line-height: 1.5;
+    margin: 10px 0px;
 `;
 
 const ContentWrapper = styled.div`
     width: 100%;
-    border: 4px solid Gray;
+    border-top: 4px solid Gray;
     height: ${props => props.isShowContent ? '600px' : '0'};
     transition: height 0.3s ease-in-out;
     overflow: scroll;
@@ -44,12 +47,6 @@ const ContentWrapper = styled.div`
 
 const ContentContainer = styled.div`
     font-size: 20px;
-`;
-
-const ContentTitle = styled.p`
-    font-size: 32px;
-    padding: 20px;
-    margin: 0;
 `;
 
 const ContentDescription = styled.p`
@@ -84,6 +81,12 @@ const ChatGPTContainer = styled.div`
     }
 `;
 
+const CustomHighlighter = styled(SyntaxHighlighter)`
+    margin: 10px 25px;
+    font-size: 20px;
+    line-height: 1;
+`;
+
 
 const PullRequestItem = ({data, classId}) => {
 
@@ -113,7 +116,7 @@ const PullRequestItem = ({data, classId}) => {
         // Generate GPT code review
         if ( !isGeneratingCodeReview && codeReview === '' ) {
             setIsGeneratingCodeReview(true);
-            generateGPTCodeReview(detailData.diffData);
+            generateGPTCodeReview(detailData.diffData, data.number);
         }
         
     }
@@ -137,10 +140,13 @@ const PullRequestItem = ({data, classId}) => {
     }, [authContext, classId, data.number])
 
     useEffect(() => {
-        function onCodeReviewEvent(result) {
-            window.localStorage.setItem(`${classId}/${data.number}`, result);
-            setCodeReview(result);
-            setIsGeneratingCodeReview(false);
+        function onCodeReviewEvent(result, number) {
+            if ( number === data.number ) {
+                window.localStorage.setItem(`${classId}/${data.number}`, result);
+                setCodeReview(result);
+                setIsGeneratingCodeReview(false);
+            }
+            
         }
 
         listenGPTCodeReviewResult( onCodeReviewEvent, true );
@@ -151,17 +157,27 @@ const PullRequestItem = ({data, classId}) => {
 
     }, [data.number, classId])
 
+    const styles = {
+        lineHeight: '1.5',
+    };
 
     return (
         <Block>
             <TitleWrapper onClick={showContent}>
-                <MenuOpenIcon sx={{fontSize: "30px", cursor: "pointer"}}></MenuOpenIcon>
-                <BlockTitle>#{data.number} | {data.title} | {`( ${data.head} => ${data.base} )`}</BlockTitle>
+                <div>
+                    <BlockTitle style={{fontWeight: "bold", fontSize: "24px"}}>#{data.number} | {data.title}</BlockTitle>
+                    <BlockTitle>{`( ${data.head} => ${data.base} )`}</BlockTitle>
+                </div>
             </TitleWrapper>
             <ContentWrapper isShowContent={isShowContent}>
                 {
                     isShowContent ? <ContentContainer>
-                        <ContentTitle>{body}</ContentTitle>
+                        <CustomHighlighter
+                            language="markdown"
+                            style={a11yLight}
+                            wrapLongLines={true}
+                            customStyle={styles}
+                        >{body}</CustomHighlighter>
                         <ContentDescription>Commits: {commits} | Additions: {additions} | Deletions: {deletions}</ContentDescription>
                         <ContentDescription>Pull request url: <a href={`${html_url}`}>{html_url}</a></ContentDescription>
                         {
@@ -173,7 +189,13 @@ const PullRequestItem = ({data, classId}) => {
                                     isGeneratingCodeReview ? <PulseLoader></PulseLoader> : ''
                                 } 
                             </ChatGPTContainer>
-                            : <ContentDescription>{codeReview}</ContentDescription>
+                            : 
+                            <CustomHighlighter
+                                language="markdown"
+                                style={a11yLight}
+                                wrapLongLines={true}
+                                customStyle={styles}
+                            >{codeReview}</CustomHighlighter>
                         }  
                     </ContentContainer> : ''
                 }

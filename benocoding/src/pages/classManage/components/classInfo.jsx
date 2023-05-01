@@ -80,8 +80,6 @@ const ClassInfo = ({classData}) => {
                 <ImageBackground src={`${CDN_DOMAIN + classImage}`}></ImageBackground>
                 <ClassVideo controls={true} url={`${CDN_DOMAIN + classVideo}`} width={"40%"} height={"auto"}></ClassVideo>
             </MediaContainer>
-            {/* <SplitLine></SplitLine>
-            <ClassVideo controls={true} url={`${CDN_DOMAIN + classVideo}`} width={"80%"} height={"auto"}></ClassVideo> */}
             <SplitLine></SplitLine>
             <SectionContainer>
                 <SectionTitle>Class Info</SectionTitle>

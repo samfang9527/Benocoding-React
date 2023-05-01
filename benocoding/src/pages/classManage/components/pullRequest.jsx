@@ -7,14 +7,18 @@ import PullRequestItem from "./pullRequestItem.jsx";
 import { MoonLoader } from "react-spinners";
 
 const PRWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
     align-items: center;
     margin: 40px 0;
 `;
 
 const CustomLoader = styled(MoonLoader)`
     margin: 50px 0 0 0;
+`;
+
+const PRItemWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
 const PullRequest = ({classData}) => {
@@ -48,7 +52,7 @@ const PullRequest = ({classData}) => {
     return (
         <PRWrapper>
             { isLoading ? <CustomLoader color="crimson" size={100}></CustomLoader> : 
-                <>
+                <PRItemWrapper>
                 {
                     pullRequestData.map((data, idx) => {
                         return (
@@ -56,7 +60,7 @@ const PullRequest = ({classData}) => {
                         )
                     })
                 }
-                </>
+                </PRItemWrapper>
             }
         </PRWrapper>
     )
