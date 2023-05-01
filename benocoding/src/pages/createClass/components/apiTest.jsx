@@ -145,6 +145,7 @@ const ApiTest = ({milestoneIdx}) => {
                                 <EachInput
                                     className={`${idx}`}
                                     onChange={handleCaseChange}
+                                    required
                                 ></EachInput>
                             </div>
                             <div>
@@ -152,6 +153,7 @@ const ApiTest = ({milestoneIdx}) => {
                                 <EachInput
                                     className={`${idx}`}
                                     onChange={handleMethodChange}
+                                    required
                                 ></EachInput>
                             </div>
                             <div>
@@ -159,6 +161,7 @@ const ApiTest = ({milestoneIdx}) => {
                                 <EachInput
                                     className={`${idx}`}
                                     onChange={handleStatusCodeChange}
+                                    required
                                 ></EachInput>
                             </div>
                             <div>
@@ -166,6 +169,7 @@ const ApiTest = ({milestoneIdx}) => {
                                 <CustomTextArea
                                     className={`${idx}`}
                                     onChange={handleResultChange}
+                                    required
                                 ></CustomTextArea>
                             </div>
                         </TableRow>

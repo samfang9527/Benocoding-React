@@ -197,6 +197,9 @@ export const MilestoneContext = createContext({
 
 const CreateClass = () => {
 
+    const millisecondDay = 24 * 60 * 60 * 1000;
+    const minStartDate = new Date( new Date().getTime() + millisecondDay );
+
     const navigate = useNavigate();
 
     // Ref
@@ -219,6 +222,7 @@ const CreateClass = () => {
     const [uploadVideoCancel, setUploadVideoCancel] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [userInfo, setUserInfo] = useState({});
+    const [minEndDate, setMinEndDate] = useState(new Date( minStartDate + millisecondDay ).toISOString().slice(0, 10));
 
     // for milestones
     const [milestones, setMilestones] = useState([
@@ -580,21 +584,25 @@ const CreateClass = () => {
                     </Block>
                     <Block>
                         <Title>課程開始日期</Title>
-                        <SingleLineQuestion id="start-date" type="date" ref={classStartDate} required/>
+                        <SingleLineQuestion id="start-date" type="date" ref={classStartDate} required
+                            min={minStartDate.toISOString().slice(0, 10)}
+                            onChange={(e) => {
+                                setMinEndDate(new Date( new Date(e.target.value).getTime() + millisecondDay).toISOString().slice(0, 10));
+                            }}/>
                     </Block>
                     <Block>
                         <Title>課程結束日期</Title>
-                        <SingleLineQuestion id="end-date" type="date" ref={classEndDate} required/>
+                        <SingleLineQuestion id="end-date" type="date" ref={classEndDate} required min={minEndDate}/>
                     </Block>
                     <Block>
                         <Title>課程封面</Title>
-                        <CustomFIleUpload id="upload-image" type="file" accept="image/*" onChange={handleImageUpload}/>
+                        <CustomFIleUpload id="upload-image" type="file" accept="image/*" onChange={handleImageUpload} required/>
                         <span id="image-url" hidden ref={classImage}></span>
                         <div>{showUpload("image", isUploadingImage, uploadImagePercent)}</div>
                     </Block>
                     <Block>
                         <Title>課程影片</Title>
-                        <CustomFIleUpload type="file" accept="video/*" onChange={handleVideoUpload}/>    
+                        <CustomFIleUpload type="file" accept="video/*" onChange={handleVideoUpload} required/>    
                         <span id="video-url" hidden ref={classVideo}></span>     
                         <div>{showUpload("video", isUploadingVideo, uploadVideoPercent)}</div>
                     </Block>
@@ -604,7 +612,7 @@ const CreateClass = () => {
                     </Block>
                     <Block>
                         <Title>課程價格</Title>
-                        <SingleLineQuestion id="price" ref={price}></SingleLineQuestion>
+                        <SingleLineQuestion id="price" ref={price} required type="number"></SingleLineQuestion>
                     </Block>
                     <Block>
                         <Title>GitHub Info</Title>

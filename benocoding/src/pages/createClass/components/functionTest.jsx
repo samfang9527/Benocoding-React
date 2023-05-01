@@ -182,6 +182,7 @@ const FunctionTest = ({milestoneIdx}) => {
                                 <CaseInput
                                     className={`${idx}`}
                                     onChange={handleCaseChange}
+                                    required
                                 ></CaseInput>
                             </div>
                             <div>
@@ -205,6 +206,7 @@ const FunctionTest = ({milestoneIdx}) => {
                                 <ResultInput
                                     className={`${idx}`}
                                     onChange={handleResultChange}
+                                    required
                                 ></ResultInput>
                             </div>
                         </TableRow>
