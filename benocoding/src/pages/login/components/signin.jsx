@@ -252,7 +252,7 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
 
     function validatePWD(pwd) {
 
-        if ( !pwd || pwd.length < 8 ) {
+        if ( !pwd || pwd.length < 8 || pwd.length > 16 ) {
             setIsPWDLengthValid(false);
         } else {
             setIsPWDLengthValid(true);
@@ -327,11 +327,11 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                         {
                             isFirst ? 
                             <>
-                                <PWDFormatRule isValid={true}>At least 8 characters</PWDFormatRule> 
+                                <PWDFormatRule isValid={true}>Between 8-16 characters</PWDFormatRule> 
                                 <PWDFormatRule isValid={true}>At least 1 upper and lowercase letter and number</PWDFormatRule> 
                             </> : 
                             <>
-                                <PWDFormatRule isValid={isPWDLengthValid}>At least 8 characters</PWDFormatRule> 
+                                <PWDFormatRule isValid={isPWDLengthValid}>Between 8-16 characters</PWDFormatRule> 
                                 <PWDFormatRule isValid={isPWDCombinationValid}>At least 1 upper and lowercase letter and number</PWDFormatRule> 
                             </>
                         }
