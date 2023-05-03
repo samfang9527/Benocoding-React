@@ -210,7 +210,8 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
     function handleSignIn(e) {
         e.preventDefault();
         
-        if ( !isEmailValid || !isPWDCombinationValid || !isPWDLengthValid ) {
+        // if ( !isEmailValid || !isPWDCombinationValid || !isPWDLengthValid ) {
+        if ( !isEmailValid || !isPWDLengthValid ) {
             CustomErrorAlert( "Please check your input" )
             return;
         }
@@ -271,11 +272,6 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
         } else {
             setIsPWDCombinationValid(true);
         }
-        
-        if ( isPWDCombinationValid && isPWDLengthValid ) {
-            return true;
-        }
-        return false;
     }
 
     function validateInput(e) {
@@ -307,7 +303,7 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                 <EmailFormatDesc isValid={isFirst ? true : isEmailValid }>
                     { !isFirst ? 
                         <>
-                            { isEmailValid ? "valid email" : "invalid email" }
+                            { isEmailValid ? "✔︎ valid email" : "invalid email" }
                         </> : ""
                     }
                 </EmailFormatDesc>
@@ -319,7 +315,8 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                     placeholder="Password"
                     ref={pwdInput}
                     onChange={validateInput}
-                    isValid={isFirst ? true : isPWDLengthValid && isPWDCombinationValid}
+                    isValid={isFirst ? true : isPWDLengthValid}
+                    // isValid={isFirst ? true : isPWDLengthValid && isPWDCombinationValid}
                 ></TextInput>
                 <PWDFormatBlock>
                     <label>Your password needs</label>
@@ -328,11 +325,11 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                             isFirst ? 
                             <>
                                 <PWDFormatRule isValid={true}>Between 8-16 characters</PWDFormatRule> 
-                                <PWDFormatRule isValid={true}>At least 1 upper and lowercase letter and number</PWDFormatRule> 
+                                {/* <PWDFormatRule isValid={true}>At least 1 upper and lowercase letter and number</PWDFormatRule>  */}
                             </> : 
                             <>
                                 <PWDFormatRule isValid={isPWDLengthValid}>Between 8-16 characters</PWDFormatRule> 
-                                <PWDFormatRule isValid={isPWDCombinationValid}>At least 1 upper and lowercase letter and number</PWDFormatRule> 
+                                {/* <PWDFormatRule isValid={isPWDCombinationValid}>At least 1 upper and lowercase letter and number</PWDFormatRule>  */}
                             </>
                         }
                     </PWDFormatRuleList>
