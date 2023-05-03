@@ -2,13 +2,14 @@
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import { PRODUCTION_BACKEND_API_URL, GITHUB_CLIENT_ID } from "../../../global/constant.js";
-import { useContext } from "react";
+import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../../global/authContext.jsx";
 import Divider from '@mui/material/Divider';
 import { BsGithub } from "react-icons/bs";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { CustomErrorAlert, ServerErrorAlert } from "../../../utils/alert.js";
+import validator from 'validator';
 
 const slideInFromRight = keyframes`
   from {
@@ -47,7 +48,7 @@ const SignInContainer = styled.div`
 
 const InputBlock = styled.div`
     width: 95%;
-    margin: 10px 0;
+    margin-bottom: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -60,16 +61,16 @@ const TextInput = styled.input`
     font-size: 18px;
     padding: 10px;
     border-radius: 10px;
-    border: none;
     background-color: Gainsboro;
+    border: none;
 
     :focus {
+        outline: none;
+        border: ${props => props.isValid ? '3px solid YellowGreen' : '3px solid red'};
         width: 110%;
         height: 60px;
         transition: ease-in-out, width .2s ease-in-out;
     }
-
-
 `;
 
 const SignInBtn = styled.button`
@@ -121,6 +122,39 @@ const SignUpQuestion = styled.p`
     color: blue;
 `;
 
+const PWDFormatBlock = styled.div`
+    align-self: flex-start;
+    margin: 8px 4px 0 4px;
+`;
+
+const PWDFormatRuleList = styled.ul`
+    padding-left: 0px;
+    margin: 4px 0;
+`;
+
+const PWDFormatRule = styled.li`
+    list-style-type: none;
+    font-size: 14px;
+    color: ${props => props.isValid ? 'black' : 'red'};
+
+    ::before {
+        content: "☞";
+        margin-right: 0.5em;
+    }
+`;
+
+const EmailFormatDesc = styled.label`
+    margin: 8px 4px 0 4px;
+    align-self: flex-start;
+    font-size: 14px;
+    color: ${props => props.isValid ? 'black' : 'red'};
+
+    ::before {
+        content: "${props => props.isValid ? '' : '✖'}";
+        margin-right: 0.5em;
+    }
+`;
+
 
 async function signIn(email, password) {
 
@@ -165,11 +199,24 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
     const authContext = useContext(AuthContext);
     const MySwal = withReactContent(Swal);
 
+    const emailInput = useRef(null);
+    const pwdInput = useRef(null);
+
+    const [ isFirst, setIsFirst ] = useState(true);
+    const [ isEmailValid, setIsEmailValid ] = useState(false);
+    const [ isPWDLengthValid, setIsPWDLengthValid ] = useState(false);
+    const [ isPWDCombinationValid, setIsPWDCombinationValid ] = useState(false);
+
     function handleSignIn(e) {
         e.preventDefault();
+        
+        if ( !isEmailValid || !isPWDCombinationValid || !isPWDLengthValid ) {
+            CustomErrorAlert( "Please check your input" )
+            return;
+        }
 
-        const email = document.getElementById('email-input').value;
-        const password = document.getElementById('pwd-input').value;
+        const email = emailInput.current.value;
+        const password = pwdInput.current.value;
 
         signIn(email, password)
             .then(response => {
@@ -203,13 +250,93 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
         window.open(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`, "_blank");
     }
 
+    function validatePWD(pwd) {
+
+        if ( !pwd || pwd.length < 8 ) {
+            setIsPWDLengthValid(false);
+        } else {
+            setIsPWDLengthValid(true);
+        }
+        
+        const isValidPassword = validator.isStrongPassword(pwd, 
+            {
+                minLowercase: 1,
+                minUppercase: 1,
+                minNumbers: 1,
+                minSymbols: 0,
+            }
+        )
+        if ( !isValidPassword ) {
+            setIsPWDCombinationValid(false);
+        } else {
+            setIsPWDCombinationValid(true);
+        }
+        
+        if ( isPWDCombinationValid && isPWDLengthValid ) {
+            return true;
+        }
+        return false;
+    }
+
+    function validateInput(e) {
+        e.preventDefault();
+        setIsFirst(false);
+        const email = emailInput.current.value;
+        const pwd = pwdInput.current.value;
+
+        if ( !validator.isEmail(email) ) {
+            setIsEmailValid(false);
+        } else {
+            setIsEmailValid(true);
+        }
+
+        validatePWD(pwd);
+    }
+
     return (
         <SignInContainer isSignIn={isSignIn}>
             <InputBlock>
-                <TextInput type="text" id="email-input" name="email" placeholder="Email"></TextInput>    
+                <TextInput
+                    type="email"
+                    name="email-input"
+                    placeholder="Email"
+                    ref={emailInput}
+                    onChange={validateInput}
+                    isValid={isFirst ? true : isEmailValid}
+                ></TextInput>
+                <EmailFormatDesc isValid={isFirst ? true : isEmailValid }>
+                    { !isFirst ? 
+                        <>
+                            { isEmailValid ? "valid email" : "invalid email" }
+                        </> : ""
+                    }
+                </EmailFormatDesc>
             </InputBlock>
             <InputBlock>
-                <TextInput type="password" id="pwd-input" name="password" placeholder="Password"></TextInput>    
+                <TextInput
+                    type="password"
+                    name="pwd-input"
+                    placeholder="Password"
+                    ref={pwdInput}
+                    onChange={validateInput}
+                    isValid={isFirst ? true : isPWDLengthValid && isPWDCombinationValid}
+                ></TextInput>
+                <PWDFormatBlock>
+                    <label>Your password needs</label>
+                    <PWDFormatRuleList>
+                        {
+                            isFirst ? 
+                            <>
+                                <PWDFormatRule isValid={true}>At least 8 characters</PWDFormatRule> 
+                                <PWDFormatRule isValid={true}>At least 1 upper and lowercase letter and number</PWDFormatRule> 
+                            </> : 
+                            <>
+                                <PWDFormatRule isValid={isPWDLengthValid}>At least 8 characters</PWDFormatRule> 
+                                <PWDFormatRule isValid={isPWDCombinationValid}>At least 1 upper and lowercase letter and number</PWDFormatRule> 
+                            </>
+                        }
+                    </PWDFormatRuleList>
+                </PWDFormatBlock>
             </InputBlock>
             <SignInBtn onClick={handleSignIn}>Login</SignInBtn>
             <CustomDivider>or</CustomDivider>

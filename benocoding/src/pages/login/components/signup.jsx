@@ -1,5 +1,5 @@
 
-import { useContext } from "react";
+import { useContext, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import { PRODUCTION_BACKEND_API_URL, GITHUB_CLIENT_ID } from "../../../global/constant.js";
@@ -9,6 +9,7 @@ import { AuthContext } from "../../../global/authContext.jsx";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { CustomErrorAlert, ServerErrorAlert } from "../../../utils/alert.js";
+import validator from 'validator';
 
 const slideInFromRight = keyframes`
   from {
@@ -35,7 +36,7 @@ const SignUpContainer = styled.div`
 
 const InputBlock = styled.div`
     width: 95%;
-    margin: 10px 0;
+    margin-bottom: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,6 +53,8 @@ const TextInput = styled.input`
     background-color: Gainsboro;
 
     :focus {
+        outline: none;
+        border: ${props => props.isValid ? '3px solid YellowGreen' : '3px solid red'};
         width: 110%;
         height: 60px;
         transition: ease-in-out, width .2s ease-in-out;
@@ -135,24 +138,85 @@ async function signUp(username, email, password) {
     }
 }
 
+const PWDFormatBlock = styled.div`
+    align-self: flex-start;
+    margin: 8px 4px 0 4px;
+`;
+
+const PWDFormatRuleList = styled.ul`
+    padding-left: 0px;
+    margin: 4px 0;
+`;
+
+const PWDFormatRule = styled.li`
+    list-style-type: none;
+    font-size: 14px;
+    color: ${props => props.isValid ? 'black' : 'red'};
+
+    ::before {
+        content: "☞";
+        margin-right: 0.5em;
+    }
+`;
+
+const EmailFormatDesc = styled.label`
+    margin: 8px 4px 0 4px;
+    align-self: flex-start;
+    font-size: 14px;
+    color: ${props => props.isValid ? 'black' : 'red'};
+
+    ::before {
+        content: "${props => props.isValid ? '' : '✖'}";
+        margin-right: 0.5em;
+    }
+`;
+
+const NameFormatDesc = styled.label`
+    margin: 8px 4px 0 4px;
+    align-self: flex-start;
+    font-size: 14px;
+    color: ${props => props.isValid ? 'black' : 'red'};
+
+    ::before {
+        content: "${props => props.isValid ? '' : '✖'}";
+        margin-right: 0.5em;
+    }
+`;
+
 
 const SignUp = ({isSignIn, setIsSignIn}) => {
 
     const MySwal = withReactContent(Swal);
     const authContext = useContext(AuthContext);
 
+    const nameInput = useRef(null);
+    const emailInput = useRef(null);
+    const pwdInput = useRef(null);
+
+    const [ isFirst, setIsFirst ] = useState(true);
+    const [ isNameValid, setIsNameValid ] = useState(false);
+    const [ isEmailValid, setIsEmailValid ] = useState(false);
+    const [ isPWDLengthValid, setIsPWDLengthValid ] = useState(false);
+    const [ isPWDCombinationValid, setIsPWDCombinationValid ] = useState(false);
+
     function handleSignUp(e) {
         e.preventDefault();
 
-        const username = document.getElementById('name-input').value;
-        const email = document.getElementById('email-input').value;
-        const password = document.getElementById('pwd-input').value;
+        if ( !isEmailValid || !isNameValid || !isPWDCombinationValid || !isPWDLengthValid ) {
+            CustomErrorAlert( "Please check your input" );
+            return;
+        }
+
+        const username = nameInput.current.value;
+        const email = emailInput.current.value;
+        const password = pwdInput.current.value;
 
         signUp(username, email, password)
             .then(response => {
                 const { signup } = response.data;
                 if ( signup.statusCode !== 200 ) {
                     CustomErrorAlert( signup.responseMessage );
+                    return;
                 }
 
                 MySwal.fire({
@@ -178,16 +242,118 @@ const SignUp = ({isSignIn, setIsSignIn}) => {
         window.open(`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`, "_blank");
     }
 
+    function validatePWD(pwd) {
+
+        if ( !pwd || pwd.length < 8 ) {
+            setIsPWDLengthValid(false);
+        } else {
+            setIsPWDLengthValid(true);
+        }
+        
+        const isValidPassword = validator.isStrongPassword(pwd, 
+            {
+                minLowercase: 1,
+                minUppercase: 1,
+                minNumbers: 1,
+                minSymbols: 0,
+            }
+        )
+        if ( !isValidPassword ) {
+            setIsPWDCombinationValid(false);
+        } else {
+            setIsPWDCombinationValid(true);
+        }
+        
+        if ( isPWDCombinationValid && isPWDLengthValid ) {
+            return true;
+        }
+        return false;
+    }
+
+    function validateInput(e) {
+        e.preventDefault();
+        setIsFirst(false);
+
+        const username = nameInput.current.value;
+        const email = emailInput.current.value;
+        const pwd = pwdInput.current.value;
+
+        if ( !validator.isLength(username, { min: 2, max: 16 }) ) {
+            setIsNameValid(false);
+        } else {
+            setIsNameValid(true);
+        }
+
+        if ( !validator.isEmail(email) ) {
+            setIsEmailValid(false);
+        } else {
+            setIsEmailValid(true);
+        }
+
+        validatePWD(pwd);
+    }
+
     return (
         <SignUpContainer isSignIn={isSignIn}>
             <InputBlock>
-                <TextInput type="text" id="name-input" name="username" minLength={2} maxLength={16} placeholder="Username"></TextInput>    
+                <TextInput
+                    type="text"
+                    name="username-input"
+                    placeholder="Username"
+                    ref={nameInput}
+                    onChange={validateInput}
+                    isValid={isFirst ? true : isNameValid}
+                ></TextInput>
+                <NameFormatDesc isValid={isFirst ? true : isNameValid}>
+                    { isFirst ? "" :
+                        <>
+                            { isNameValid ? "Valid username" : "Username needs to be 2-16 characters" }
+                        </>
+                    }
+                </NameFormatDesc>
             </InputBlock>
             <InputBlock>
-                <TextInput type="email" id="email-input" name="email" placeholder="Email"></TextInput>    
+                <TextInput
+                    type="email"
+                    name="email-input"
+                    placeholder="Email"
+                    ref={emailInput}
+                    onChange={validateInput}
+                    isValid={isFirst ? true : isEmailValid}
+                ></TextInput>
+                <EmailFormatDesc isValid={isFirst ? true : isEmailValid}>
+                    { isFirst ? "" :
+                        <>
+                            { isEmailValid ? "✔︎ Valid email" : "Wrong email format" }
+                        </>
+                    }
+                </EmailFormatDesc>
             </InputBlock>
             <InputBlock>
-                <TextInput type="password" id="pwd-input" name="password" minLength={8} maxLength={20} placeholder="Password"></TextInput>    
+                <TextInput
+                    type="password"
+                    name="password-input"
+                    placeholder="Password"
+                    ref={pwdInput}
+                    onChange={validateInput}
+                    isValid={isFirst ? true : isPWDCombinationValid && isPWDLengthValid}
+                ></TextInput>
+                <PWDFormatBlock>
+                    <label>Your password needs</label>
+                    <PWDFormatRuleList>
+                        {
+                            isFirst ? 
+                            <>
+                                <PWDFormatRule isValid={true}>At least 8 characters</PWDFormatRule> 
+                                <PWDFormatRule isValid={true}>At least 1 upper and lowercase letter and number</PWDFormatRule> 
+                            </> : 
+                            <>
+                                <PWDFormatRule isValid={isPWDLengthValid}>At least 8 characters</PWDFormatRule> 
+                                <PWDFormatRule isValid={isPWDCombinationValid}>At least 1 upper and lowercase letter and number</PWDFormatRule> 
+                            </>
+                        }
+                    </PWDFormatRuleList>
+                </PWDFormatBlock>
             </InputBlock>
             <SignUpBtn onClick={handleSignUp}>Signup</SignUpBtn>
             <CustomDivider>or</CustomDivider>
