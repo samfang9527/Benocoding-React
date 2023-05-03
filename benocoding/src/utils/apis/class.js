@@ -142,6 +142,7 @@ async function getClassData(classId) {
                         statusCode,
                         responseMessage
                     },
+                    price,
                     teacherName,
                     teacherOptions,
                     studentOptions,

@@ -51,7 +51,7 @@ const InfoBlock = styled.div`
 `;
 
 const CheckoutBlock = styled.div`
-    width: 50%;
+    width: 80%;
     height: ${props => props.showCheckout ? "450px" : "100px"};
     border-radius: 20px;
     transition: 0.3s ease-in-out;
@@ -59,7 +59,7 @@ const CheckoutBlock = styled.div`
     border: 3px dashed black;
     position: relative;
     left: 50%;
-    margin-left: -25%;
+    margin-left: -40%;
     opacity: ${props => props.showCheckout ? "1" : "0.4"};
     transition: 0.25s all ease-in-out;
 `;
@@ -82,7 +82,7 @@ const ClassDescriptionBlock = styled.div`
     font-size: 22px;
     padding: 0 20px;
     align-self: flex-start;
-    margin: 20px;
+    margin: 15px 20px;
 `;
 
 const ClassDescription = styled.pre`
@@ -113,6 +113,7 @@ const ClassDetail = () => {
     const [ classData, setClassData ] = useState({});
     const [ showCheckout, setShowCheckout ] = useState(false);
     const [ classId, setClassId ] = useState('');
+    const [ isLogin, setIsLogin ] = useState(false);
 
     const {
         className,
@@ -123,13 +124,14 @@ const ClassDetail = () => {
         teacherName,
         classVideo,
         classMembers,
-        milestones
+        milestones,
+        price
     } = classData;
+
 
     useEffect(() => {
         const path = location.pathname
         const classId = path.slice( path.lastIndexOf('/') + 1 );
-        
         getClassData(classId)
             .then(response => {
                 if ( response && response.response.statusCode === 200 ) {
@@ -141,6 +143,13 @@ const ClassDetail = () => {
 
     }, [location.pathname])
 
+    useEffect(() => {
+        const jwt = window.localStorage.getItem("jwt");
+        if ( jwt ) {
+            setIsLogin(true);
+        }
+    }, [])
+
     return (
         <MainContainer>
             <ImageSection>
@@ -148,7 +157,11 @@ const ClassDetail = () => {
             </ImageSection>
             <InfoSection>
                 <CheckoutBlock showCheckout={showCheckout}>
-                    <CheckoutTitle onClick={() => {setShowCheckout(!showCheckout)}}>點擊購課</CheckoutTitle>
+                    <CheckoutTitle onClick={() => {
+                        if ( isLogin ) {
+                            setShowCheckout(!showCheckout)
+                        }
+                    }}>{ isLogin ? "點擊購課" : "請登入後購課" }</CheckoutTitle>
                     {
                         showCheckout ? 
                             <>
@@ -166,8 +179,22 @@ const ClassDetail = () => {
                         <ClassDescription>{teacherName}</ClassDescription>
                         
                     </ClassDescriptionBlock>
+                    <ClassDescriptionBlock>Price | 
+                        <ClassDescription>{ price ? price : ''}</ClassDescription>TWD
+                    </ClassDescriptionBlock>
                     <ClassDescriptionBlock>Totally 
                         <ClassDescription>{ milestones ? milestones.length : ''}</ClassDescription> milestones
+                        <ol style={{margin: "5px 0"}}>
+                            { milestones ? 
+                                milestones.map((milestone, idx) => {
+                                    console.log(milestone)
+                                    return (
+                                        <li key={milestone.milestone + idx} style={{margin: "5px 0"}}>{milestone.milestone}</li>
+                                    )
+                                })
+                                : ""
+                            }
+                        </ol>
                     </ClassDescriptionBlock>
                     <ClassDescriptionBlock>From 
                         <ClassDescription>{ classStartDate ? formatDateString(classStartDate) : ''}</ClassDescription> to 
