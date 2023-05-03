@@ -161,7 +161,7 @@ const ClassDetail = () => {
                         if ( isLogin ) {
                             setShowCheckout(!showCheckout)
                         }
-                    }}>{ isLogin ? "點擊購課" : "請登入後購課" }</CheckoutTitle>
+                    }}>{ isLogin ? "點擊購課" : "登入購課" }</CheckoutTitle>
                     {
                         showCheckout ? 
                             <>
