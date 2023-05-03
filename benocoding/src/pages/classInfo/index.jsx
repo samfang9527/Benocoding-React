@@ -6,6 +6,7 @@ import { getClassData } from "../../utils/apis/class.js";
 import { CDN_DOMAIN } from "../../global/constant.js";
 import ReactPlayer from "react-player";
 import Tappay from "./components/tappay.jsx";
+import { SyncLoader } from "react-spinners";
 
 const MainContainer = styled.div`
     display: flex;
@@ -101,6 +102,18 @@ const ClassVideo = styled(ReactPlayer)`
     margin: 50px 0px;
 `;
 
+const BuyingMask = styled.div`
+    width: 100%;
+    height: 100%;
+    background-color: rgba(150, 150, 150, 0.5);
+`;
+
+const LoaderContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
 
 function formatDateString(dateString) {
     return dateString.slice( 0, dateString.lastIndexOf('T') );
@@ -114,6 +127,7 @@ const ClassDetail = () => {
     const [ showCheckout, setShowCheckout ] = useState(false);
     const [ classId, setClassId ] = useState('');
     const [ isLogin, setIsLogin ] = useState(false);
+    const [ isBuying, setIsBuying ] = useState(false);
 
     const {
         className,
@@ -157,16 +171,23 @@ const ClassDetail = () => {
             </ImageSection>
             <InfoSection>
                 <CheckoutBlock showCheckout={showCheckout}>
-                    <CheckoutTitle onClick={() => {
-                        if ( isLogin ) {
-                            setShowCheckout(!showCheckout)
-                        }
-                    }}>{ isLogin ? "點擊購課" : "登入購課" }</CheckoutTitle>
+                    { isBuying ? 
+                        <BuyingMask>
+                            <LoaderContainer>
+                                <p style={{textAlign: "center", fontSize: "20px", marginTop: "10px"}}>付款中</p>
+                                <SyncLoader size={10}></SyncLoader>
+                            </LoaderContainer>
+                        </BuyingMask> : <CheckoutTitle onClick={() => {
+                            if ( isLogin ) {
+                                setShowCheckout(!showCheckout)
+                            }
+                        }}>{ isLogin ? "點擊購課" : "登入購課" }</CheckoutTitle>
+                    }
                     {
                         showCheckout ? 
                             <>
                                 <hr style={{width: "50%", border: "1px solid black"}}></hr>
-                                <Tappay classId={classId}/>
+                                <Tappay classId={classId} setIsBuying={setIsBuying} setShowCheckout={setShowCheckout}/>
                             </>
                             : ''
                     }
@@ -187,7 +208,6 @@ const ClassDetail = () => {
                         <ol style={{margin: "5px 0"}}>
                             { milestones ? 
                                 milestones.map((milestone, idx) => {
-                                    console.log(milestone)
                                     return (
                                         <li key={milestone.milestone + idx} style={{margin: "5px 0"}}>{milestone.milestone}</li>
                                     )
@@ -201,7 +221,7 @@ const ClassDetail = () => {
                         <ClassDescription>{ classEndDate ? formatDateString(classEndDate) : ''}</ClassDescription>
                     </ClassDescriptionBlock>
                     <ClassDescriptionBlock>Student numbers: 
-                        <ClassDescription>{ classMembers ? classMembers.length - 1 : ''}</ClassDescription>
+                        <ClassDescription>{ classMembers ? classMembers.length : ''}</ClassDescription>
                     </ClassDescriptionBlock>
                 </InfoBlock>
             </InfoSection>

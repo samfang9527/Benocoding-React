@@ -1,11 +1,10 @@
 
 import styled from "styled-components";
-import { useEffect, useRef, useContext, useState } from "react";
+import { useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../../global/authContext";
 import axios from "axios";
 import { PRODUCTION_BACKEND_API_URL } from "../../../global/constant.js";
-import { SyncLoader } from "react-spinners";
 import { CustomErrorAlert, ServerErrorAlert } from "../../../utils/alert";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -57,6 +56,7 @@ const SubmitBtn = styled.button`
     }
 `;
 
+
 async function buyClass(prime, classId, userId) {
     const query = {
         query: `
@@ -85,47 +85,33 @@ async function buyClass(prime, classId, userId) {
         },
         data: query
     })
-    console.log(data.data);
     return data.data;
 }
 
-const Tappay = ({classId}) => {
+const Tappay = ({classId, setIsBuying, setShowCheckout}) => {
 
     const submitButton = useRef(null);
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
     const MySwal = withReactContent(Swal);
 
-    const [ isBuying, setIsBuying ] = useState(false);
-
     function checkout(e) {
         e.preventDefault();
 
-        const { user } = authContext;
-        if ( !user.userId ) {
-            CustomErrorAlert('Please sign in to continue')
-            .then(result => {
-                if ( result.isConfirmed || result.isDismissed ) {
-                    navigate('/login');
-                }
-            })
-            return;
-        }
-
-        setIsBuying(true);
         window.TPDirect.card.getPrime(function(result) {
             if (result.status !== 0) {
                 console.error('getPrime error');
-                setIsBuying(false);
                 return;
             }
+            setIsBuying(true);
+            setShowCheckout(false);
             const prime = result.card.prime;
             const { userId } = authContext.user;
             buyClass(prime, classId, userId)
                 .then(res => {
-                    const { response } = res;
-                    if ( response && response.statusCode !== 200 ) {
-                        CustomErrorAlert(response.responseMessage)
+                    const { buyClass } = res;
+                    if ( buyClass.response && buyClass.response.statusCode !== 200 ) {
+                        CustomErrorAlert(buyClass.response.responseMessage)
                         return;
                     }
 
@@ -144,8 +130,11 @@ const Tappay = ({classId}) => {
                     console.error(err);
                     ServerErrorAlert();
                 })
+                .finally(() => {
+                    setIsBuying(false);
+                })
         })
-        setIsBuying(false);
+        
     }
 
     useEffect(() => {
@@ -212,7 +201,6 @@ const Tappay = ({classId}) => {
             // update.canGetPrime === true
             // --> you can call TPDirect.card.getPrime()
             if (update.canGetPrime) {
-                console.log(update.canGetPrime);
                 // Enable submit Button to get prime.
                 submitButton.current.removeAttribute('disabled');
             } else {
@@ -227,7 +215,6 @@ const Tappay = ({classId}) => {
     return (
         <Wrapper>
             {
-                isBuying ? <SyncLoader></SyncLoader> :
                 <>
                     <TPFieldContainer>
                         <Title>信用卡付款</Title>
