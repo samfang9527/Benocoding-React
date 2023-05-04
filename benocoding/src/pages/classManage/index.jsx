@@ -35,6 +35,7 @@ const SideNavBlock = styled.nav`
     z-index: 1;
     border-radius: 0 8px 8px 0;
     transition: width 0.2s ease-in-out;
+    margin-left: 3px;
 `
 
 const CustomIconBtn = styled(IconButton)`
@@ -92,7 +93,7 @@ const ClassManage = () => {
                 classDesc: classData.classDesc,
                 classStartDate: classData.classStartDate.slice(0, 10),
                 classEndDate: classData.classEndDate.slice(0, 10),
-                // milestones: classData.milestones,
+                milestones: classData.milestones,
                 classImage: classData.classImage,
                 classVideo: classData.classVideo,
                 // gitHub: classData.gitHub
@@ -172,18 +173,20 @@ const ClassManage = () => {
     return (
         <MainContainer>
             <SideNavWrapper>
-                <CustomIconBtn onClick={handleExpand} sx={{color: "darkgreen"}}>
-                    <MenuIcon fontSize="large" />
-                </CustomIconBtn>
-                <SideNavBlock
-                    isExpanded={isNavExpanded}
-                >
-                    {
-                        isCreater ?
-                            <TeacherNavOption isExpanded={isNavExpanded} setChosenOption={setChosenOption} /> :
-                            <StudentNavOption isExpanded={isNavExpanded} setChosenOption={setChosenOption} />
-                    }
-                </SideNavBlock>
+                <div style={{position: "sticky", top: "10%"}}>
+                    <CustomIconBtn onClick={handleExpand} sx={{color: "darkgreen"}}>
+                        <MenuIcon fontSize="large" />
+                    </CustomIconBtn>
+                    <SideNavBlock
+                        isExpanded={isNavExpanded}
+                    >
+                        {
+                            isCreater ?
+                                <TeacherNavOption isExpanded={isNavExpanded} setChosenOption={setChosenOption} /> :
+                                <StudentNavOption isExpanded={isNavExpanded} setChosenOption={setChosenOption} />
+                        }
+                    </SideNavBlock>
+                </div>
             </SideNavWrapper>
             <ViewWrapper>
                 { handleView() }

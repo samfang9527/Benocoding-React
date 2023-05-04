@@ -11,8 +11,6 @@ const MilestoneWrapper = styled.div`
 
 const Milestone = ({milestoneData, classData}) => {
 
-    console.log(milestoneData);
-
     return (
         <MilestoneWrapper>
             {
