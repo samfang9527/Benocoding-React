@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, createContext } from "react";
 import { CDN_DOMAIN, PRODUCTION_BACKEND_DOMAIN } from "../../../global/constant.js";
 import axios from "axios";
 import ReactPlayer from "react-player";
@@ -104,6 +104,11 @@ const UpdateBtn = styled.button`
     }
 `;
 
+export const MilestoneContext = createContext({
+    changedMilestones: {},
+    setChangedMilestones: () => {}
+})
+
 const Settings = ({mutableData, classId}) => {
 
     const {
@@ -127,7 +132,7 @@ const Settings = ({mutableData, classId}) => {
     const [ minEndDate, setMinEndDate ] = useState(getMinEndDate(new Date(classStartDate)));
     const [ imageSrc, setImageSrc ] = useState(`${CDN_DOMAIN + classImage}`);
     const [ videoUrl, setVideoUrl ] = useState(`${CDN_DOMAIN + classVideo}`);
-    const [ changedMilestones, setChangedMilestones ] = useState(Array.from(milestones))
+    const [ changedMilestones, setChangedMilestones ] = useState(JSON.parse(JSON.stringify(milestones)))
 
     async function handleImageUpload(e) {
         e.preventDefault();
@@ -214,10 +219,8 @@ const Settings = ({mutableData, classId}) => {
     }
 
     function handleUpdate(e) {
-        if ( Object.keys(changeContent).length === 0 ) {
-            return;
-        }
-        setIsUpdating(true);
+        // setIsUpdating(true);
+        changeContent.milestones = changedMilestones;
         updateClassSettings(changeContent, classId)
             .then(res => {
                 const { response } = res.updateClass;
@@ -233,6 +236,7 @@ const Settings = ({mutableData, classId}) => {
                         if ( result.isConfirmed || result.isDismissed ) {
                             setIsUpdating(false);
                             setChangeContent({});
+                            setChangedMilestones(JSON.parse(JSON.stringify(milestones)))
                             window.location.reload();
                         }
                     })
@@ -249,6 +253,10 @@ const Settings = ({mutableData, classId}) => {
     }
 
     return (
+        <MilestoneContext.Provider value={{
+            changedMilestones,
+            setChangedMilestones
+        }}>
         <MainContainer>
             {className && ( 
                 <EachBlock>
@@ -349,6 +357,7 @@ const Settings = ({mutableData, classId}) => {
                 onClick={handleUpdate}
             >{ isUpdating ? <RiseLoader /> : 'Update' }</UpdateBtn>
         </MainContainer>
+        </MilestoneContext.Provider>
     )
 }
 

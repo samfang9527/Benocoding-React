@@ -1,7 +1,9 @@
 
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Fragment } from "react";
+import SettingTestCase from "./settingTestCase";
+import { MilestoneContext } from "./settings";
 
 const MilestoneBlock = styled.div`
     width: 100%;
@@ -9,7 +11,6 @@ const MilestoneBlock = styled.div`
     align-items: center;
     flex-direction: column;
     margin: 10px 0;
-    border: 1px solid black;
 `;
 
 const Title = styled.p`
@@ -28,24 +29,6 @@ const TextArea = styled.textarea`
     height: 400px;
     overflow: scroll;
     font-size: 18px;
-`;
-
-const EachTestCaseBlock = styled.div`
-    display: flex;
-    margin: 10px;
-`;
-
-const EachTestCaseInputBlock = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin: 0 10px;
-`;
-
-const TestCaseInput = styled.input`
-    width: 100px;
-    height: 30px;
-    font-size: 16px;
-    margin: 5px 0;
 `;
 
 const ShowDetailCheck = styled.input`
@@ -142,44 +125,10 @@ const TestOptionSpan = styled.span`
     color: ${props => props.isChecked ? "var(--font-color-light)" : ""};
 `;
 
-const CaseControlBtn = styled.button`
-    padding: 0.1em 0.25em;
-    width: 3.75em;
-    height: 4em;
-    background-color: #212121;
-    border: 0.08em solid #fff;
-    border-radius: 0.3em;
-    font-size: 12px;
-`;
+const SettingMilestone = ({ milestones }) => {
 
-const CaseControlBtnSpan = styled.span`
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    bottom: 0.4em;
-    width: 2em;
-    height: 2em;
-    background-color: #212121;
-    border-radius: 0.2em;
-    font-size: 1.5em;
-    color: #fff;
-    border: 0.08em solid #fff;
-    box-shadow: 0 0.4em 0.1em 0.019em #fff;
-    cursor: pointer;
-
-    :active {
-        transition: all 0.1s;
-        transform: translate(0, 0.4em);
-        box-shadow: 0 0 0 0 #fff;
-    }
-
-    :not(focus) {
-        transition: all 0.6s;
-    }
-`;
-
-const SettingMilestone = ({ milestones, changedMilestones, setChangedMilestones }) => {
+    const milestoneContext = useContext(MilestoneContext);
+    const { changedMilestones } = milestoneContext;
 
     const [ showingList, setShowingList ] = useState(milestones.map(() => false));
     const [ testTypeList, setTestTypeList ] = useState(milestones.map((m) => {
@@ -188,137 +137,6 @@ const SettingMilestone = ({ milestones, changedMilestones, setChangedMilestones 
         if ( !functionTest ) { return 'api-test' }
         return 'function-test'
     }))
-    console.log(changedMilestones);
-
-    function renderFunctionTest(functionName, testCases, milestoneIdx) {
-        return (
-            <>
-                <Title>Function name</Title>
-                <SingleInput defaultValue={functionName}></SingleInput>
-                <Title>Test cases</Title>
-                {
-                    testCases.map((testCase, idx) => {
-                        return (
-                            <EachTestCaseBlock key={testCase.case + idx}>
-                                <EachTestCaseInputBlock>
-                                    <label>Case name</label>
-                                    <TestCaseInput
-                                        defaultValue={testCase.case}
-                                    ></TestCaseInput>
-                                </EachTestCaseInputBlock>
-                                <EachTestCaseInputBlock>
-                                    <label>Case Input 1</label>
-                                    <TestCaseInput
-                                        defaultValue={testCase.inputs[0]}
-                                        style={{width: "250px"}}
-                                    ></TestCaseInput>
-                                </EachTestCaseInputBlock>
-                                <EachTestCaseInputBlock>
-                                    <label>Case Input 2</label>
-                                    <TestCaseInput
-                                        defaultValue={testCase.inputs[1]}
-                                        style={{width: "250px"}}
-                                    ></TestCaseInput>
-                                </EachTestCaseInputBlock>
-                                <EachTestCaseInputBlock>
-                                    <label>Expected result</label>
-                                    <TestCaseInput defaultValue={testCase.result}></TestCaseInput>
-                                </EachTestCaseInputBlock>
-                            </EachTestCaseBlock>
-                        )
-                    })
-                }
-                <div style={{
-                    width: "100px",
-                    display: "flex",
-                    justifyContent: "space-around",
-                    marginBottom: "20px"
-                }}>
-                    <CaseControlBtn>
-                        <CaseControlBtnSpan onClick={() => removeTestCase(milestoneIdx)}>
-                            -
-                        </CaseControlBtnSpan>
-                    </CaseControlBtn>
-                    <CaseControlBtn>
-                        <CaseControlBtnSpan onClick={() => addTestCase(milestoneIdx)}>
-                            +
-                        </CaseControlBtnSpan>
-                    </CaseControlBtn>
-                </div>
-            </>
-        )
-    }
-
-    function renderAPITest(testCases, milestoneIdx) {
-        return (
-            <>
-                {
-                    testCases.map((testCase, idx) => {
-                        return (
-                            <EachTestCaseBlock key={testCase.case + idx}>
-                                <EachTestCaseInputBlock>
-                                    <label>Case name</label>
-                                    <TestCaseInput
-                                        defaultValue={testCase.case}
-                                    ></TestCaseInput>
-                                </EachTestCaseInputBlock>
-                                <EachTestCaseInputBlock>
-                                    <label>Method</label>
-                                    <TestCaseInput
-                                        defaultValue={testCase.method}
-                                        style={{width: "250px"}}
-                                    ></TestCaseInput>
-                                </EachTestCaseInputBlock>
-                                <EachTestCaseInputBlock>
-                                    <label>Expected status code</label>
-                                    <TestCaseInput defaultValue={testCase.statusCode}></TestCaseInput>
-                                </EachTestCaseInputBlock>
-                                <EachTestCaseInputBlock>
-                                    <label>Expected result</label>
-                                    <TestCaseInput defaultValue={testCase.result}></TestCaseInput>
-                                </EachTestCaseInputBlock>
-                            </EachTestCaseBlock>
-                        )
-                    })
-                }
-                <div style={{
-                    width: "100px",
-                    display: "flex",
-                    justifyContent: "space-around",
-                    marginBottom: "20px"
-                }}>
-                    <CaseControlBtn>
-                        <CaseControlBtnSpan onClick={() => removeTestCase(milestoneIdx)}>
-                            -
-                        </CaseControlBtnSpan>
-                    </CaseControlBtn>
-                    <CaseControlBtn>
-                        <CaseControlBtnSpan onClick={() => addTestCase(milestoneIdx)}>
-                            +
-                        </CaseControlBtnSpan>
-                    </CaseControlBtn>
-                </div>
-            </>
-        )
-    }
-
-    function addTestCase(idx) {
-        const { testCases } = changedMilestones[idx];
-        testCases.push({
-            case: '',
-            inputs: [],
-            method: '',
-            result: '',
-            statusCode: ''
-        })
-        setChangedMilestones(changedMilestones.slice());
-    }
-
-    function removeTestCase(idx) {
-        const { testCases } = changedMilestones[idx];
-        testCases.pop();
-        setChangedMilestones(changedMilestones.slice());
-    }
 
     function handleShowMilestone(idx) {
         showingList[idx] = !showingList[idx];
@@ -329,32 +147,17 @@ const SettingMilestone = ({ milestones, changedMilestones, setChangedMilestones 
         const choice = e.target.value;
         testTypeList[idx] = choice;
         setTestTypeList(testTypeList.slice());
-    }
 
-    function handleTestView(type, milestoneData, idx) {
-        const { autoTest, functionTest } = milestoneData;
-        if ( type === 'function-test' ) {
-            changedMilestones[idx]["autoTest"] = true;
-            changedMilestones[idx]["functionTest"] = true;
-            if ( autoTest && functionTest ) {
-                const { functionName, testCases } = milestoneData;
-                return renderFunctionTest(functionName, testCases, idx);
-            } else {
-                return renderFunctionTest('', [], idx);
-            }
-        } else if ( type === 'api-test' ) {
-            changedMilestones[idx]["autoTest"] = true;
-            changedMilestones[idx]["functionTest"] = false;
-            if ( autoTest && !functionTest ) {
-                const { testCases } = milestoneData;
-                return renderAPITest(testCases, idx);
-            } else {
-                return renderAPITest([], idx);
-            }
+        if ( choice === "function-test" ) {
+            changedMilestones[idx].autoTest = true;
+            changedMilestones[idx].functionTest = true;
+
+        } else if ( choice === "api-test" ) {
+            changedMilestones[idx].autoTest = true;
+            changedMilestones[idx].functionTest = false;
         } else {
-            changedMilestones[idx]["autoTest"] = false;
-            changedMilestones[idx]["functionTest"] = false;
-            return;
+            changedMilestones[idx].autoTest = false;
+            changedMilestones[idx].functionTest = false;
         }
     }
     
@@ -366,8 +169,12 @@ const SettingMilestone = ({ milestones, changedMilestones, setChangedMilestones 
             return (
                 <Fragment key={milestone.milestone + milestoneIdx}>
                     <MilestoneBlock>
-                        <Title>{`Milestone ${milestoneIdx}`}</Title>
-                        <ShowDetailCheck onChange={() => handleShowMilestone(milestoneIdx)} type="checkbox"></ShowDetailCheck>
+                        <Title style={{margin: "10px 0"}}>{`Milestone ${milestoneIdx}`}</Title>
+                        <hr style={{width: "15%", border: "1px solid black"}}/>
+                        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <p style={{margin: "10px 0"}}>Show details</p>
+                            <ShowDetailCheck onChange={() => handleShowMilestone(milestoneIdx)} type="checkbox"></ShowDetailCheck>
+                        </div>
                         { showingList[milestoneIdx] ? 
                             <>
                                 <SingleInput
@@ -397,11 +204,14 @@ const SettingMilestone = ({ milestones, changedMilestones, setChangedMilestones 
                                         </TestOptionBtn>  
                                     </TestOption>
                                 </TestOptionWrapper>
-                                { handleTestView(testTypeList[milestoneIdx], milestone, milestoneIdx) }
+                                {
+                                    testTypeList[milestoneIdx] === "no-test" ? ""
+                                        : <SettingTestCase testType={testTypeList[milestoneIdx]} milestoneData={milestone} milestoneIdx={milestoneIdx} />
+                                }
                             </>
                         : "" }
-                        
                     </MilestoneBlock>
+                    <hr style={{width: "90%"}}/>
                 </Fragment>
             )
         })
