@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import { useState, createContext } from "react";
+import { useState, createContext, useRef } from "react";
 import { CDN_DOMAIN, PRODUCTION_BACKEND_DOMAIN } from "../../../global/constant.js";
 import axios from "axios";
 import ReactPlayer from "react-player";
@@ -124,6 +124,7 @@ const Settings = ({mutableData, classId}) => {
     const MySwal = withReactContent(Swal);
     const millisecondDay = 24 * 60 * 60 * 1000;
     const minStartDate = new Date( new Date().getTime() + millisecondDay );
+    const endDateTag = useRef(null);
 
     const [ changeContent, setChangeContent ] = useState({});
     const [ isUploadingImage, setIsUploadingImage ] = useState(false);
@@ -219,7 +220,7 @@ const Settings = ({mutableData, classId}) => {
     }
 
     function handleUpdate(e) {
-        // setIsUpdating(true);
+        setIsUpdating(true);
         changeContent.milestones = changedMilestones;
         updateClassSettings(changeContent, classId)
             .then(res => {
@@ -289,6 +290,7 @@ const Settings = ({mutableData, classId}) => {
                             const value = e.target.value;
                             setMinEndDate(getMinEndDate(new Date(value)));
                             changeContent[name] = value;
+                            endDateTag.current.value = getMinEndDate(new Date(value));
                         }}
                     />
                 </EachBlock> )}
@@ -300,6 +302,7 @@ const Settings = ({mutableData, classId}) => {
                         name="classEndDate"
                         min={minEndDate}
                         onChange={handleSimpleInputUpdate}
+                        ref={endDateTag}
                     />
                 </EachBlock> )}
             { classImage && (

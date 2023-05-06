@@ -106,7 +106,7 @@ async function getUserClassList(userId, pageNum, role) {
                         classDesc,
                         classStartDate,
                         classImage,
-                        classId
+                        _id
                     }   
                 }
         }
@@ -293,7 +293,6 @@ async function getPullRequestDetail(userId, classId, number) {
 }
 
 async function updateClassSettings(updateData, classId) {
-
     const mutation = {
         query: `
             mutation($data: UpdateData!, $classId: String!) {
@@ -320,6 +319,7 @@ async function updateClassSettings(updateData, classId) {
         },
         data: mutation
     })
+    console.log(data);
     return data.data;
 }
 
