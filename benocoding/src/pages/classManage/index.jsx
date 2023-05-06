@@ -8,7 +8,6 @@ import { AuthContext } from "../../global/authContext.jsx";
 import TeacherNavOption from "./components/teacherNavOption.jsx";
 import StudentNavOption from "./components/studentNavOption.jsx";
 import Chatroom from "./components/chatroom.jsx";
-import Members from "./components/members.jsx";
 import ClassInfo from "./components/classInfo.jsx";
 import Milestone from "./components/milestone.jsx";
 import PullRequest from "./components/pullRequest.jsx";
@@ -56,7 +55,6 @@ const ClassManage = () => {
     const { user } = authContext;
 
     const [ classData, setClassData ] = useState({});
-    const [ members, setMembers ] = useState([]);
     const [ milestones, setMilestones ] = useState([]);
     const [ isCreater, setIsCreater ] = useState(true);
     const [ isNavExpanded, setIsNavExpanded ] = useState(false);
@@ -69,10 +67,6 @@ const ClassManage = () => {
     function handleView() {
         if ( chosenOption === "class-info" ) {
             return <ClassInfo classData={classData} />;
-        }
-
-        if ( chosenOption === "class-member" ) {
-            return <Members memberData={members} classData={classData} />;
         }
 
         if ( chosenOption === "chatroom" ) {
@@ -127,9 +121,7 @@ const ClassManage = () => {
 
                         // options
                         response.ownerId === user.userId ? setIsCreater(true) : setIsCreater(false);
-                        
-                        // members
-                        setMembers(response.classMembers);
+
                     } else {
                         CustomErrorAlert( response.response.responseMessage )
                         .then(result => {

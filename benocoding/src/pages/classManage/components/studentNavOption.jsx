@@ -1,7 +1,6 @@
 
 import styled from "styled-components";
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
@@ -52,13 +51,6 @@ const StudentNavOption = ({isExpanded, setChosenOption}) => {
                     height: 30
                 }}></DescriptionOutlinedIcon>
                 <Title isExpanded={isExpanded}>Class info</Title>
-            </EachIcon>
-            <EachIcon onClick={() => setChosenOption('class-member')}>
-                <GroupsOutlinedIcon sx={{
-                    width: 30,
-                    height: 30
-                }}></GroupsOutlinedIcon>
-                <Title isExpanded={isExpanded}>Class member</Title>
             </EachIcon>
             <EachIcon onClick={() => setChosenOption('chatroom')}>
                 <ChatOutlinedIcon sx={{
