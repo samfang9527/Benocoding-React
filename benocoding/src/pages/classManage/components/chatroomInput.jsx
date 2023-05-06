@@ -1,7 +1,8 @@
 
 import styled from "styled-components";
 import { sendMessage } from "../../../utils/socket/socket.js";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../../../global/authContext.jsx";
 
 const InputForm = styled.form`
     width: 100%;
@@ -22,7 +23,10 @@ const Textarea = styled.textarea`
 `;
 
 
-const ChatroomInput = ({username, chatroomId}) => {
+const ChatroomInput = ({chatroomId}) => {
+
+    const authContext = useContext(AuthContext);
+    const { userId, username } = authContext.user;
 
     const [ inputText, setInputText ] = useState('');
     const [ isComposing, setIsComposing ] = useState(false);
@@ -38,10 +42,10 @@ const ChatroomInput = ({username, chatroomId}) => {
         }
 
         if ( e.shiftKey === false && inputText.trim() !== '' ) {
-            console.log(inputText)
             e.preventDefault();
             const msgData = {
-                time: new Date().toLocaleString(),
+                userId: userId,
+                time: new Date(),
                 from: username,
                 message: inputText.trim()
             }

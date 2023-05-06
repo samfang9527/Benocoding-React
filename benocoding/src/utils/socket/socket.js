@@ -11,7 +11,6 @@ export function subscribeChatroom( chatroomId ) {
 }
 
 export function unSubscribeChatroom( chatroomId ) {
-    console.log('run');
     socket.emit('unsubscribe', chatroomId);
 }
 
@@ -28,7 +27,6 @@ export function listenNewMessage( onUpdateEvent, on ) {
 }
 
 export function generateGPTCodeReview( diffData, number ) {
-    console.log(number);
     socket.emit('codeReview', diffData, number);
 }
 
@@ -38,4 +36,8 @@ export function listenGPTCodeReviewResult( onCodeReviewEvent, on ) {
     } else {
         socket.off('codeReviewResult', onCodeReviewEvent);
     }
+}
+
+export function updateChatroomConnectTime( userId ) {
+    socket.emit('chatroomConnect', userId);
 }

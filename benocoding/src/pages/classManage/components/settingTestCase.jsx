@@ -155,7 +155,7 @@ const SettingTestCase = ({ testType, milestoneIdx, milestoneData }) => {
                 {
                     eachTestTypeData["function"].map((testCase, idx) => {
                         return (
-                            <EachTestCaseBlock key={idx}>
+                            <EachTestCaseBlock key={"func" + idx}>
                                 <EachTestCaseInputBlock>
                                     <label>Case name</label>
                                     <TestCaseInput
@@ -220,7 +220,7 @@ const SettingTestCase = ({ testType, milestoneIdx, milestoneData }) => {
                 {
                     eachTestTypeData["api"].map((testCase, idx) => {
                         return (
-                            <EachTestCaseBlock key={idx}>
+                            <EachTestCaseBlock key={"api" + idx}>
                                 <EachTestCaseInputBlock>
                                     <label>Case name</label>
                                     <TestCaseInput
