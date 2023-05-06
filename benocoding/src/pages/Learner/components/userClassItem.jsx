@@ -11,9 +11,10 @@ const Block = styled.li`
     justify-content: flex-start;
     cursor: pointer;
     border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
 
     :hover {
-        background-color: AntiqueWhite;
+        background-color: snow;
     }
 `;
 

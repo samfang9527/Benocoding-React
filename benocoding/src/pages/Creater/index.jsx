@@ -1,7 +1,6 @@
 
 import styled from "styled-components";
 import { useContext, useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom';
 import { AuthContext } from "../../global/authContext.jsx";
 import CreaterClassItem from "./components/createrClassItem.jsx";
 import { getUserClassList } from "../../utils/apis/class.js";
@@ -43,31 +42,19 @@ const CustomLoader = styled(MoonLoader)`
     margin: 50px 0 0 0;
 `;
 
-function getPaging(location) {
-    const queryString = location.search;
-    const params = new URLSearchParams(queryString);
-    return params.get('paging');
-}
-
-function setQueryString(location, value) {
-    const queryString = location.search;
-    const params = new URLSearchParams(queryString);
-    params.set('paging', value);
-    window.location.search = params;
-}
 
 const Creater = () => {
 
-    const location = useLocation();
     const authContext = useContext(AuthContext);
 
     // state
     const [ classList, setClassList ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ pageQuantity, setPageQuantity ] = useState(1);
+    const [ pageNum, setPageNum ] = useState(0);
 
     function handlePageChange(e, value) {
-        setQueryString(location, value-1);
+        setPageNum(value-1)
     }
 
     useEffect(() => {
@@ -77,10 +64,6 @@ const Creater = () => {
 
             // get user classList
             setIsLoading(true)
-            let pageNum = getPaging(location);
-            if ( !pageNum || pageNum === '' ) {
-                pageNum = 0;
-            }
             getUserClassList(user.userId, Number(pageNum), 'Creater')
                 .then(res => {
                     const { response } = res.getCreaterClassList;
@@ -95,7 +78,7 @@ const Creater = () => {
                 })
                 .finally(() => setIsLoading(false))
         }
-    }, [authContext, location]);
+    }, [authContext, pageNum]);
 
     return (
         <Section>
@@ -109,13 +92,13 @@ const Creater = () => {
                         {
                             classList.map((class_) => {
                                 return (
-                                    <CreaterClassItem key={class_.classId} classData={class_}></CreaterClassItem>
+                                    <CreaterClassItem key={"creater" + class_._id} classData={class_}></CreaterClassItem>
                                 )
                             })
                         }
                     </ClassList>
                     { classList.length === 0 ? <SectionTitle style={{color: "FireBrick"}}>You have no classes</SectionTitle> : '' }
-                    <Pagination count={pageQuantity} size="large" style={{marginBottom: "20px"}} onChange={handlePageChange}></Pagination>
+                    <Pagination page={pageNum+1} count={pageQuantity} size="large" style={{marginBottom: "20px"}} onChange={handlePageChange}></Pagination>
                 </Fragment>
             }
         </Section>

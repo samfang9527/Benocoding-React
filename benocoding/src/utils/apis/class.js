@@ -107,7 +107,8 @@ async function getUserClassList(userId, pageNum, role) {
                         classStartDate,
                         classImage,
                         _id
-                    }   
+                    },
+                    maxPageNum
                 }
         }
         `,
@@ -125,7 +126,6 @@ async function getUserClassList(userId, pageNum, role) {
             },
             data: graphqlQuery
         })
-        console.log(data.data)
         return data.data;
     } catch (err) {
         console.error(err);

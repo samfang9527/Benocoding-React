@@ -2,7 +2,6 @@
 import styled from "styled-components";
 import { getUserClassList } from "../../utils/apis/class.js";
 import { useContext, useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom';
 import { AuthContext } from "../../global/authContext.jsx";
 import UserClassItem from "./components/userClassItem.jsx";
 import { MoonLoader } from "react-spinners";
@@ -44,32 +43,18 @@ const CustomLoader = styled(MoonLoader)`
     margin: 50px 0 0 0;
 `;
 
-
-function getPaging(location) {
-    const queryString = location.search;
-    const params = new URLSearchParams(queryString);
-    return params.get('paging');
-}
-
-function setQueryString(location, value) {
-    const queryString = location.search;
-    const params = new URLSearchParams(queryString);
-    params.set('paging', value);
-    window.location.search = params;
-}
-
 const Learner = () => {
 
-    const location = useLocation();
     const authContext = useContext(AuthContext);
 
     // state
     const [ classList, setClassList ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ pageQuantity, setPageQuantity ] = useState(1);
+    const [ pageNum, setPageNum ] = useState(0);
 
     function handlePageChange(e, value) {
-        setQueryString(location, value-1);
+        setPageNum(value-1);
     }
 
     useEffect(() => {
@@ -79,10 +64,6 @@ const Learner = () => {
 
             // get user classList
             setIsLoading(true)
-            let pageNum = getPaging(location);
-            if ( !pageNum || pageNum === '' ) {
-                pageNum = 0;
-            }
             getUserClassList(user.userId, Number(pageNum), 'Learner')
                 .then(res => {
                     const { response } = res.getLearnerClassList;
@@ -97,7 +78,7 @@ const Learner = () => {
                 })
                 .finally(() => setIsLoading(false))
         }
-    }, [authContext, location]);
+    }, [authContext, pageNum]);
 
     return (
         <Section>
@@ -111,15 +92,16 @@ const Learner = () => {
                         {
                             classList.map((class_) => {
                                 return (
-                                    <UserClassItem key={class_.classId} classData={class_}></UserClassItem>
+                                    <UserClassItem key={"learner" + class_._id} classData={class_}></UserClassItem>
                                 )
                             })
                         }
                     </ClassList>
                     { classList.length === 0 ? <SectionTitle style={{color: "FireBrick"}}>You have no classes</SectionTitle> : '' }
-                    <Pagination count={pageQuantity} size="large" style={{marginBottom: "20px"}} onChange={handlePageChange}></Pagination>
+                    
                 </Fragment>
             }
+            <Pagination page={pageNum+1} count={pageQuantity} size="large" style={{marginBottom: "20px"}} onChange={handlePageChange}></Pagination>
         </Section>
     )
 }
