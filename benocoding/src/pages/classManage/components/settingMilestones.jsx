@@ -160,6 +160,11 @@ const SettingMilestone = ({ milestones }) => {
             changedMilestones[idx].functionTest = false;
         }
     }
+
+    function handleInputChange(e, name, idx) {
+        e.preventDefault();
+        changedMilestones[idx][name] = e.target.value;
+    }
     
     return (
         milestones.map((milestone, milestoneIdx) => {
@@ -180,9 +185,13 @@ const SettingMilestone = ({ milestones }) => {
                                 <SingleInput
                                     name={`milestone-${milestoneIdx}`}
                                     defaultValue={milestone.milestone}
+                                    onChange={(e) => handleInputChange(e, "milestone", milestoneIdx)}
                                 ></SingleInput>
                                 <Title>Milestone description</Title>
-                                <TextArea defaultValue={milestoneDesc}></TextArea>
+                                <TextArea
+                                    defaultValue={milestoneDesc}
+                                    onChange={(e) => handleInputChange(e, "milestoneDesc", milestoneIdx)}
+                                ></TextArea>
                                 <Title>Automation test</Title>
                                 <TestOptionWrapper>
                                     <TestOption>

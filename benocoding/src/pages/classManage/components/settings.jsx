@@ -235,7 +235,6 @@ const Settings = ({mutableData, classId}) => {
         const name = e.target.name;
         const value = e.target.value;
         changeContent[name] = value;
-        console.log(changeContent);
     }
 
     function handleUpdate(e) {
