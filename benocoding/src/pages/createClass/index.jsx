@@ -238,12 +238,23 @@ const CreateClass = () => {
         }
     ]);
 
+    console.log('milestones', milestones)
+
     async function handleImageUpload(e) {
         e.preventDefault();
 
         const file = e.target.files[0];
         if ( file ) {
             try {
+                const fileSizeInMB = file.size / (1024 * 1024);
+                if (fileSizeInMB > 2) {
+                    CustomErrorAlert("Image size should under 2MB")
+                        .finally(() => {
+                            e.target.value = null; // clear the input field
+                        })
+                    return;
+                }
+
                 const originalName = file.name;
                 const fileExtension = originalName.slice(originalName.lastIndexOf('.'));
                 const type = file.type;
@@ -293,6 +304,15 @@ const CreateClass = () => {
         const file = e.target.files[0];
         if ( file ) {
             try {
+                const fileSizeInMB = file.size / (1024 * 1024);
+                if (fileSizeInMB > 100) {
+                    CustomErrorAlert("Video size should under 100MB")
+                        .finally(() => {
+                            e.target.value = null; // clear the input field
+                        })
+                    return;
+                }
+
                 const originalName = file.name;
                 const fileExtension = originalName.slice(originalName.lastIndexOf('.'));
                 const type = file.type;
@@ -371,7 +391,7 @@ const CreateClass = () => {
         }
 
         const uploadBlock = document.getElementById(`upload-${type}`)
-        uploadBlock.value = '';
+        uploadBlock.value = null;
     }
 
     function showRemoveBtn() {
@@ -405,6 +425,54 @@ const CreateClass = () => {
     async function createClass(e) {
         e.preventDefault();
 
+        // check test cases format
+        for ( let i = 0; i < milestones.length; i++ ) {
+            const { autoTest, functionTest, functionName, testCases } = milestones[i];
+
+            if ( !autoTest && !functionTest ) { continue };
+            if ( testCases.length === 0 ) {
+                CustomErrorAlert(`No test case on milestone${i}`);
+                return;
+            }
+
+            if ( autoTest && functionTest ) {
+                // check functionName, result
+                if ( functionName.length === 0 ) {
+                    CustomErrorAlert(`Function name is required on milestone ${i}`);
+                    return;
+                }
+
+                for ( let j = 0; j < testCases.length; j++ ) {
+                    const { result } = testCases[j];
+                    if ( result.length === 0 ) {
+                        CustomErrorAlert(`Test result is required on milestone${i}`);
+                        return;
+                    }
+                }
+            }
+
+            if ( autoTest && !functionTest ) {
+                // checkt method, statusCode, result
+                for ( let j = 0; j < testCases.length; j++ ) {
+                    const { method, statusCode, result } = testCases[j];
+                    if ( method.length === 0 ) {
+                        CustomErrorAlert(`Method is required on milestone${i}`);
+                        return;
+                    }
+
+                    if ( statusCode.length === 0 ) {
+                        CustomErrorAlert(`Status code is required on milestone${i}`);
+                        return;
+                    }
+
+                    if ( result.length === 0 ) {
+                        CustomErrorAlert(`Test result is required on milestone${i}`);
+                        return;
+                    }
+                }
+            }
+        }
+
         const ownerId = userInfo.userId;
         const classTags = [];
         const tagsElements = document.getElementsByClassName('class-tags');
@@ -432,6 +500,8 @@ const CreateClass = () => {
                 accessToken: githubAccessToken.current.value
             }
         }
+
+        console.log('postData', postData)
 
         const graphqlMutation = {
             operationName: "createClass",
@@ -479,11 +549,12 @@ const CreateClass = () => {
         return (
             <LoadingPage>
                 <p style={{
-                    marginBottom: '100px'
+                    marginBottom: '50px',
+                    color: "white"
                 }}>課程建立中</p>
                 <ClimbingBoxLoader
                     color="darkorange"
-                    size={50}
+                    size={40}
                     loading={isSubmitting}
                 ></ClimbingBoxLoader>
             </LoadingPage>
@@ -587,7 +658,11 @@ const CreateClass = () => {
                         <SingleLineQuestion id="start-date" type="date" ref={classStartDate} required
                             min={minStartDate.toISOString().slice(0, 10)}
                             onChange={(e) => {
-                                setMinEndDate(new Date( new Date(e.target.value).getTime() + millisecondDay).toISOString().slice(0, 10));
+                                const newMinEndDate = new Date( new Date(e.target.value).getTime() + millisecondDay).toISOString().slice(0, 10);
+                                setMinEndDate(newMinEndDate);
+                                if ( newMinEndDate > classEndDate.current.value ) {
+                                    classEndDate.current.value = newMinEndDate;
+                                }
                             }}/>
                     </Block>
                     <Block>
@@ -602,7 +677,7 @@ const CreateClass = () => {
                     </Block>
                     <Block>
                         <Title>課程影片</Title>
-                        <CustomFIleUpload type="file" accept="video/*" onChange={handleVideoUpload} required/>    
+                        <CustomFIleUpload id="upload-video" type="file" accept="video/*" onChange={handleVideoUpload} required/>    
                         <span id="video-url" hidden ref={classVideo}></span>     
                         <div>{showUpload("video", isUploadingVideo, uploadVideoPercent)}</div>
                     </Block>
@@ -612,7 +687,7 @@ const CreateClass = () => {
                     </Block>
                     <Block>
                         <Title>課程價格</Title>
-                        <SingleLineQuestion id="price" ref={price} required type="number"></SingleLineQuestion>
+                        <SingleLineQuestion id="price" ref={price} max={10000} min={0} required type="number"></SingleLineQuestion>
                     </Block>
                     <Block>
                         <Title>GitHub Info</Title>
@@ -636,8 +711,8 @@ const CreateClass = () => {
                             })
                         }
                         <MilestoneBtnContainer>
-                            <AddMilestoneBtn onClick={addMilestone}>+</AddMilestoneBtn>
                             {showRemoveBtn()}
+                            <AddMilestoneBtn onClick={addMilestone}>+</AddMilestoneBtn>
                         </MilestoneBtnContainer>
                     </Block>
                     <Block>

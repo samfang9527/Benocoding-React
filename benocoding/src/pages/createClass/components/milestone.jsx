@@ -40,28 +40,57 @@ const MultiLineQuestion = styled.textarea`
     cursor: text;
 `;
 
-const OptionButtonBlock = styled.div`
-
+const TestOptionWrapper = styled.div`
+    --font-color-dark: #323232;
+    --font-color-light: #FFF;
+    --bg-color: #fff;
+    --main-color: #323232;
+    position: relative;
+    width: 450px;
+    height: 50px;
+    background-color: var(--bg-color);
+    border: 2px solid var(--main-color);
+    border-radius: 34px;
+    display: flex;
+    flex-direction: row;
+    box-shadow: 4px 4px var(--main-color);
+    margin: 0 0 20px 0;
+    font-size: 16px;
 `;
 
-const OptionButton = styled.button`
-    width: 200px;
-    height: 70px;
-    border-radius: 50px;
-    font-size: 20px;
-    background-color: MediumSeaGreen;
-    color: white;
-    margin: 0 15px;
+const TestOption = styled.div`
+    width: 147px;
+    height: 42px;
+    position: relative;
+    top: 2px;
+    left: 2px;
+`;
+
+const TestOptionInput = styled.input`
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    appearance: none;
     cursor: pointer;
-    border: none;
+`;
 
-    :hover {
-        background-color: ForestGreen;
-    }
+const TestOptionBtn = styled.div`
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${props => props.isChecked ? "var(--main-color)" : ""};
+    color: ${props => props.isChecked ? "var(--font-color-light)" : ""};
+`;
 
-    :focus {
-        background-color: ForestGreen;
-    }
+const TestOptionSpan = styled.span`
+    background-color: ${props => props.isChecked ? "var(--main-color)" : ""};
+    color: ${props => props.isChecked ? "var(--font-color-light)" : "var(--font-color-dark)"};
 `;
 
 const Milestone = ({idx}) => {
@@ -71,32 +100,25 @@ const Milestone = ({idx}) => {
 
     const { milestones, setMilestones } = useContext(MilestoneContext);
 
-    function functionTest(e) {
+    function handleTestChange(e, type) {
         e.preventDefault();
-        setUseFunctionTest(true);
-        setUseAutoTest(true);
+        if ( type === "function-test" ) {
+            setUseAutoTest(true);
+            setUseFunctionTest(true);
+            milestones[idx].autoTest = true;
+            milestones[idx].functionTest = true;
 
-        // set milestone 
-        milestones[idx].autoTest = true;
-        milestones[idx].functionTest = true;
-        setMilestones(milestones.slice());
-    }
-
-    function apiTest(e) {
-        e.preventDefault();
-        setUseFunctionTest(false);
-        setUseAutoTest(true);
-
-        milestones[idx].autoTest = true;
-        milestones[idx].functionTest = false;
-        setMilestones(milestones.slice());
-    }
-
-    function noneTest(e) {
-        e.preventDefault();
-        setUseAutoTest(false);
-
-        milestones[idx].autoTest = false;
+        } else if ( type === "api-test" ) {
+            setUseAutoTest(true);
+            setUseFunctionTest(false);
+            milestones[idx].autoTest = true;
+            milestones[idx].functionTest = false;
+        } else {
+            setUseAutoTest(false);
+            setUseFunctionTest(false);
+            milestones[idx].autoTest = false;
+            milestones[idx].functionTest = false;
+        }
         setMilestones(milestones.slice());
     }
 
@@ -121,11 +143,26 @@ const Milestone = ({idx}) => {
             <Title>Milestone description</Title>
             <MultiLineQuestion className="milestone-desc" placeholder="milestone description" onChange={setMilestoneDesc} required/>
             <Title>Auto-test options</Title>
-            <OptionButtonBlock>
-                <OptionButton onClick={functionTest}>Function Test</OptionButton>
-                <OptionButton onClick={apiTest}>API Test</OptionButton>
-                <OptionButton onClick={noneTest}>None</OptionButton>
-            </OptionButtonBlock>
+            <TestOptionWrapper>
+                <TestOption>
+                    <TestOptionInput type="radio" name="btn" value="function-test" onChange={(e) => handleTestChange(e, "function-test")} checked={useAutoTest && useFunctionTest}/>
+                    <TestOptionBtn isChecked={useAutoTest && useFunctionTest}>
+                        <TestOptionSpan isChecked={useAutoTest && useFunctionTest}>Function test</TestOptionSpan>
+                    </TestOptionBtn>
+                </TestOption>
+                <TestOption>
+                    <TestOptionInput type="radio" name="btn" value="api-test" onChange={(e) => handleTestChange(e, "api-test")} checked={useAutoTest && !useFunctionTest}/>
+                    <TestOptionBtn isChecked={useAutoTest && !useFunctionTest}>
+                        <TestOptionSpan isChecked={useAutoTest && !useFunctionTest}>API test</TestOptionSpan>
+                    </TestOptionBtn>
+                </TestOption>
+                <TestOption>
+                    <TestOptionInput type="radio" name="btn" value="no-test" onChange={(e) => handleTestChange(e, "no-test")} checked={!useAutoTest}/>
+                    <TestOptionBtn isChecked={!useAutoTest}>
+                        <TestOptionSpan isChecked={!useAutoTest}>No test</TestOptionSpan>
+                    </TestOptionBtn>  
+                </TestOption>
+            </TestOptionWrapper>
             { useAutoTest ?
                 <>
                     { useFunctionTest ? <FunctionTest milestoneIdx={idx}/> : <ApiTest milestoneIdx={idx}/> }

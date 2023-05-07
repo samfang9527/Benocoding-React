@@ -32,7 +32,8 @@ const Wrapper = styled.div`
 const NoMessageInfo = styled.div`
     width: 100%;
     text-align: center;
-    position: absolute;
+    position: relative;
+    align-self: center;
     top: 30%;
     left: 0;
     font-size: 40px;
@@ -198,10 +199,10 @@ const Chatroom = ({classData}) => {
 
     return (
         <Container>
+            {
+                messages.length === 0 ? <NoMessageInfo>No messages yet <br /> start chat right now!</NoMessageInfo> : ""
+            }
             <Wrapper>
-                {
-                    messages.length === 0 ? <NoMessageInfo>No messages yet <br /> start chat right now!</NoMessageInfo> : ""
-                }
                 {
                     messages.map((msg, idx) => {
                         return (

@@ -14,25 +14,6 @@ const Wrapper = styled.div`
     justify-content: center;
 `;
 
-const CaseControlBlock = styled.div`
-
-`;
-
-const CaseControlBtn = styled.button`
-    width: 150px;
-    height: 30px;
-    border: none;
-    margin: 10px;
-    cursor: pointer;
-    background-color: orange;
-    color: white;
-    font-size: 18px;
-
-    :hover {
-        background-color: darkorange;
-    }
-`;
-
 const TableRow = styled.div`
     width: 900px;
     display: flex;
@@ -57,6 +38,43 @@ const CustomTextArea = styled.textarea`
 
 const ColumnName = styled.p`
     font-size: 16px;
+`;
+
+const CaseControlBtn = styled.button`
+    padding: 0.1em 0.25em;
+    width: 3.75em;
+    height: 4em;
+    background-color: #212121;
+    border: 0.08em solid #fff;
+    border-radius: 0.3em;
+    font-size: 12px;
+`;
+
+const CaseControlBtnSpan = styled.span`
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0.4em;
+    width: 2em;
+    height: 2em;
+    background-color: #212121;
+    border-radius: 0.2em;
+    font-size: 1.5em;
+    color: #fff;
+    border: 0.08em solid #fff;
+    box-shadow: 0 0.4em 0.1em 0.019em #fff;
+    cursor: pointer;
+
+    :active {
+        transition: all 0.1s;
+        transform: translate(0, 0.4em);
+        box-shadow: 0 0 0 0 #fff;
+    }
+
+    :not(focus) {
+        transition: all 0.6s;
+    }
 `;
 
 const ApiTest = ({milestoneIdx}) => {
@@ -90,7 +108,7 @@ const ApiTest = ({milestoneIdx}) => {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
         const targetIdx = classNames[classNames.length - 1];
-        const value = JSON.stringify(e.target.value);
+        const value = e.target.value;
         rows[targetIdx].case = value;
         setRows([...rows]);
 
@@ -101,7 +119,7 @@ const ApiTest = ({milestoneIdx}) => {
     function handleMethodChange(e) {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
-        const value = JSON.stringify(e.target.value);
+        const value = e.target.value;
         const targetIdx = classNames[classNames.length - 1];
         rows[targetIdx].method = value;
         setRows([...rows]);
@@ -113,7 +131,7 @@ const ApiTest = ({milestoneIdx}) => {
     function handleStatusCodeChange(e) {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
-        const value = JSON.stringify(e.target.value);
+        const value = e.target.value;
         const targetIdx = classNames[classNames.length - 1];
         rows[targetIdx].statusCode = value;
         setRows([...rows]);
@@ -125,7 +143,7 @@ const ApiTest = ({milestoneIdx}) => {
     function handleResultChange(e) {
         e.preventDefault();
         const classNames = e.target.className.split(' ');
-        const value = JSON.stringify(e.target.value);
+        const value = e.target.value;
         const targetIdx = classNames[classNames.length - 1];
         rows[targetIdx].result = value;
         setRows([...rows]);
@@ -176,10 +194,23 @@ const ApiTest = ({milestoneIdx}) => {
                     )
                 })
             }
-            <CaseControlBlock>
-                <CaseControlBtn onClick={handleAddCase}>Add case</CaseControlBtn>
-                <CaseControlBtn onClick={handleRemoveCase}>Remove case</CaseControlBtn>
-            </CaseControlBlock>
+            <div style={{
+                width: "100px",
+                display: "flex",
+                justifyContent: "space-around",
+                marginTop: "20px"
+            }}>
+                <CaseControlBtn>
+                    <CaseControlBtnSpan onClick={handleRemoveCase}>
+                        -
+                    </CaseControlBtnSpan>
+                </CaseControlBtn>
+                <CaseControlBtn>
+                    <CaseControlBtnSpan onClick={handleAddCase}>
+                        +
+                    </CaseControlBtnSpan>
+                </CaseControlBtn>
+            </div>
         </Wrapper>
     )
 }

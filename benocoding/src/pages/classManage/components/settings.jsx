@@ -9,6 +9,7 @@ import { RiseLoader } from "react-spinners";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import SettingMilestone from "./settingMilestones.jsx";
+import { CustomErrorAlert } from "../../../utils/alert.js";
 
 const MainContainer = styled.div`
     border: 5px solid black;
@@ -142,6 +143,15 @@ const Settings = ({mutableData, classId}) => {
         const file = e.target.files[0];
         if ( file ) {
             try {
+                const fileSizeInMB = file.size / (1024 * 1024);
+                if (fileSizeInMB > 2) {
+                    CustomErrorAlert("Image size should under 2MB")
+                        .finally(() => {
+                            e.target.value = null; // clear the input field
+                        })
+                    return;
+                }
+
                 const originalName = file.name;
                 const fileExtension = originalName.slice(originalName.lastIndexOf('.'));
                 const type = file.type;
@@ -180,6 +190,15 @@ const Settings = ({mutableData, classId}) => {
         const file = e.target.files[0];
         if ( file ) {
             try {
+                const fileSizeInMB = file.size / (1024 * 1024);
+                if (fileSizeInMB > 100) {
+                    CustomErrorAlert("Video size should under 100MB")
+                        .finally(() => {
+                            e.target.value = null; // clear the input field
+                        })
+                    return;
+                }
+
                 const originalName = file.name;
                 const fileExtension = originalName.slice(originalName.lastIndexOf('.'));
                 const type = file.type;
@@ -288,9 +307,12 @@ const Settings = ({mutableData, classId}) => {
                         onChange={(e) => {
                             const name = e.target.name;
                             const value = e.target.value;
-                            setMinEndDate(getMinEndDate(new Date(value)));
+                            const newMinEndDate = getMinEndDate(new Date(value));
+                            setMinEndDate(newMinEndDate);
                             changeContent[name] = value;
-                            endDateTag.current.value = getMinEndDate(new Date(value));
+                            if ( newMinEndDate > endDateTag.current.value ) {
+                                endDateTag.current.value = getMinEndDate(new Date(value));
+                            }
                         }}
                     />
                 </EachBlock> )}
