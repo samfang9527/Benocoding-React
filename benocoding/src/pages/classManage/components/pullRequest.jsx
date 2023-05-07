@@ -4,21 +4,45 @@ import { useState, useEffect, useContext } from "react";
 import { getAllPullRequests } from "../../../utils/apis/class.js";
 import { AuthContext } from "../../../global/authContext.jsx";
 import PullRequestItem from "./pullRequestItem.jsx";
-import { MoonLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
 
 const PRWrapper = styled.div`
     align-items: center;
     margin: 40px 0;
 `;
 
-const CustomLoader = styled(MoonLoader)`
-    margin: 50px 0 0 0;
+const CustomLoader = styled(BarLoader)`
 `;
 
 const PRItemWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+`;
+
+const LoadingInfo = styled.span`
+    text-align: center;
+    font-size: 32px;
+`;
+
+const LoadingBlock = styled.div`
+    position: relative;
+    top: 10px;
+    left: 50%;
+    width: 500px;
+    margin-left: -250px;
+`;
+
+const NoPRInfo = styled.div`
+    width: 100%;
+    text-align: center;
+    position: relative;
+    align-self: center;
+    top: 30%;
+    left: 0;
+    font-size: 40px;
+    letter-spacing: 2px;
+    line-height: 2;
 `;
 
 const PullRequest = ({classData}) => {
@@ -51,15 +75,22 @@ const PullRequest = ({classData}) => {
 
     return (
         <PRWrapper>
-            { isLoading ? <CustomLoader color="crimson" size={100}></CustomLoader> : 
+            { isLoading ? 
+                <LoadingBlock>
+                    <LoadingInfo>Fetching pull requests data...</LoadingInfo>
+                    <CustomLoader color="NavajoWhite" height={10} width={400}></CustomLoader>
+                </LoadingBlock> : 
                 <PRItemWrapper>
-                {
-                    pullRequestData.map((data, idx) => {
-                        return (
-                            <PullRequestItem key={data.created_at} data={data} classId={classData.id}>OK</PullRequestItem>
-                        )
-                    })
-                }
+                    {
+                        pullRequestData.length === 0 ? <NoPRInfo>Congratulations! <br /> no pull requests here</NoPRInfo> : ""
+                    }
+                    {
+                        pullRequestData.map((data, idx) => {
+                            return (
+                                <PullRequestItem key={data.created_at} data={data} classId={classData.id}>OK</PullRequestItem>
+                            )
+                        })
+                    }
                 </PRItemWrapper>
             }
         </PRWrapper>

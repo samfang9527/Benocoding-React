@@ -11,6 +11,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { sublimeInit } from '@uiw/codemirror-theme-sublime';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { a11yLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { CustomErrorAlert } from "../../../utils/alert.js";
 
 const Block = styled.div`
     height: 50px;
@@ -140,6 +141,16 @@ const APITestInput = styled.input`
     margin: 0 20px;
 `;
 
+const NoTestInfo = styled.div`
+    width: fit-content;
+    letter-spacing: 2px;
+    line-height: 2;
+    margin: 0 10px;
+    border: 5px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 10px;
+`;
+
 
 const MilestoneItem = ({milestone, idx, classId}) => {
 
@@ -189,7 +200,11 @@ const MilestoneItem = ({milestone, idx, classId}) => {
                     }
                 }
             )
-            const { testResults } = data;
+            const { testResults, err } = data;
+            if ( err ) {
+                CustomErrorAlert("Failed to test, please check your file format or contact to the teacher");
+                return;
+            }
             setTestResults(testResults);
     
             let allPassed = true;
@@ -323,7 +338,7 @@ const MilestoneItem = ({milestone, idx, classId}) => {
                                         <StartTestBtn onClick={handleAPITest}>Test!</StartTestBtn>
                                     </>
                                 }
-                            </> : ''
+                            </> :  <NoTestInfo>No auto test on this milestone</NoTestInfo>
                         }
                     </ContentContainer> : ''
                 }

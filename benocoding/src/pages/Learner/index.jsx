@@ -83,7 +83,7 @@ const Learner = () => {
     return (
         <Section>
             <SectionTitle>Hi! {authContext.user.username}</SectionTitle>
-            <SectionTitle style={{padding: "0", marginTop: "-10px"}}>Welcome to your learner lobby</SectionTitle>
+            <SectionTitle style={{padding: "0", marginTop: "-10px"}}>Welcome to your learning lobby</SectionTitle>
             <SeperateLine></SeperateLine>
             {
                 isLoading ? <CustomLoader color="Crimson" size={100}></CustomLoader> :

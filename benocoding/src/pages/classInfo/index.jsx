@@ -52,7 +52,7 @@ const InfoBlock = styled.div`
 `;
 
 const CheckoutBlock = styled.div`
-    width: 80%;
+    width: 90%;
     height: ${props => props.showCheckout ? "450px" : "100px"};
     border-radius: 20px;
     transition: 0.3s ease-in-out;
@@ -60,7 +60,7 @@ const CheckoutBlock = styled.div`
     border: 3px dashed black;
     position: relative;
     left: 50%;
-    margin-left: -40%;
+    margin-left: -45%;
     opacity: ${props => props.showCheckout ? "1" : "0.4"};
     transition: 0.25s all ease-in-out;
 `;
