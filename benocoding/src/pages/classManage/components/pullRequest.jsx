@@ -9,6 +9,7 @@ import { BarLoader } from "react-spinners";
 const PRWrapper = styled.div`
     align-items: center;
     margin: 40px 0;
+    min-height: 85vh;
 `;
 
 const CustomLoader = styled(BarLoader)`

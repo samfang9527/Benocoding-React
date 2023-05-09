@@ -8,6 +8,7 @@ import { a11yLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
+    min-height: 85vh;
 `;
 
 const SectionContainer = styled.div`
