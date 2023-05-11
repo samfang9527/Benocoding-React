@@ -153,7 +153,7 @@ const Chatroom = ({classData}) => {
                     setMessages(messages);
                 }
             })
-            .catch(err => {console.error(err)})
+            .catch(err => {})
 
     }, [ chatroomId ])
 
@@ -187,7 +187,7 @@ const Chatroom = ({classData}) => {
                     setLastConnectTime(new Date(lastChatroomConnectTime));
                 }
             })
-            .catch(err => {console.error(err)});
+            .catch(err => {});
     }, [userId])
 
     function drawUnseenHr(time) {

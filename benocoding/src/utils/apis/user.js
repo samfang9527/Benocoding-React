@@ -49,7 +49,7 @@ async function getUserMilestoneData(userId, classId) {
         const { milestones } = data.data;
         return milestones;
     } catch (err) {
-        console.error(err);
+        return;
     }
 }
 

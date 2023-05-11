@@ -44,7 +44,7 @@ export const AuthContextProvider = ({children}) => {
           })
           return data;
         } catch (err) {
-          console.error(err);
+          
         }
     }
 
@@ -74,7 +74,7 @@ export const AuthContextProvider = ({children}) => {
                     setIsLoding(false);
                 }
             } catch (err) {
-                console.error(err);
+                
             }
         })();
     }, []);

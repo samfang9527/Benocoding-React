@@ -74,7 +74,7 @@ const Learner = () => {
                     }
                 })
                 .catch(err => {
-                    console.error(err)
+                    
                 })
                 .finally(() => setIsLoading(false))
         }

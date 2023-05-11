@@ -241,7 +241,6 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                 })
             })
             .catch(err => {
-                console.error(err);
                 ServerErrorAlert();
             }) 
     }

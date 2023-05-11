@@ -153,7 +153,6 @@ const ClassDetail = () => {
                     setClassId(classId)
                 }
             })
-            .catch(err => {console.error(err)})
 
     }, [location.pathname])
 

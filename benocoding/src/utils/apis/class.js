@@ -38,7 +38,7 @@ async function getRandomClasses() {
         return getRandomClasses;
 
     } catch (err) {
-        console.error(err);
+        
     }
 }
 
@@ -87,7 +87,7 @@ async function getClassList(pageNum, keyword) {
         return getClassList;
 
     } catch (err) {
-        console.error(err);
+        
     }
 }
 
@@ -128,7 +128,7 @@ async function getUserClassList(userId, pageNum, role) {
         })
         return data.data;
     } catch (err) {
-        console.error(err);
+        
     }
 }
 
@@ -202,7 +202,7 @@ async function getClassData(classId) {
         return classData;
 
     } catch (err) {
-        console.error(err);
+        return null;
     }
 }
 
@@ -245,7 +245,7 @@ async function getAllPullRequests(userId, classId) {
         })
         return data.data;
     } catch (err) {
-        console.error(err);
+        
     }
 }
 
@@ -288,7 +288,7 @@ async function getPullRequestDetail(userId, classId, number) {
         })
         return data.data;
     } catch (err) {
-        console.error(err);
+        
     }
 }
 
@@ -319,7 +319,6 @@ async function updateClassSettings(updateData, classId) {
         },
         data: mutation
     })
-    console.log(data);
     return data.data;
 }
 

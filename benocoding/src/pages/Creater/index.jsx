@@ -74,7 +74,7 @@ const Creater = () => {
                     }
                 })
                 .catch(err => {
-                    console.error(err)
+                    
                 })
                 .finally(() => setIsLoading(false))
         }

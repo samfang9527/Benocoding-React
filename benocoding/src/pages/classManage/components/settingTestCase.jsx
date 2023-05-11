@@ -88,8 +88,6 @@ const SettingTestCase = ({ testType, milestoneIdx, milestoneData }) => {
         "api": autoTest && !functionTest ? testCases : []
     })
 
-    console.log('eachTestType', eachTestTypeData);
-
     function handleFunctionNameChange(e) {
         e.preventDefault();
         const name = e.target.name;

@@ -131,7 +131,7 @@ const PullRequestItem = ({data, classId}) => {
                         setDetailData(getPRDetail);
                     }
                 })
-                .catch(err => {console.error(err)})
+                .catch(err => {})
             const codeReview = window.localStorage.getItem(`${classId}/${data.number}`);
             if ( codeReview ) {
                 setCodeReview(codeReview);

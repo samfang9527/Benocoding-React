@@ -173,7 +173,7 @@ const Settings = ({mutableData, classId}) => {
                 setImageSrc(`${CDN_DOMAIN + fileName}`);
 
             } catch (err) {
-                console.error(err);
+                CustomErrorAlert("File upload failed")
             } finally {
                 setIsUploadingImage(false);
             }
@@ -220,7 +220,7 @@ const Settings = ({mutableData, classId}) => {
                 setVideoUrl(`${CDN_DOMAIN + fileName}`);
 
             } catch (err) {
-                console.error(err);
+                CustomErrorAlert("File upload failed")
             } finally {
                 setIsUploadingVideo(false);
             }
@@ -262,7 +262,7 @@ const Settings = ({mutableData, classId}) => {
                 }
             })
             .catch(err => {
-                console.error(err);
+                CustomErrorAlert("Updating failed")
             })
     }
 

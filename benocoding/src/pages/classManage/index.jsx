@@ -133,7 +133,6 @@ const ClassManage = () => {
                     
                 })
                 .catch(err => {
-                    console.error(err)
                     ServerErrorAlert()
                     .then(result => {
                         if ( result.isConfirmed || result.isDismissed ) {
@@ -158,7 +157,7 @@ const ClassManage = () => {
                         }
                         
                     })
-                    .catch(err => {console.error(err)})
+                    .catch(err => {})
         }
     }, [authContext, navigate, location, user.userId])
 

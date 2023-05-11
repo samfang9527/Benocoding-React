@@ -238,8 +238,6 @@ const CreateClass = () => {
         }
     ]);
 
-    console.log('milestones', milestones)
-
     async function handleImageUpload(e) {
         e.preventDefault();
 
@@ -290,7 +288,7 @@ const CreateClass = () => {
                 imageSpan.value = fileName;
 
             } catch (err) {
-                console.error(err);
+                CustomErrorAlert("File upload failed")
             } finally {
                 setIsUploadingImage(false);
                 setUploadImagePercent(0);
@@ -348,7 +346,7 @@ const CreateClass = () => {
                 videoSpan.value = fileName;
 
             } catch (err) {
-                console.error(err);
+                CustomErrorAlert("File upload failed")
             } finally {
                 setIsUploadingVideo(false);
                 setUploadVideoPercent(0);
@@ -501,8 +499,6 @@ const CreateClass = () => {
             }
         }
 
-        console.log('postData', postData)
-
         const graphqlMutation = {
             operationName: "createClass",
             query: `
@@ -541,7 +537,7 @@ const CreateClass = () => {
             }, 1000);
             
         } catch (err) {
-            console.error(err);
+            CustomErrorAlert("Class create failed")
         }
     }
 
@@ -583,7 +579,7 @@ const CreateClass = () => {
         })
         return data;
       } catch (err) {
-        console.error(err);
+        
       }
     }
 
@@ -612,7 +608,6 @@ const CreateClass = () => {
                 }
             })
             .catch(err => {
-                console.error(err);
                 ServerErrorAlert()
                 .then(result => {
                     if ( result.isConfirmed || result.isDismissed ) {

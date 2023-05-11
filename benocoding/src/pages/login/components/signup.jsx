@@ -233,7 +233,6 @@ const SignUp = ({isSignIn, setIsSignIn}) => {
                 })
             })
             .catch(err => {
-                console.error(err);
                 ServerErrorAlert();
             })
     }

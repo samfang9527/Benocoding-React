@@ -166,7 +166,7 @@ const Home = () => {
                     
                 }
             })
-            .catch(err => {console.error(err)})
+            .catch(err => {})
 
     }, [pageNum, keyword])
 
@@ -177,7 +177,7 @@ const Home = () => {
                 const { classList } = response;
                 setCampaignList(classList);
             })
-            .catch(err => {console.error(err)})
+            .catch(err => {})
     }, [])
 
     useEffect(() => {

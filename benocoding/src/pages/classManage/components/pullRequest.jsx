@@ -67,7 +67,7 @@ const PullRequest = ({classData}) => {
                     }
                     
                 })
-                .catch(err => {console.error(err)})
+                .catch(err => {})
                 .finally(() => {setIsLoading(false);})
         }
         

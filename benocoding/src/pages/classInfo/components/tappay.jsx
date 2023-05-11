@@ -100,7 +100,7 @@ const Tappay = ({classId, setIsBuying, setShowCheckout}) => {
 
         window.TPDirect.card.getPrime(function(result) {
             if (result.status !== 0) {
-                console.error('getPrime error');
+                CustomErrorAlert('Payment error')
                 return;
             }
             setIsBuying(true);
@@ -127,7 +127,6 @@ const Tappay = ({classId, setIsBuying, setShowCheckout}) => {
                     })
                 })
                 .catch(err => {
-                    console.error(err);
                     ServerErrorAlert();
                 })
                 .finally(() => {

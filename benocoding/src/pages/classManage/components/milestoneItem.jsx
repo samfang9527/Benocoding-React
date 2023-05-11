@@ -215,7 +215,7 @@ const MilestoneItem = ({milestone, idx, classId}) => {
             });
             setTestPassed(allPassed);
         } catch (err) {
-            console.error(err);
+            CustomErrorAlert("Network error");
         } finally {
             setIsTesting(false);
         }
@@ -243,9 +243,22 @@ const MilestoneItem = ({milestone, idx, classId}) => {
                     }
                 }
             )
-            setTestResults(data);
+            const { testResults, err } = data;
+            if ( err ) {
+                CustomErrorAlert("Failed to test, please check your url format or contact to the teacher");
+                return;
+            }
+            setTestResults(testResults);
+
+            let allPassed = true;
+            testResults.forEach(element => {
+                if ( !element.passed ) {
+                    allPassed = false;
+                }
+            });
+            setTestPassed(allPassed);
         } catch (err) {
-            console.error(err);
+            CustomErrorAlert("Network error");
         } finally {
             setIsTesting(false);
         }
