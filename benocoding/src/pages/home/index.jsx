@@ -21,7 +21,7 @@ const MainContainer = styled.div`
 
 const CampaignSection = styled.section`
     width: 100%;
-    height: 600px;
+    height: 350px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -77,7 +77,7 @@ const ImgBlock = styled.div`
 `;
 
 const CampaignImage = styled.img`
-    height: 30rem;
+    height: 23rem;
     width: 100%;
     object-fit: cover;
     cursor: pointer;
