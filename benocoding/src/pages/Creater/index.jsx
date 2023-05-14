@@ -92,7 +92,7 @@ const Creater = () => {
                         {
                             classList.map((class_) => {
                                 return (
-                                    <CreaterClassItem key={"creater" + class_._id} classData={class_}></CreaterClassItem>
+                                    <CreaterClassItem key={"creater" + class_?._id} classData={class_}></CreaterClassItem>
                                 )
                             })
                         }

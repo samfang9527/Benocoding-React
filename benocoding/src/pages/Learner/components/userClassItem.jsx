@@ -40,17 +40,17 @@ const ClassDescription = styled.p`
 
 const UserClassItem = ({classData}) => {
 
-    const startDate = classData.classStartDate ? classData.classStartDate.slice(0, classData.classStartDate.lastIndexOf('T')) : '';
+    const startDate = classData?.classStartDate ? classData.classStartDate.slice(0, classData.classStartDate.lastIndexOf('T')) : '';
 
     function toClassManagePage() {
-        window.location.assign(`/userclass/${classData._id}`);
+        window.location.assign(`/userclass/${classData?._id}`);
     }
 
     return (
         <Block onClick={toClassManagePage}>
-            <ClassImage src={`${CDN_DOMAIN + classData.classImage}`}/>
-            <ClassTitle>{classData.className}</ClassTitle>
-            <ClassDescription>Creater: {classData.teacherName}</ClassDescription>
+            <ClassImage src={`${CDN_DOMAIN + classData?.classImage}`}/>
+            <ClassTitle>{classData?.className}</ClassTitle>
+            <ClassDescription>Creater: {classData?.teacherName}</ClassDescription>
             <ClassDescription>Start date: {startDate}</ClassDescription>
         </Block>
     )

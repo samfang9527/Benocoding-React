@@ -92,7 +92,7 @@ const Learner = () => {
                         {
                             classList.map((class_) => {
                                 return (
-                                    <UserClassItem key={"learner" + class_._id} classData={class_}></UserClassItem>
+                                    <UserClassItem key={"learner" + class_?._id} classData={class_}></UserClassItem>
                                 )
                             })
                         }
