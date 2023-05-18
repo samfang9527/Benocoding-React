@@ -203,9 +203,9 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
     const pwdInput = useRef(null);
 
     const [ isFirst, setIsFirst ] = useState(true);
-    const [ isEmailValid, setIsEmailValid ] = useState(false);
-    const [ isPWDLengthValid, setIsPWDLengthValid ] = useState(false);
-    const [ isPWDCombinationValid, setIsPWDCombinationValid ] = useState(false);
+    const [ isEmailValid, setIsEmailValid ] = useState(true);
+    const [ isPWDLengthValid, setIsPWDLengthValid ] = useState(true);
+    const [ isPWDCombinationValid, setIsPWDCombinationValid ] = useState(true);
 
     function handleSignIn(e) {
         e.preventDefault();
@@ -297,7 +297,7 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                     ref={emailInput}
                     onChange={validateInput}
                     isValid={isFirst ? true : isEmailValid}
-                    defaultValue={"user001@example.com"}
+                    defaultValue="user001@example.com"
                 ></TextInput>
                 <EmailFormatDesc isValid={isFirst ? true : isEmailValid }>
                     { !isFirst ? 
@@ -315,7 +315,7 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                     ref={pwdInput}
                     onChange={validateInput}
                     isValid={isFirst ? true : isPWDLengthValid && isPWDCombinationValid}
-                    defaultValue={"User0012023"}
+                    defaultValue="User0012023"
                 ></TextInput>
                 <PWDFormatBlock>
                     <label>Your password needs</label>
