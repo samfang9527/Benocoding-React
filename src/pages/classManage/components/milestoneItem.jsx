@@ -139,6 +139,7 @@ const APITestInput = styled.input`
     height: 30px;
     font-size: 22px;
     margin: 0 20px;
+    width:  400px;
 `;
 
 const NoTestInfo = styled.div`
@@ -331,7 +332,7 @@ const MilestoneItem = ({milestone, idx, classId}) => {
                                                 isTesting ? <CustomLoader color="Crimson" size={40}></CustomLoader> : 
                                                 <ListItem>
                                                     Your url: 
-                                                    <APITestInput ref={apiInput} defaultValue="https://benocoding.com"></APITestInput>
+                                                    <APITestInput ref={apiInput} defaultValue="https://api.benocoding.com/test/api"></APITestInput>
                                                 </ListItem>
                                             }
                                         </List><br></br>

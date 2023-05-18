@@ -297,6 +297,7 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                     ref={emailInput}
                     onChange={validateInput}
                     isValid={isFirst ? true : isEmailValid}
+                    defaultValue={"user001@example.com"}
                 ></TextInput>
                 <EmailFormatDesc isValid={isFirst ? true : isEmailValid }>
                     { !isFirst ? 
@@ -314,6 +315,7 @@ const SignIn = ({isSignIn, setIsSignIn}) => {
                     ref={pwdInput}
                     onChange={validateInput}
                     isValid={isFirst ? true : isPWDLengthValid && isPWDCombinationValid}
+                    defaultValue={"User0012023"}
                 ></TextInput>
                 <PWDFormatBlock>
                     <label>Your password needs</label>
